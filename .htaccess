@@ -1,0 +1,18 @@
+# ==========================================================
+# ServEasy Customer Web Portal Security Configuration
+# ==========================================================
+Options -Indexes
+
+# Protect sensitive files
+<FilesMatch "(\.env|\.env\..*|\.log|\.sql|\.git|composer\.(json|lock))$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order Deny,Allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Fallback index
+DirectoryIndex index.php index.html
