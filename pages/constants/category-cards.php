@@ -12,6 +12,7 @@ if (!isset($categoriesData) || empty($categoriesData) || !isset($subcategoriesDa
     $hasDb = false;
     $db_categories = [];
     $subcategories_raw = [];
+    $stats_by_cat = [];
 
     if ($dbConfigPath && file_exists($dbConfigPath)) {
         try {
@@ -47,34 +48,55 @@ if (!isset($categoriesData) || empty($categoriesData) || !isset($subcategoriesDa
     }
 
     if (!$hasDb) {
-        // Multi-domain split deployment fallback (Backend on separate domain)
+        // Multi-domain split deployment: Fetch exact DB categories, all subcategories, and stats from Central Backend API
         try {
-            $bridgePath = file_exists(__DIR__ . '/../common/ApiBridge.php') ? __DIR__ . '/../common/ApiBridge.php' : __DIR__ . '/../../common/ApiBridge.php';
+            $bridgePath = file_exists(__DIR__ . '/../../common/ApiBridge.php')
+                ? __DIR__ . '/../../common/ApiBridge.php'
+                : __DIR__ . '/../common/ApiBridge.php';
             if (file_exists($bridgePath)) {
                 require_once $bridgePath;
             }
             if (class_exists('Frontend\ApiBridge')) {
-                $apiRes = \Frontend\ApiBridge::callApi('categories.php');
-                if (!empty($apiRes['data']) && is_array($apiRes['data'])) {
-                    $db_categories = $apiRes['data'];
+                // Single fast API call for exact categories + all 40 subcategories + stats
+                $overviewRes = \Frontend\ApiBridge::callApi('categories.php?action=overview');
+                if (!empty($overviewRes['data']['categories']) && is_array($overviewRes['data']['categories'])) {
+                    $db_categories = $overviewRes['data']['categories'];
+                }
+                if (!empty($overviewRes['data']['subcategories']) && is_array($overviewRes['data']['subcategories'])) {
+                    $subcategories_raw = $overviewRes['data']['subcategories'];
+                }
+                if (!empty($overviewRes['data']['stats']) && is_array($overviewRes['data']['stats'])) {
+                    foreach ($overviewRes['data']['stats'] as $st) {
+                        $stats_by_cat[(int)$st['category_id']] = $st;
+                    }
                 }
 
-                $srvRes = \Frontend\ApiBridge::callApi('services.php?limit=250&sort=default');
-                if (!empty($srvRes['data']) && is_array($srvRes['data'])) {
-                    foreach ($srvRes['data'] as $s) {
-                        $subcategories_raw[] = [
-                            'subcategory_id'   => (int)($s['subcategory_id'] ?? $s['id']),
-                            'category_id'      => (int)($s['category_id'] ?? 1),
-                            'subcategory_name' => $s['subcategory_name'] ?? $s['name'],
-                            'subcategory_slug' => $s['slug'] ?? '',
-                            'icon_class'       => $s['subcategory_icon'] ?? 'grid-outline',
-                            'category_name'    => $s['category_name'] ?? '',
-                            'category_slug'    => $s['category_slug'] ?? '',
-                            'service_id'       => (int)($s['id'] ?? 0),
-                            'service_name'     => $s['name'] ?? '',
-                            'service_slug'     => $s['slug'] ?? '',
-                            'service_price'    => $s['base_price'] ?? 20.00
-                        ];
+                // Fallback to legacy endpoints if backend hasn't deployed action=overview yet
+                if (empty($db_categories)) {
+                    $apiRes = \Frontend\ApiBridge::callApi('categories.php');
+                    if (!empty($apiRes['data']) && is_array($apiRes['data'])) {
+                        $db_categories = $apiRes['data'];
+                        usort($db_categories, fn($a, $b) => (int)$a['id'] <=> (int)$b['id']);
+                    }
+                }
+                if (empty($subcategories_raw)) {
+                    $srvRes = \Frontend\ApiBridge::callApi('services.php?limit=250&sort=default');
+                    if (!empty($srvRes['data']) && is_array($srvRes['data'])) {
+                        foreach ($srvRes['data'] as $s) {
+                            $subcategories_raw[] = [
+                                'subcategory_id'   => (int)($s['subcategory_id'] ?? $s['id']),
+                                'category_id'      => (int)($s['category_id'] ?? 1),
+                                'subcategory_name' => $s['subcategory_name'] ?? $s['name'],
+                                'subcategory_slug' => $s['slug'] ?? '',
+                                'icon_class'       => $s['subcategory_icon'] ?? 'grid-outline',
+                                'category_name'    => $s['category_name'] ?? '',
+                                'category_slug'    => $s['category_slug'] ?? '',
+                                'service_id'       => (int)($s['id'] ?? 0),
+                                'service_name'     => $s['name'] ?? '',
+                                'service_slug'     => $s['slug'] ?? '',
+                                'service_price'    => $s['base_price'] ?? 20.00
+                            ];
+                        }
                     }
                 }
             }
@@ -94,31 +116,26 @@ if (!isset($categoriesData) || empty($categoriesData) || !isset($subcategoriesDa
 
         if (empty($subcategories_raw)) {
             $subcategories_raw = [
-                // Cat 1: Automotive
-                ['subcategory_id' => 1, 'category_id' => 1, 'subcategory_name' => 'Car Wash & Detailing', 'subcategory_slug' => 'car-wash', 'icon_class' => 'water-outline', 'category_name' => 'Automotive', 'category_slug' => 'vehicle-services', 'service_id' => 1, 'service_slug' => 'vehicle-car-and-bike-wash', 'service_price' => 25.00],
-                ['subcategory_id' => 2, 'category_id' => 1, 'subcategory_name' => 'Bike & Motorcycle Wash', 'subcategory_slug' => 'bike-wash', 'icon_class' => 'bicycle-outline', 'category_name' => 'Automotive', 'category_slug' => 'vehicle-services', 'service_id' => 2, 'service_slug' => 'vehicle-car-and-bike-wash', 'service_price' => 15.00],
-                ['subcategory_id' => 3, 'category_id' => 1, 'subcategory_name' => 'Engine & Brake Tune-Up', 'subcategory_slug' => 'engine-tuneup', 'icon_class' => 'build-outline', 'category_name' => 'Automotive', 'category_slug' => 'vehicle-services', 'service_id' => 17, 'service_slug' => 'vehicle-brake-engine-tuneup', 'service_price' => 45.00],
-                ['subcategory_id' => 4, 'category_id' => 1, 'subcategory_name' => 'Emergency Towing & Tyre', 'subcategory_slug' => 'towing-tyre', 'icon_class' => 'car-outline', 'category_name' => 'Automotive', 'category_slug' => 'vehicle-services', 'service_id' => 18, 'service_slug' => 'emergency-sos-help', 'service_price' => 35.00],
-                // Cat 2: Home
-                ['subcategory_id' => 10, 'category_id' => 2, 'subcategory_name' => 'Deep Home Cleaning', 'subcategory_slug' => 'deep-cleaning', 'icon_class' => 'sparkles-outline', 'category_name' => 'Home Services', 'category_slug' => 'home-services', 'service_id' => 1, 'service_slug' => 'complete-interior-deep-clean-polish', 'service_price' => 39.00],
-                ['subcategory_id' => 11, 'category_id' => 2, 'subcategory_name' => 'AC Repair & Servicing', 'subcategory_slug' => 'ac-services', 'icon_class' => 'snow-outline', 'category_name' => 'Home Services', 'category_slug' => 'home-services', 'service_id' => 7, 'service_slug' => 'electronics-and-ac-services', 'service_price' => 29.00],
-                ['subcategory_id' => 12, 'category_id' => 2, 'subcategory_name' => 'Electrician & Plumbing', 'subcategory_slug' => 'electrician-plumbing', 'icon_class' => 'flash-outline', 'category_name' => 'Home Services', 'category_slug' => 'home-services', 'service_id' => 8, 'service_slug' => 'room-cleaning-and-decor', 'service_price' => 20.00],
-                ['subcategory_id' => 13, 'category_id' => 2, 'subcategory_name' => 'Laundry & Dry Clean', 'subcategory_slug' => 'laundry-clean', 'icon_class' => 'shirt-outline', 'category_name' => 'Home Services', 'category_slug' => 'home-services', 'service_id' => 9, 'service_slug' => 'laundry-and-dry-clean', 'service_price' => 18.00],
-                // Cat 3: Personal Staff
-                ['subcategory_id' => 20, 'category_id' => 3, 'subcategory_name' => 'House Maid & Cleaning', 'subcategory_slug' => 'house-maid', 'icon_class' => 'people-outline', 'category_name' => 'Personal Staff', 'category_slug' => 'personal-staff-&-maids', 'service_id' => 5, 'service_slug' => 'personal-staff-and-maids', 'service_price' => 30.00],
-                ['subcategory_id' => 21, 'category_id' => 3, 'subcategory_name' => 'Home Chef & Cook', 'subcategory_slug' => 'home-chef', 'icon_class' => 'restaurant-outline', 'category_name' => 'Personal Staff', 'category_slug' => 'personal-staff-&-maids', 'service_id' => 5, 'service_slug' => 'personal-staff-and-maids', 'service_price' => 40.00],
-                ['subcategory_id' => 22, 'category_id' => 3, 'subcategory_name' => 'Baby Sitter & Childcare', 'subcategory_slug' => 'baby-sitter', 'icon_class' => 'heart-outline', 'category_name' => 'Personal Staff', 'category_slug' => 'personal-staff-&-maids', 'service_id' => 5, 'service_slug' => 'personal-staff-and-maids', 'service_price' => 35.00],
-                // Cat 4: Transport
-                ['subcategory_id' => 30, 'category_id' => 4, 'subcategory_name' => 'Car & Bike Rentals', 'subcategory_slug' => 'car-rentals', 'icon_class' => 'car-sport-outline', 'category_name' => 'Transport', 'category_slug' => 'transport-&-rental', 'service_id' => 9, 'service_slug' => 'car-and-bike-rentals', 'service_price' => 50.00],
-                ['subcategory_id' => 31, 'category_id' => 4, 'subcategory_name' => 'Cargo & Goods Transport', 'subcategory_slug' => 'cargo-transport', 'icon_class' => 'bus-outline', 'category_name' => 'Transport', 'category_slug' => 'transport-&-rental', 'service_id' => 11, 'service_slug' => 'goods-and-cargo-carrier', 'service_price' => 60.00],
-                // Cat 5: Rooms
-                ['subcategory_id' => 40, 'category_id' => 5, 'subcategory_name' => 'Short Period Stays', 'subcategory_slug' => 'short-stays', 'icon_class' => 'bed-outline', 'category_name' => 'Rooms & Lodging', 'category_slug' => 'rooms-&-lodging', 'service_id' => 13, 'service_slug' => 'short-period-rooms', 'service_price' => 45.00],
-                ['subcategory_id' => 41, 'category_id' => 5, 'subcategory_name' => 'Sightseeing & Guide', 'subcategory_slug' => 'sightseeing', 'icon_class' => 'compass-outline', 'category_name' => 'Rooms & Lodging', 'category_slug' => 'rooms-&-lodging', 'service_id' => 10, 'service_slug' => 'sightseeing-and-tours', 'service_price' => 30.00],
-                // Cat 6: Food
-                ['subcategory_id' => 50, 'category_id' => 6, 'subcategory_name' => 'Restaurant Food Delivery', 'subcategory_slug' => 'food-delivery', 'icon_class' => 'fast-food-outline', 'category_name' => 'Food & Dining', 'category_slug' => 'food-&-dining', 'service_id' => 16, 'service_slug' => 'restaurant-orders-and-dining', 'service_price' => 15.00],
-                // Cat 7: Emergency SOS
-                ['subcategory_id' => 60, 'category_id' => 7, 'subcategory_name' => '24/7 Roadside Rescue', 'subcategory_slug' => 'roadside-rescue', 'icon_class' => 'warning-outline', 'category_name' => 'Emergency SOS', 'category_slug' => 'emergency-sos', 'service_id' => 6, 'service_slug' => 'emergency-sos-help', 'service_price' => 50.00],
-                ['subcategory_id' => 61, 'category_id' => 7, 'subcategory_name' => 'Emergency Locksmith', 'subcategory_slug' => 'emergency-locksmith', 'icon_class' => 'key-outline', 'category_name' => 'Emergency SOS', 'category_slug' => 'emergency-sos', 'service_id' => 6, 'service_slug' => 'emergency-sos-help', 'service_price' => 40.00],
+                // Cat 1: Automotive & Vehicles (6)
+                ['subcategory_id' => 1, 'category_id' => 1, 'subcategory_name' => 'Car Wash', 'subcategory_slug' => 'car-wash', 'icon_class' => 'water-outline', 'category_name' => 'Automotive & Vehicles', 'category_slug' => 'vehicle-services', 'service_id' => 2, 'service_slug' => 'vehicle-car-and-bike-wash', 'service_price' => 25.00],
+                ['subcategory_id' => 2, 'category_id' => 1, 'subcategory_name' => 'Bike Wash', 'subcategory_slug' => 'bike-wash', 'icon_class' => 'bicycle-outline', 'category_name' => 'Automotive & Vehicles', 'category_slug' => 'vehicle-services', 'service_id' => 19, 'service_slug' => 'vehicle-car-and-bike-wash', 'service_price' => 20.00],
+                ['subcategory_id' => 3, 'category_id' => 1, 'subcategory_name' => 'Vehicle Repair', 'subcategory_slug' => 'vehicle-repair', 'icon_class' => 'build-outline', 'category_name' => 'Automotive & Vehicles', 'category_slug' => 'vehicle-services', 'service_id' => 17, 'service_slug' => 'vehicle-brake-engine-tuneup', 'service_price' => 45.00],
+                ['subcategory_id' => 6, 'category_id' => 1, 'subcategory_name' => 'Vehicle Servicing', 'subcategory_slug' => 'vehicle-servicing', 'icon_class' => 'build-outline', 'category_name' => 'Automotive & Vehicles', 'category_slug' => 'vehicle-services', 'service_id' => 20, 'service_slug' => 'vehicle-brake-engine-tuneup', 'service_price' => 40.00],
+                ['subcategory_id' => 7, 'category_id' => 1, 'subcategory_name' => 'Vehicle Parts', 'subcategory_slug' => 'vehicle-parts', 'icon_class' => 'cog-outline', 'category_name' => 'Automotive & Vehicles', 'category_slug' => 'vehicle-services', 'service_id' => 21, 'service_slug' => 'vehicle-brake-engine-tuneup', 'service_price' => 35.00],
+                ['subcategory_id' => 8, 'category_id' => 1, 'subcategory_name' => 'Garage Service', 'subcategory_slug' => 'garage-service', 'icon_class' => 'construct-outline', 'category_name' => 'Automotive & Vehicles', 'category_slug' => 'vehicle-services', 'service_id' => 22, 'service_slug' => 'vehicle-brake-engine-tuneup', 'service_price' => 50.00],
+                // Cat 2: Home & Living Services
+                ['subcategory_id' => 4, 'category_id' => 2, 'subcategory_name' => 'Room Cleaning', 'subcategory_slug' => 'room-cleaning', 'icon_class' => 'sparkles-outline', 'category_name' => 'Home & Living Services', 'category_slug' => 'home-services', 'service_id' => 3, 'service_slug' => 'room-cleaning-and-decor', 'service_price' => 20.00],
+                ['subcategory_id' => 9, 'category_id' => 2, 'subcategory_name' => 'Home Maintenance', 'subcategory_slug' => 'home-maintenance', 'icon_class' => 'hammer-outline', 'category_name' => 'Home & Living Services', 'category_slug' => 'home-services', 'service_id' => 7, 'service_slug' => 'electronics-and-ac-services', 'service_price' => 25.00],
+                ['subcategory_id' => 10, 'category_id' => 2, 'subcategory_name' => 'Bathroom Wash', 'subcategory_slug' => 'bathroom-wash', 'icon_class' => 'water-outline', 'category_name' => 'Home & Living Services', 'category_slug' => 'home-services', 'service_id' => 3, 'service_slug' => 'room-cleaning-and-decor', 'service_price' => 15.00],
+                ['subcategory_id' => 11, 'category_id' => 2, 'subcategory_name' => 'Kitchen Wash', 'subcategory_slug' => 'kitchen-wash', 'icon_class' => 'sparkles-outline', 'category_name' => 'Home & Living Services', 'category_slug' => 'home-services', 'service_id' => 1, 'service_slug' => 'complete-interior-deep-clean-polish', 'service_price' => 25.00],
+                ['subcategory_id' => 12, 'category_id' => 2, 'subcategory_name' => 'Deep Cleaning', 'subcategory_slug' => 'deep-cleaning', 'icon_class' => 'sparkles-outline', 'category_name' => 'Home & Living Services', 'category_slug' => 'home-services', 'service_id' => 1, 'service_slug' => 'complete-interior-deep-clean-polish', 'service_price' => 39.00],
+                ['subcategory_id' => 14, 'category_id' => 2, 'subcategory_name' => 'AC Service', 'subcategory_slug' => 'ac-service', 'icon_class' => 'snow-outline', 'category_name' => 'Home & Living Services', 'category_slug' => 'home-services', 'service_id' => 7, 'service_slug' => 'electronics-and-ac-services', 'service_price' => 29.00],
+                // Cat 3: Personal Staff & Maids
+                ['subcategory_id' => 5, 'category_id' => 3, 'subcategory_name' => 'House Maid', 'subcategory_slug' => 'house-maid', 'icon_class' => 'people-outline', 'category_name' => 'Personal Staff & Maids', 'category_slug' => 'personal-staff-&-maids', 'service_id' => 5, 'service_slug' => 'personal-staff-and-maids', 'service_price' => 12.00],
+                ['subcategory_id' => 19, 'category_id' => 3, 'subcategory_name' => 'Watchman Guard', 'subcategory_slug' => 'watchman-guard', 'icon_class' => 'shield-outline', 'category_name' => 'Personal Staff & Maids', 'category_slug' => 'personal-staff-&-maids', 'service_id' => 5, 'service_slug' => 'personal-staff-and-maids', 'service_price' => 25.00],
+                ['subcategory_id' => 20, 'category_id' => 3, 'subcategory_name' => 'Home Chef', 'subcategory_slug' => 'home-chef', 'icon_class' => 'restaurant-outline', 'category_name' => 'Personal Staff & Maids', 'category_slug' => 'personal-staff-&-maids', 'service_id' => 5, 'service_slug' => 'personal-staff-and-maids', 'service_price' => 30.00],
+                ['subcategory_id' => 21, 'category_id' => 3, 'subcategory_name' => 'Baby Sitter', 'subcategory_slug' => 'baby-sitter', 'icon_class' => 'heart-outline', 'category_name' => 'Personal Staff & Maids', 'category_slug' => 'personal-staff-&-maids', 'service_id' => 5, 'service_slug' => 'personal-staff-and-maids', 'service_price' => 25.00],
+                ['subcategory_id' => 22, 'category_id' => 3, 'subcategory_name' => 'Elderly Care', 'subcategory_slug' => 'elderly-care', 'icon_class' => 'medkit-outline', 'category_name' => 'Personal Staff & Maids', 'category_slug' => 'personal-staff-&-maids', 'service_id' => 5, 'service_slug' => 'personal-staff-and-maids', 'service_price' => 30.00],
             ];
         }
     }
@@ -240,19 +257,18 @@ if (!isset($categoriesData) || empty($categoriesData) || !isset($subcategoriesDa
                     'price'         => $priceStr,
                     'link'          => $targetLink
                 ];
-            }
 
-            $subs_by_cat[$cid][] = [
-                'id'    => $subId,
-                'name'  => $subName,
-                'slug'  => $subSlug,
-                'link'  => $targetLink
-            ];
+                $subs_by_cat[$cid][] = [
+                    'id'    => $subId,
+                    'name'  => $subName,
+                    'slug'  => $subSlug,
+                    'link'  => $targetLink
+                ];
+            }
         }
 
         // Min base_price & accurate individual service count per category
-        $stats_by_cat = [];
-        if ($hasDb && !empty($catPdo)) {
+        if (empty($stats_by_cat) && $hasDb && !empty($catPdo)) {
             try {
                 $stats_stmt = $catPdo->query("
                     SELECT 
