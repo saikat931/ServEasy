@@ -40,47 +40,56 @@ $has_name         = false;
 
 if (isset($_SESSION['user_id'])) {
     $is_logged_in = true;
-    $conn = mysqli_connect($_ENV['DB_HOST'] ?? '127.0.0.1', $_ENV['DB_USERNAME'] ?? 'root', $_ENV['DB_PASSWORD'] ?? '', $_ENV['DB_DATABASE'] ?? 'serveasy_v2');
-    if ($conn) {
-        $user_id = (int)$_SESSION['user_id'];
-        $query = mysqli_query($conn, "SELECT full_name, email_address, phone_number FROM site_user WHERE id='$user_id'");
-        if ($query && mysqli_num_rows($query) > 0) {
-            $aside_user = mysqli_fetch_assoc($query);
-            $full_name = trim($aside_user['full_name'] ?? '');
-            $email     = trim($aside_user['email_address'] ?? '');
-            $phone     = trim($aside_user['phone_number'] ?? '');
+    $user_id = (int)$_SESSION['user_id'];
+    $full_name = trim((string)($_SESSION['full_name'] ?? ''));
+    $email     = trim((string)($_SESSION['email'] ?? ''));
+    $phone     = trim((string)($_SESSION['phone'] ?? ''));
 
-            if (!empty($full_name)) {
-                $display_name = $full_name;
-                $has_name = true;
-                $words = preg_split("/\s+/", $full_name);
-                if (count($words) >= 2) {
-                    $user_initials = strtoupper(mb_substr($words[0], 0, 1) . mb_substr($words[1], 0, 1));
-                } else {
-                    $user_initials = strtoupper(mb_substr($full_name, 0, 2));
-                }
-                $display_identity = !empty($phone) ? $phone : (!empty($email) ? $email : "Member #$user_id");
-                $display_sub      = (!empty($email) && !empty($phone)) ? $email : "Verified Customer";
-            } else {
-                if (!empty($phone)) {
-                    $display_name     = "My Account";
-                    $display_identity = $phone;
-                    $user_initials    = strtoupper(substr($phone, -2));
-                    $display_sub      = "Member #" . $user_id;
-                } elseif (!empty($email)) {
-                    $display_name     = "My Account";
-                    $display_identity = $email;
-                    $user_initials    = strtoupper(substr($email, 0, 2));
-                    $display_sub      = "Member #" . $user_id;
-                } else {
-                    $display_name     = "ServEasy Member";
-                    $display_identity = "Member #" . $user_id;
-                    $user_initials    = "SE";
-                    $display_sub      = "Active Account";
+    // Optional refresh from DB if available locally (never throws on standalone Hostinger domain)
+    if (empty($full_name) && empty($email) && empty($phone) && file_exists(__DIR__ . '/../../common/db_connection.php')) {
+        try {
+            require_once __DIR__ . '/../../common/db_connection.php';
+            $asidePdo = class_exists('ServEasyWebDB') ? ServEasyWebDB::connect() : null;
+            if ($asidePdo) {
+                $st = $asidePdo->prepare("SELECT full_name, email_address, phone_number FROM site_user WHERE id = ? LIMIT 1");
+                $st->execute([$user_id]);
+                if ($aside_user = $st->fetch(PDO::FETCH_ASSOC)) {
+                    $full_name = trim((string)($aside_user['full_name'] ?? ''));
+                    $email     = trim((string)($aside_user['email_address'] ?? ''));
+                    $phone     = trim((string)($aside_user['phone_number'] ?? ''));
                 }
             }
+        } catch (\Throwable $t) {}
+    }
+
+    if (!empty($full_name)) {
+        $display_name = $full_name;
+        $has_name = true;
+        $words = preg_split("/\s+/", $full_name);
+        if (count($words) >= 2) {
+            $user_initials = strtoupper(mb_substr($words[0], 0, 1) . mb_substr($words[1], 0, 1));
+        } else {
+            $user_initials = strtoupper(mb_substr($full_name, 0, 2));
         }
-        mysqli_close($conn);
+        $display_identity = !empty($phone) ? $phone : (!empty($email) ? $email : "Member #$user_id");
+        $display_sub      = (!empty($email) && !empty($phone)) ? $email : "Verified Customer";
+    } else {
+        if (!empty($phone)) {
+            $display_name     = "My Account";
+            $display_identity = $phone;
+            $user_initials    = strtoupper(substr($phone, -2));
+            $display_sub      = "Member #" . $user_id;
+        } elseif (!empty($email)) {
+            $display_name     = "My Account";
+            $display_identity = $email;
+            $user_initials    = strtoupper(substr($email, 0, 2));
+            $display_sub      = "Member #" . $user_id;
+        } else {
+            $display_name     = "ServEasy Member";
+            $display_identity = "Member #" . $user_id;
+            $user_initials    = "SE";
+            $display_sub      = "Active Account";
+        }
     }
 }
 ?>
