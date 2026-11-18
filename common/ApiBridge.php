@@ -107,7 +107,7 @@ class ApiBridge {
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        if ($response && $httpCode >= 200 && $httpCode < 300) {
+        if ($response && $httpCode >= 200 && $httpCode < 500) {
             $json = json_decode($response, true);
             if (json_last_error() === JSON_ERROR_NONE) {
                 return $json;
