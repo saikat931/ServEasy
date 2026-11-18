@@ -114,88 +114,100 @@ if (isset($_POST['ajax_action']) && $_POST['ajax_action'] === 'create_maid_booki
 
 // Fetch saved customer addresses
 $userAddresses = [];
-try {
-    $stmtAddr = $db->prepare("
-        SELECT id, label, address, landmark, pincode 
-        FROM `user_addresses` 
-        WHERE user_id = ?
-        ORDER BY is_default DESC, updated_at DESC
-    ");
-    $stmtAddr->execute([$_SESSION['user_id']]);
-    $rawAddresses = $stmtAddr->fetchAll(PDO::FETCH_ASSOC) ?: [];
-    $seenKeys = [];
-    $userAddresses = [];
-    foreach ($rawAddresses as $addr) {
-        $key = strtolower(trim($addr['address'])) . '|' . trim($addr['pincode']);
-        if (!isset($seenKeys[$key])) {
-            $seenKeys[$key] = true;
-            $userAddresses[] = $addr;
+if ($db) {
+    try {
+        $stmtAddr = $db->prepare("
+            SELECT id, label, address, landmark, pincode 
+            FROM `user_addresses` 
+            WHERE user_id = ?
+            ORDER BY is_default DESC, updated_at DESC
+        ");
+        $stmtAddr->execute([$_SESSION['user_id']]);
+        $rawAddresses = $stmtAddr->fetchAll(PDO::FETCH_ASSOC) ?: [];
+        $seenKeys = [];
+        $userAddresses = [];
+        foreach ($rawAddresses as $addr) {
+            $key = strtolower(trim($addr['address'])) . '|' . trim($addr['pincode']);
+            if (!isset($seenKeys[$key])) {
+                $seenKeys[$key] = true;
+                $userAddresses[] = $addr;
+            }
         }
-    }
-} catch (Exception $e) {}
+    } catch (\Throwable $e) {}
+}
 
-// Fetch subcategories under Maids & Staff (Category ID: 13, slug: personal-staff-&-maids)
+// Fetch subcategories under Maids & Staff (Category ID: 3, slug: personal-staff-&-maids)
 $subcategories = [];
-try {
-    $stmtSub = $db->prepare("
-        SELECT sc.* FROM `serveasy-subcategories` sc
-        JOIN `serveasy-categories` c ON sc.category_id = c.id
-        WHERE c.slug = 'personal-staff-&-maids' AND sc.is_active = 1
-        ORDER BY sc.name ASC
-    ");
-    $stmtSub->execute();
-    $subcategories = $stmtSub->fetchAll(PDO::FETCH_ASSOC);
-} catch(Exception $e) {}
+if ($db) {
+    try {
+        $stmtSub = $db->prepare("
+            SELECT sc.* FROM `serveasy-subcategories` sc
+            JOIN `serveasy-categories` c ON sc.category_id = c.id
+            WHERE c.slug = 'personal-staff-&-maids' AND sc.is_active = 1
+            ORDER BY sc.name ASC
+        ");
+        $stmtSub->execute();
+        $subcategories = $stmtSub->fetchAll(PDO::FETCH_ASSOC);
+    } catch (\Throwable $e) {}
+} elseif (file_exists(__DIR__ . '/../../common/ApiBridge.php')) {
+    require_once __DIR__ . '/../../common/ApiBridge.php';
+    $subRes = \Frontend\ApiBridge::callApi('categories.php?action=subcategories&category_id=3');
+    if (!empty($subRes['data']) && is_array($subRes['data'])) {
+        $subcategories = $subRes['data'];
+    }
+}
 
 // Fetch all approved profiles
 $profiles = [];
-try {
-    $stmtProfiles = $db->prepare("
-        SELECT mp.*, sp.id AS sp_provider_id, COALESCE(c.company_name, sp.full_name) AS company_name
-        FROM `provider_profiles` mp
-        JOIN `serveasy-providers` sp ON mp.provider_id = sp.id
-        LEFT JOIN `serveasy-company` c ON c.provider_id = sp.id
-        WHERE mp.status = 'Approved'
-        ORDER BY mp.years_of_experience DESC, mp.id DESC
-    ");
-    $stmtProfiles->execute();
-    $profiles = $stmtProfiles->fetchAll(PDO::FETCH_ASSOC);
-
-    // Attach skills and subcategories details
-    foreach ($profiles as &$p) {
-        $profile_id = (int)$p['id'];
-        
-        // Skills
-        $stmtSk = $db->prepare("SELECT skill_name FROM `provider_skills` WHERE profile_id = :pid");
-        $stmtSk->execute([':pid' => $profile_id]);
-        $p['skills'] = $stmtSk->fetchAll(PDO::FETCH_COLUMN) ?: [];
-
-        // Custom Skills
-        $stmtCustSk = $db->prepare("SELECT skill_name FROM `provider_custom_skills` WHERE profile_id = :pid");
-        $stmtCustSk->execute([':pid' => $profile_id]);
-        $p['custom_skills'] = $stmtCustSk->fetchAll(PDO::FETCH_COLUMN) ?: [];
-
-        // Subcategories
-        $stmtSubs = $db->prepare("
-            SELECT sc.id, sc.name FROM `provider_services` ps
-            JOIN `serveasy-subcategories` sc ON ps.subcategory_id = sc.id
-            WHERE ps.profile_id = :pid
+if ($db) {
+    try {
+        $stmtProfiles = $db->prepare("
+            SELECT mp.*, sp.id AS sp_provider_id, COALESCE(c.company_name, sp.full_name) AS company_name
+            FROM `provider_profiles` mp
+            JOIN `serveasy-providers` sp ON mp.provider_id = sp.id
+            LEFT JOIN `serveasy-company` c ON c.provider_id = sp.id
+            WHERE mp.status = 'Approved'
+            ORDER BY mp.years_of_experience DESC, mp.id DESC
         ");
-        $stmtSubs->execute([':pid' => $profile_id]);
-        $p['subcategories'] = $stmtSubs->fetchAll(PDO::FETCH_ASSOC) ?: [];
+        $stmtProfiles->execute();
+        $profiles = $stmtProfiles->fetchAll(PDO::FETCH_ASSOC);
 
-        // Availability
-        $stmtAvail = $db->prepare("SELECT day_of_week, time_slot, is_available, emergency_availability FROM `provider_availability` WHERE profile_id = :pid");
-        $stmtAvail->execute([':pid' => $profile_id]);
-        $p['availability'] = $stmtAvail->fetchAll(PDO::FETCH_ASSOC) ?: [];
+        // Attach skills and subcategories details
+        foreach ($profiles as &$p) {
+            $profile_id = (int)$p['id'];
+            
+            // Skills
+            $stmtSk = $db->prepare("SELECT skill_name FROM `provider_skills` WHERE profile_id = :pid");
+            $stmtSk->execute([':pid' => $profile_id]);
+            $p['skills'] = $stmtSk->fetchAll(PDO::FETCH_COLUMN) ?: [];
 
-        // Service Areas
-        $stmtAreas = $db->prepare("SELECT area_name, pincode FROM `provider_service_areas` WHERE profile_id = :pid");
-        $stmtAreas->execute([':pid' => $profile_id]);
-        $p['areas'] = $stmtAreas->fetchAll(PDO::FETCH_ASSOC) ?: [];
-    }
-    unset($p);
-} catch(Exception $e) {}
+            // Custom Skills
+            $stmtCustSk = $db->prepare("SELECT skill_name FROM `provider_custom_skills` WHERE profile_id = :pid");
+            $stmtCustSk->execute([':pid' => $profile_id]);
+            $p['custom_skills'] = $stmtCustSk->fetchAll(PDO::FETCH_COLUMN) ?: [];
+
+            // Subcategories
+            $stmtSubs = $db->prepare("
+                SELECT sc.id, sc.name FROM `provider_services` ps
+                JOIN `serveasy-subcategories` sc ON ps.subcategory_id = sc.id
+                WHERE ps.profile_id = :pid
+            ");
+            $stmtSubs->execute([':pid' => $profile_id]);
+            $p['subcategories'] = $stmtSubs->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+            // Availability
+            $stmtAvail = $db->prepare("SELECT day_of_week, time_slot, is_available, emergency_availability FROM `provider_availability` WHERE profile_id = :pid");
+            $stmtAvail->execute([':pid' => $profile_id]);
+            $p['availability'] = $stmtAvail->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+            // Service Areas
+            $stmtAreas = $db->prepare("SELECT area_name, pincode FROM `provider_service_areas` WHERE profile_id = :pid");
+            $stmtAreas->execute([':pid' => $profile_id]);
+            $p['areas'] = $stmtAreas->fetchAll(PDO::FETCH_ASSOC) ?: [];
+        }
+        unset($p);
+    } catch (\Throwable $e) {}
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
