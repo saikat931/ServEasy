@@ -112,8 +112,11 @@ if (isset($_POST['ajax_action']) && $_POST['ajax_action'] === 'create_maid_booki
     exit;
 }
 
-// Fetch saved customer addresses
+// Fetch saved customer addresses, subcategories & approved profiles
 $userAddresses = [];
+$subcategories = [];
+$profiles = [];
+
 if ($db) {
     try {
         $stmtAddr = $db->prepare("
@@ -125,7 +128,6 @@ if ($db) {
         $stmtAddr->execute([$_SESSION['user_id']]);
         $rawAddresses = $stmtAddr->fetchAll(PDO::FETCH_ASSOC) ?: [];
         $seenKeys = [];
-        $userAddresses = [];
         foreach ($rawAddresses as $addr) {
             $key = strtolower(trim($addr['address'])) . '|' . trim($addr['pincode']);
             if (!isset($seenKeys[$key])) {
@@ -134,11 +136,7 @@ if ($db) {
             }
         }
     } catch (\Throwable $e) {}
-}
 
-// Fetch subcategories under Maids & Staff (Category ID: 3, slug: personal-staff-&-maids)
-$subcategories = [];
-if ($db) {
     try {
         $stmtSub = $db->prepare("
             SELECT sc.* FROM `serveasy-subcategories` sc
@@ -149,17 +147,7 @@ if ($db) {
         $stmtSub->execute();
         $subcategories = $stmtSub->fetchAll(PDO::FETCH_ASSOC);
     } catch (\Throwable $e) {}
-} elseif (file_exists(__DIR__ . '/../../common/ApiBridge.php')) {
-    require_once __DIR__ . '/../../common/ApiBridge.php';
-    $subRes = \Frontend\ApiBridge::callApi('categories.php?action=subcategories&category_id=3');
-    if (!empty($subRes['data']) && is_array($subRes['data'])) {
-        $subcategories = $subRes['data'];
-    }
-}
 
-// Fetch all approved profiles
-$profiles = [];
-if ($db) {
     try {
         $stmtProfiles = $db->prepare("
             SELECT mp.*, sp.id AS sp_provider_id, COALESCE(c.company_name, sp.full_name) AS company_name
@@ -172,21 +160,16 @@ if ($db) {
         $stmtProfiles->execute();
         $profiles = $stmtProfiles->fetchAll(PDO::FETCH_ASSOC);
 
-        // Attach skills and subcategories details
         foreach ($profiles as &$p) {
             $profile_id = (int)$p['id'];
-            
-            // Skills
             $stmtSk = $db->prepare("SELECT skill_name FROM `provider_skills` WHERE profile_id = :pid");
             $stmtSk->execute([':pid' => $profile_id]);
             $p['skills'] = $stmtSk->fetchAll(PDO::FETCH_COLUMN) ?: [];
 
-            // Custom Skills
             $stmtCustSk = $db->prepare("SELECT skill_name FROM `provider_custom_skills` WHERE profile_id = :pid");
             $stmtCustSk->execute([':pid' => $profile_id]);
             $p['custom_skills'] = $stmtCustSk->fetchAll(PDO::FETCH_COLUMN) ?: [];
 
-            // Subcategories
             $stmtSubs = $db->prepare("
                 SELECT sc.id, sc.name FROM `provider_services` ps
                 JOIN `serveasy-subcategories` sc ON ps.subcategory_id = sc.id
@@ -195,18 +178,24 @@ if ($db) {
             $stmtSubs->execute([':pid' => $profile_id]);
             $p['subcategories'] = $stmtSubs->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
-            // Availability
             $stmtAvail = $db->prepare("SELECT day_of_week, time_slot, is_available, emergency_availability FROM `provider_availability` WHERE profile_id = :pid");
             $stmtAvail->execute([':pid' => $profile_id]);
             $p['availability'] = $stmtAvail->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
-            // Service Areas
             $stmtAreas = $db->prepare("SELECT area_name, pincode FROM `provider_service_areas` WHERE profile_id = :pid");
             $stmtAreas->execute([':pid' => $profile_id]);
             $p['areas'] = $stmtAreas->fetchAll(PDO::FETCH_ASSOC) ?: [];
         }
         unset($p);
     } catch (\Throwable $e) {}
+} elseif (file_exists(__DIR__ . '/../../common/ApiBridge.php')) {
+    require_once __DIR__ . '/../../common/ApiBridge.php';
+    $mRes = \Frontend\ApiBridge::callApi('web-portal-api.php?action=maids_init');
+    if (!empty($mRes['status']) && $mRes['status'] === 'success') {
+        $userAddresses = is_array($mRes['userAddresses'] ?? null) ? $mRes['userAddresses'] : [];
+        $subcategories = is_array($mRes['subcategories'] ?? null) ? $mRes['subcategories'] : [];
+        $profiles      = is_array($mRes['profiles'] ?? null) ? $mRes['profiles'] : [];
+    }
 }
 ?>
 <!DOCTYPE html>

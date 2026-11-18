@@ -26,7 +26,16 @@ if (!$pdo && file_exists(__DIR__ . '/../common/db_connection.php')) {
 if (isset($_REQUEST['ajax_action'])) {
     header('Content-Type: application/json');
     if (!$pdo) {
-        echo json_encode(['status' => 'error', 'message' => 'Blog database unavailable']);
+        if (file_exists(__DIR__ . '/../common/ApiBridge.php')) {
+            require_once __DIR__ . '/../common/ApiBridge.php';
+            $payload = array_merge($_GET, $_POST, ['action' => $_REQUEST['ajax_action']]);
+            $apiRes = \Frontend\ApiBridge::callApi('web-portal-api.php', 'POST', $payload);
+            if (is_array($apiRes)) {
+                echo json_encode($apiRes);
+                exit;
+            }
+        }
+        echo json_encode(['status' => 'error', 'message' => 'Blog API unavailable']);
         exit;
     }
     $action = $_REQUEST['ajax_action'];
@@ -95,6 +104,16 @@ if ($pdo) {
     try {
         $published_posts = $pdo->query("SELECT * FROM blog_posts WHERE status = 'published' ORDER BY created_at DESC")->fetchAll(PDO::FETCH_ASSOC);
     } catch (\Throwable $t) {}
+} elseif (file_exists(__DIR__ . '/../common/ApiBridge.php')) {
+    require_once __DIR__ . '/../common/ApiBridge.php';
+    $qs = 'web-portal-api.php?action=blog_init';
+    if (!empty($_GET['id'])) $qs .= '&id=' . (int)$_GET['id'];
+    if (!empty($_GET['slug'])) $qs .= '&slug=' . urlencode(trim($_GET['slug']));
+    $bRes = \Frontend\ApiBridge::callApi($qs);
+    if (!empty($bRes['status']) && $bRes['status'] === 'success') {
+        $single_post     = $bRes['single_post'] ?? null;
+        $published_posts = is_array($bRes['published_posts'] ?? null) ? $bRes['published_posts'] : [];
+    }
 }
 
 // Extract featured post (first post) and regular grid posts

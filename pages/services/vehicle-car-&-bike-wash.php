@@ -79,7 +79,24 @@ $addressAction = $addressReq['ajax_action'] ?? $addressReq['action'] ?? null;
 if ($addressAction === 'save_user_address') {
   header('Content-Type: application/json');
   if (!$db) {
-    echo json_encode(['status' => 'skip', 'message' => 'Database connection unavailable']);
+    if (file_exists(__DIR__ . '/../../common/ApiBridge.php')) {
+      require_once __DIR__ . '/../../common/ApiBridge.php';
+      $payload = [
+        'action'    => 'save_user_address',
+        'label'     => trim($addressReq['label'] ?? 'Home'),
+        'address'   => trim($addressReq['address'] ?? ''),
+        'landmark'  => trim($addressReq['landmark'] ?? ''),
+        'pincode'   => trim($addressReq['pincode'] ?? ''),
+        'latitude'  => $addressReq['latitude'] ?? ($addressReq['lat'] ?? ''),
+        'longitude' => $addressReq['longitude'] ?? ($addressReq['lng'] ?? ''),
+      ];
+      $apiRes = \Frontend\ApiBridge::callApi('web-portal-api.php', 'POST', $payload);
+      if (is_array($apiRes)) {
+        echo json_encode($apiRes);
+        exit;
+      }
+    }
+    echo json_encode(['status' => 'error', 'message' => 'Unable to reach Central Backend API to save address.']);
     exit;
   }
   try {
@@ -370,6 +387,40 @@ if ($db) {
     $stmtBranches->execute();
     $providerBranches = $stmtBranches->fetchAll(PDO::FETCH_ASSOC);
   } catch (\Throwable $e) { }
+} elseif (file_exists(__DIR__ . '/../../common/ApiBridge.php')) {
+  require_once __DIR__ . '/../../common/ApiBridge.php';
+  $initEndpoint = 'web-portal-api.php?action=vehicle_wash_init' . (!empty($_GET['booking_id']) ? '&booking_id=' . (int)$_GET['booking_id'] : '');
+  $initData = \Frontend\ApiBridge::callApi($initEndpoint);
+  if (!empty($initData['status']) && $initData['status'] === 'success') {
+    if (!empty($initData['fee'])) {
+      $initial_convenience_fee     = (float)($initData['fee']['fee_amount'] ?? 20.00);
+      $initial_fee_type            = ($initData['fee']['fee_type'] ?? 'fixed') === 'percentage' ? 'percentage' : 'fixed';
+      $initial_fee_active          = !empty($initData['fee']['is_active']) ? 1 : 0;
+      $initial_fee_scope           = $initData['fee']['service_scope'] ?? 'all';
+      $initial_applicable_services = is_array($initData['fee']['applicable_services'] ?? null) ? $initData['fee']['applicable_services'] : [];
+      $is_vehicle_in_fee_scope     = ($initial_fee_scope === 'all')
+        || in_array('car-wash', $initial_applicable_services)
+        || in_array('bike-wash', $initial_applicable_services)
+        || in_array('vehicle-repair', $initial_applicable_services)
+        || in_array('others-wash-services', $initial_applicable_services)
+        || in_array('vehicle-services', $initial_applicable_services)
+        || in_array('1', $initial_applicable_services)
+        || in_array('2', $initial_applicable_services);
+    }
+    $currentUser      = is_array($initData['currentUser'] ?? null) ? $initData['currentUser'] : [];
+    $userAddresses    = is_array($initData['userAddresses'] ?? null) ? $initData['userAddresses'] : [];
+    $allSubcategories = is_array($initData['allSubcategories'] ?? null) ? $initData['allSubcategories'] : [];
+    $allServices      = is_array($initData['allServices'] ?? null) ? $initData['allServices'] : [];
+    $providers        = is_array($initData['providers'] ?? null) ? $initData['providers'] : [];
+    $providerBranches = is_array($initData['providerBranches'] ?? null) ? $initData['providerBranches'] : [];
+    if (!empty($initData['profile']) && is_array($initData['profile'])) {
+      $p = $initData['profile'];
+      if (!empty($p['phone_number']) && strpos($p['phone_number'], '@') === false) $verifiedPhone = trim($p['phone_number']);
+      if (!empty($p['full_name'])) $verifiedName = trim($p['full_name']);
+      if (!empty($p['email_address'])) $verifiedEmail = trim($p['email_address']);
+    }
+    $apiPreselectedBooking = $initData['preselectedBooking'] ?? null;
+  }
 }
 
 // -------------------------------------------------------
@@ -394,7 +445,7 @@ $preselectedSubcat = isset($_GET['subcat']) ? trim($_GET['subcat']) : null;
 $preselectedVehicle = isset($_GET['vehicle']) ? trim($_GET['vehicle']) : null;
 $isSelectVehicleMode = (isset($_GET['select_vehicle']) && $_GET['select_vehicle'] == '1');
 
-$preselectedBooking = null;
+$preselectedBooking = $apiPreselectedBooking ?? null;
 if (isset($_GET['booking_id']) && $db) {
   try {
     $stmtB = $db->prepare("

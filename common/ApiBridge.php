@@ -79,8 +79,8 @@ class ApiBridge {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         $headers = [
@@ -89,6 +89,7 @@ class ApiBridge {
         ];
         if (!empty($_SESSION['access_token'])) {
             $headers[] = 'Authorization: Bearer ' . $_SESSION['access_token'];
+            $headers[] = 'X-Auth-Token: ' . $_SESSION['access_token'];
         }
         if (!empty($_SESSION['user_id'])) {
             $headers[] = 'X-Customer-Id: ' . (int)$_SESSION['user_id'];
