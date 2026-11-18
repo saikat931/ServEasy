@@ -50,7 +50,40 @@
         if (!options.headers['Accept']) {
             options.headers['Accept'] = 'application/json';
         }
+        try {
+            var token = localStorage.getItem('serveasy_access_token');
+            if (token && !options.headers['Authorization']) {
+                options.headers['Authorization'] = 'Bearer ' + token;
+            }
+        } catch (e) {}
         var url = window.serveasyApiUrl(endpoint);
         return fetch(url, options);
     };
+
+    // Auto-attach JWT Authorization header for all cross-domain API requests to SERVEASY_API_BASE
+    if (typeof window.fetch === 'function' && !window.__serveasyFetchPatched) {
+        window.__serveasyFetchPatched = true;
+        var nativeFetch = window.fetch.bind(window);
+        window.fetch = function(input, init) {
+            try {
+                var reqUrl = (typeof input === 'string') ? input : (input && input.url ? input.url : '');
+                var apiBase = window.SERVEASY_API_BASE || '';
+                if (apiBase && reqUrl && reqUrl.indexOf(apiBase) === 0) {
+                    var token = localStorage.getItem('serveasy_access_token');
+                    if (token) {
+                        init = init ? Object.assign({}, init) : {};
+                        if (init.headers instanceof Headers) {
+                            if (!init.headers.has('Authorization')) init.headers.set('Authorization', 'Bearer ' + token);
+                        } else {
+                            init.headers = Object.assign({}, init.headers || {});
+                            if (!init.headers['Authorization'] && !init.headers['authorization']) {
+                                init.headers['Authorization'] = 'Bearer ' + token;
+                            }
+                        }
+                    }
+                }
+            } catch (e) {}
+            return nativeFetch(input, init);
+        };
+    }
 })(window);

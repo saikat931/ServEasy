@@ -1,3 +1,9 @@
+# Local / live environment & database credential files
+.env
+.env.local
+db.env
+host.env
+
 # OS generated files
 .DS_Store
 Thumbs.db

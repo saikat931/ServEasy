@@ -352,6 +352,21 @@ if (isset($_SESSION['user_id'])) {
         }
 
         window.addEventListener("focus", refreshOtpConfig);
+        window.addEventListener("DOMContentLoaded", function () {
+            refreshOtpConfig();
+            const idEl = document.getElementById("identity");
+            const otpEl = document.getElementById("otp");
+            if (idEl) {
+                idEl.addEventListener("keydown", function (e) {
+                    if (e.key === "Enter") { e.preventDefault(); sendOTP(); }
+                });
+            }
+            if (otpEl) {
+                otpEl.addEventListener("keydown", function (e) {
+                    if (e.key === "Enter") { e.preventDefault(); verifyOTP(); }
+                });
+            }
+        });
 
         function validateIdentity() {
             let identity = document.getElementById("identity").value.trim();
@@ -468,8 +483,38 @@ if (isset($_SESSION['user_id'])) {
                 body: "action=verify_otp&identity=" + encodeURIComponent(identity) + "&otp=" + encodeURIComponent(otp)
             })
                 .then(res => res.json())
-                .then(data => {
+                .then(async data => {
                     if (data.status == "success") {
+                        try {
+                            if (data.access_token) localStorage.setItem("serveasy_access_token", data.access_token);
+                            if (data.user) localStorage.setItem("serveasy_user", JSON.stringify(data.user));
+                        } catch (e) {}
+
+                        // Sync PHP session on this Web domain (required for split-domain Hostinger deployments)
+                        if (data.access_token) {
+                            try {
+                                const syncRes = await fetch("./session-sync.php", {
+                                    method: "POST",
+                                    credentials: "same-origin",
+                                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                                    body: "access_token=" + encodeURIComponent(data.access_token)
+                                });
+                                const syncData = await syncRes.json();
+                                if (!syncData || syncData.status !== "success") {
+                                    verifyBtn.innerHTML = '<span>Verify & Login</span><ion-icon name="checkmark-circle-outline"></ion-icon>';
+                                    verifyBtn.disabled = false;
+                                    Notify.error((syncData && syncData.message) || "Failed to initialize session");
+                                    return;
+                                }
+                            } catch (syncErr) {
+                                console.error("Session sync error:", syncErr);
+                                verifyBtn.innerHTML = '<span>Verify & Login</span><ion-icon name="checkmark-circle-outline"></ion-icon>';
+                                verifyBtn.disabled = false;
+                                Notify.error("Could not establish login session. Please try again.");
+                                return;
+                            }
+                        }
+
                         const urlParams = new URLSearchParams(window.location.search);
                         const serverRedirect = <?php echo json_encode($redirect_param); ?>;
                         let redirectTarget = urlParams.get('redirect') || serverRedirect;
@@ -486,7 +531,7 @@ if (isset($_SESSION['user_id'])) {
                         if (redirectTarget) {
                             window.location.href = redirectTarget;
                         } else {
-                            window.location = "../../../Frontend/Web/index.php";
+                            window.location = "../index.php";
                         }
                     } else {
                         verifyBtn.innerHTML = '<span>Verify & Login</span><ion-icon name="checkmark-circle-outline"></ion-icon>';

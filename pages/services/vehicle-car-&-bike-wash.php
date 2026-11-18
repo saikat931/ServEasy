@@ -23,6 +23,12 @@ if (!$isLoggedIn) {
 
 // Connect to DB
 $db = class_exists('App\Helpers\DB') ? \App\Helpers\DB::getConnection() : null;
+if (!$db && file_exists(__DIR__ . '/../../common/db_connection.php')) {
+  require_once __DIR__ . '/../../common/db_connection.php';
+  if (class_exists('ServEasyWebDB')) {
+    $db = ServEasyWebDB::connect();
+  }
+}
 
 // Fetch convenience fee from platform_settings in serveasy-admin
 $initial_convenience_fee = 20.00;

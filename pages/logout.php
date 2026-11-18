@@ -10,8 +10,20 @@ if (ini_get("session.use_cookies")) {
         $params["secure"], $params["httponly"]
     );
 }
+setcookie('access_token', '', time() - 3600, '/');
 session_unset();
 session_destroy();
-
-header("Location: ../index.php");
-exit;
+?>
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Logging out...</title></head>
+<body>
+<script>
+try {
+    localStorage.removeItem('serveasy_access_token');
+    localStorage.removeItem('serveasy_user');
+} catch (e) {}
+window.location.replace('../index.php');
+</script>
+</body>
+</html>

@@ -3,9 +3,10 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Redirect or default to active customer in demo mode
 if (!isset($_SESSION['user_id'])) {
-    $_SESSION['user_id'] = 8;
+    $target_url = $_SERVER['REQUEST_URI'] ?? './user-profile.php';
+    header("Location: ../auth/auth.php?redirect=" . urlencode($target_url));
+    exit;
 }
 
 $bPath = file_exists(__DIR__ . '/../../backend/api/bootstrap.php')
@@ -15,6 +16,12 @@ $bPath = file_exists(__DIR__ . '/../../backend/api/bootstrap.php')
         : null);
 if ($bPath && file_exists($bPath)) { require_once $bPath; }
 $db = class_exists('App\Helpers\DB') ? \App\Helpers\DB::getConnection() : null;
+if (!$db && file_exists(__DIR__ . '/../common/db_connection.php')) {
+    require_once __DIR__ . '/../common/db_connection.php';
+    if (class_exists('ServEasyWebDB')) {
+        $db = ServEasyWebDB::connect();
+    }
+}
 $user_id = (int)$_SESSION['user_id'];
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -22,6 +29,10 @@ $user_id = (int)$_SESSION['user_id'];
 // ──────────────────────────────────────────────────────────────────────────────
 if (isset($_POST['ajax_action'])) {
     header('Content-Type: application/json');
+    if (!$db) {
+        echo json_encode(['status' => 'error', 'message' => 'Direct profile database unavailable on standalone domain.']);
+        exit;
+    }
     try {
         // ACTION: Update Personal Info in site_user
         if ($_POST['ajax_action'] === 'update_personal_info') {
@@ -162,17 +173,41 @@ if (isset($_POST['ajax_action'])) {
 // ──────────────────────────────────────────────────────────────────────────────
 
 // 1. Fetch site_user
-$stmtUser = $db->prepare("SELECT id, full_name, email_address, phone_number, is_active, created_at, updated_at FROM `site_user` WHERE id = ? LIMIT 1");
-$stmtUser->execute([$user_id]);
-$user = $stmtUser->fetch(PDO::FETCH_ASSOC);
+$user = null;
+if ($db) {
+    $stmtUser = $db->prepare("SELECT id, full_name, email_address, phone_number, is_active, created_at, updated_at FROM `site_user` WHERE id = ? LIMIT 1");
+    $stmtUser->execute([$user_id]);
+    $user = $stmtUser->fetch(PDO::FETCH_ASSOC);
 
-if (!$user) {
-    // Fallback to first available site_user
-    $userFallback = $db->query("SELECT id, full_name, email_address, phone_number, is_active, created_at, updated_at FROM `site_user` ORDER BY id ASC LIMIT 1")->fetch(PDO::FETCH_ASSOC);
-    if ($userFallback) {
-        $user = $userFallback;
-        $user_id = (int)$user['id'];
-        $_SESSION['user_id'] = $user_id;
+    if (!$user) {
+        $userFallback = $db->query("SELECT id, full_name, email_address, phone_number, is_active, created_at, updated_at FROM `site_user` ORDER BY id ASC LIMIT 1")->fetch(PDO::FETCH_ASSOC);
+        if ($userFallback) {
+            $user = $userFallback;
+            $user_id = (int)$user['id'];
+            $_SESSION['user_id'] = $user_id;
+        }
+    }
+} else {
+    $user = [
+        'id'            => $user_id,
+        'full_name'     => $_SESSION['full_name'] ?? '',
+        'email_address' => $_SESSION['email'] ?? '',
+        'phone_number'  => $_SESSION['phone'] ?? '',
+        'is_active'     => 1,
+        'created_at'    => null,
+        'updated_at'    => null,
+    ];
+    if (file_exists(__DIR__ . '/../common/ApiBridge.php')) {
+        require_once __DIR__ . '/../common/ApiBridge.php';
+        $pRes = \Frontend\ApiBridge::callApi('profile.php');
+        if (!empty($pRes['data']) && is_array($pRes['data'])) {
+            $pd = $pRes['data'];
+            $user['full_name'] = $pd['full_name'] ?? trim(($pd['first_name'] ?? '') . ' ' . ($pd['last_name'] ?? '')) ?: $user['full_name'];
+            $user['email_address'] = $pd['email_address'] ?? $pd['email'] ?? $user['email_address'];
+            $user['phone_number'] = $pd['phone_number'] ?? $pd['phone'] ?? $user['phone_number'];
+            $user['created_at'] = $pd['created_at'] ?? null;
+            $user['updated_at'] = $pd['updated_at'] ?? null;
+        }
     }
 }
 
@@ -192,15 +227,18 @@ if (!empty($nameParts[1])) $initials .= strtoupper(substr($nameParts[1], 0, 1));
 if (empty($initials)) $initials = 'SE';
 
 // 2. Fetch KYC verification from id_verifications
-$stmtKyc = $db->prepare("
-    SELECT verification_id, id_type, id_number, verification_status, created_at, verified_at 
-    FROM `id_verifications` 
-    WHERE user_id = ? 
-    ORDER BY verification_id DESC 
-    LIMIT 1
-");
-$stmtKyc->execute([$user_id]);
-$kyc = $stmtKyc->fetch(PDO::FETCH_ASSOC);
+$kyc = null;
+if ($db) {
+    $stmtKyc = $db->prepare("
+        SELECT verification_id, id_type, id_number, verification_status, created_at, verified_at 
+        FROM `id_verifications` 
+        WHERE user_id = ? 
+        ORDER BY verification_id DESC 
+        LIMIT 1
+    ");
+    $stmtKyc->execute([$user_id]);
+    $kyc = $stmtKyc->fetch(PDO::FETCH_ASSOC);
+}
 $kycStatus = $kyc ? ($kyc['verification_status'] ?: 'unverified') : 'unverified';
 $maskedIdNumber = '';
 if (!empty($kyc['id_number'])) {
@@ -209,30 +247,41 @@ if (!empty($kyc['id_number'])) {
 }
 
 // 3. Fetch Booking Stats from vehicle_wash
-$stmtStats = $db->prepare("
-    SELECT 
-        COUNT(*) as total_bookings,
-        SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed_bookings,
-        SUM(CASE WHEN status IN ('pending', 'accepted', 'in_progress') THEN 1 ELSE 0 END) as active_bookings,
-        COALESCE(SUM(CASE WHEN status = 'completed' THEN total_amount ELSE 0 END), 0) as total_spent
-    FROM `vehicle_wash` 
-    WHERE customer_id = ?
-");
-$stmtStats->execute([$user_id]);
-$stats = $stmtStats->fetch(PDO::FETCH_ASSOC);
+$stats = [];
+if ($db) {
+    $stmtStats = $db->prepare("
+        SELECT 
+            COUNT(*) as total_bookings,
+            SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed_bookings,
+            SUM(CASE WHEN status IN ('pending', 'accepted', 'in_progress') THEN 1 ELSE 0 END) as active_bookings,
+            COALESCE(SUM(CASE WHEN status = 'completed' THEN total_amount ELSE 0 END), 0) as total_spent
+        FROM `vehicle_wash` 
+        WHERE customer_id = ?
+    ");
+    $stmtStats->execute([$user_id]);
+    $stats = $stmtStats->fetch(PDO::FETCH_ASSOC) ?: [];
+}
 $totalBookings = (int)($stats['total_bookings'] ?? 0);
 $completedBookings = (int)($stats['completed_bookings'] ?? 0);
 $activeBookings = (int)($stats['active_bookings'] ?? 0);
 $totalSpent = number_format((float)($stats['total_spent'] ?? 0), 2);
 
 // 4. Fetch User Addresses from user_addresses
-$stmtAddr = $db->prepare("SELECT * FROM `user_addresses` WHERE user_id = ? ORDER BY is_default DESC, created_at DESC");
-$stmtAddr->execute([$user_id]);
-$rawAddresses = $stmtAddr->fetchAll(PDO::FETCH_ASSOC);
+$rawAddresses = [];
+if ($db) {
+    $stmtAddr = $db->prepare("SELECT * FROM `user_addresses` WHERE user_id = ? ORDER BY is_default DESC, created_at DESC");
+    $stmtAddr->execute([$user_id]);
+    $rawAddresses = $stmtAddr->fetchAll(PDO::FETCH_ASSOC);
+} elseif (class_exists('Frontend\ApiBridge')) {
+    $aRes = \Frontend\ApiBridge::callApi('addresses.php');
+    if (!empty($aRes['data']) && is_array($aRes['data'])) {
+        $rawAddresses = $aRes['data'];
+    }
+}
 $seenKeys = [];
 $addresses = [];
 foreach ($rawAddresses as $addr) {
-    $key = strtolower(trim($addr['address'])) . '|' . trim($addr['pincode']);
+    $key = strtolower(trim($addr['address'] ?? '')) . '|' . trim($addr['pincode'] ?? '');
     if (!isset($seenKeys[$key])) {
         $seenKeys[$key] = true;
         $addresses[] = $addr;
@@ -240,15 +289,23 @@ foreach ($rawAddresses as $addr) {
 }
 
 // 5. Fetch Recent Bookings from vehicle_wash
-$stmtRecent = $db->prepare("
-    SELECT id, booking_number, vehicle_type, vehicle_brand, vehicle_model, vehicle_reg_no, schedule_date, schedule_time, total_amount, status, payment_status, payment_method, created_at
-    FROM `vehicle_wash`
-    WHERE customer_id = ?
-    ORDER BY id DESC
-    LIMIT 4
-");
-$stmtRecent->execute([$user_id]);
-$recentBookings = $stmtRecent->fetchAll(PDO::FETCH_ASSOC);
+$recentBookings = [];
+if ($db) {
+    $stmtRecent = $db->prepare("
+        SELECT id, booking_number, vehicle_type, vehicle_brand, vehicle_model, vehicle_reg_no, schedule_date, schedule_time, total_amount, status, payment_status, payment_method, created_at
+        FROM `vehicle_wash`
+        WHERE customer_id = ?
+        ORDER BY id DESC
+        LIMIT 4
+    ");
+    $stmtRecent->execute([$user_id]);
+    $recentBookings = $stmtRecent->fetchAll(PDO::FETCH_ASSOC);
+} elseif (class_exists('Frontend\ApiBridge')) {
+    $bRes = \Frontend\ApiBridge::callApi('bookings.php?customer_id=' . $user_id);
+    if (!empty($bRes['data']) && is_array($bRes['data'])) {
+        $recentBookings = array_slice($bRes['data'], 0, 4);
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

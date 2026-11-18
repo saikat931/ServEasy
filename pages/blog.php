@@ -15,10 +15,20 @@ if ($dbPath && file_exists($dbPath)) {
         try { $pdo = Database::connect(); } catch (\Throwable $t) {}
     }
 }
+if (!$pdo && file_exists(__DIR__ . '/../common/db_connection.php')) {
+    require_once __DIR__ . '/../common/db_connection.php';
+    if (class_exists('ServEasyWebDB')) {
+        $pdo = ServEasyWebDB::connect();
+    }
+}
 
 // ── Handle AJAX Requests ────────────────────────────────────────────────
 if (isset($_REQUEST['ajax_action'])) {
     header('Content-Type: application/json');
+    if (!$pdo) {
+        echo json_encode(['status' => 'error', 'message' => 'Blog database unavailable']);
+        exit;
+    }
     $action = $_REQUEST['ajax_action'];
 
     // 1. Like Post Action
@@ -63,7 +73,7 @@ if (isset($_REQUEST['ajax_action'])) {
 
 // ── Single Post View Mode ───────────────────────────────────────────────
 $single_post = null;
-if (!empty($_GET['id']) || !empty($_GET['slug'])) {
+if ($pdo && (!empty($_GET['id']) || !empty($_GET['slug']))) {
     if (!empty($_GET['id'])) {
         $stmt = $pdo->prepare("SELECT * FROM blog_posts WHERE id = ? AND status = 'published' LIMIT 1");
         $stmt->execute([(int)$_GET['id']]);
@@ -80,7 +90,12 @@ if (!empty($_GET['id']) || !empty($_GET['slug'])) {
 }
 
 // ── Fetch All Published Posts for Catalog Mode ──────────────────────────
-$published_posts = $pdo->query("SELECT * FROM blog_posts WHERE status = 'published' ORDER BY created_at DESC")->fetchAll(PDO::FETCH_ASSOC);
+$published_posts = [];
+if ($pdo) {
+    try {
+        $published_posts = $pdo->query("SELECT * FROM blog_posts WHERE status = 'published' ORDER BY created_at DESC")->fetchAll(PDO::FETCH_ASSOC);
+    } catch (\Throwable $t) {}
+}
 
 // Extract featured post (first post) and regular grid posts
 $featured_post = null;

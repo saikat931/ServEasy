@@ -83,10 +83,17 @@ class ApiBridge {
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        $headers = [
             'Accept: application/json',
             'User-Agent: ServEasy-Frontend-Bridge/1.0'
-        ]);
+        ];
+        if (!empty($_SESSION['access_token'])) {
+            $headers[] = 'Authorization: Bearer ' . $_SESSION['access_token'];
+        }
+        if (!empty($_SESSION['user_id'])) {
+            $headers[] = 'X-Customer-Id: ' . (int)$_SESSION['user_id'];
+        }
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
         if (strtoupper($method) === 'POST') {
             curl_setopt($ch, CURLOPT_POST, true);
