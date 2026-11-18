@@ -473,9 +473,9 @@ if (isset($_GET['booking_id']) && $db) {
 
   <base href="../">
 
-  <!-- Solution A: Customer Web Independent Config & API Bridge -->
-  <script src="../config.js" onerror="this.onerror=null;this.src='../../config.js';"></script>
-  <script src="./assets/js/serveasy-api-bridge.js"></script>
+  <!-- Solution A: Customer Web Independent Config & API Bridge (Cache-Busted for Hostinger) -->
+  <script src="../config.js?v=20261118v2" onerror="this.onerror=null;this.src='../../config.js?v=20261118v2';"></script>
+  <script src="./assets/js/serveasy-api-bridge.js?v=20261118v2"></script>
 
   <!-- Favicon -->
   <link rel="shortcut icon" href="./assets/favicon.svg" type="image/svg+xml">
@@ -2279,8 +2279,6 @@ if (isset($_GET['booking_id']) && $db) {
   </a>
 
   <!-- JS imports -->
-  <script src="../config.js" onerror="this.onerror=null;this.src='../../config.js';"></script>
-  <script src="./assets/js/serveasy-api-bridge.js"></script>
   <script src="./assets/js/script.js"></script>
   <script src="./assets/js/notify.js"></script>
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
@@ -4435,7 +4433,7 @@ if (isset($_GET['booking_id']) && $db) {
         package_id: bookingState.packageId,
         provider_id: bookingState.providerId,
         schedule_date: bookingState.date,
-        schedule_time: bookingState.timeSlot.split(' – ')[0],
+        schedule_time: String(bookingState.timeSlot || '').split(/\s*[–-]\s*/)[0].trim(),
         address: formattedAddress,
         latitude: latVal,
         longitude: lngVal,
@@ -4456,17 +4454,28 @@ if (isset($_GET['booking_id']) && $db) {
       };
 
       try {
-        const bUrl = (window.serveasyApiUrl ? window.serveasyApiUrl("bookings.php") : ((window.SERVEASY_API_BASE || "../../../backend/api/") + "bookings.php"));
+        const isLocalHost = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+        let bUrl = (window.serveasyApiUrl ? window.serveasyApiUrl("bookings.php") : ((window.SERVEASY_API_BASE || "https://beige-curlew-610555.hostingersite.com/api/") + "bookings.php"));
+        if (!isLocalHost && (bUrl.indexOf('ServEasy-v2') !== -1 || bUrl.indexOf(window.location.origin) === 0 || bUrl.indexOf('../') === 0)) {
+          bUrl = 'https://beige-curlew-610555.hostingersite.com/api/bookings.php';
+        }
         const res = await fetch(bUrl, {
           method: 'POST',
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
             'X-Customer-Id': String(effectiveCustomerId)
           },
           body: JSON.stringify(payload)
         });
-        const result = await res.json();
+        const rawText = await res.text();
+        let result;
+        try {
+          result = JSON.parse(rawText);
+        } catch (parseErr) {
+          throw new Error(`Invalid server response (HTTP ${res.status} from ${bUrl})`);
+        }
 
         if (result.success && result.data) {
           const booking = result.data;

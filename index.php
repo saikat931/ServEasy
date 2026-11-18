@@ -48,8 +48,8 @@ if (class_exists('App\Repositories\ServiceRepository')) {
   <base href="pages/">
 
   <!-- Solution A: Customer Web Independent Config & API Bridge -->
-  <script src="../config.js" onerror="this.onerror=null;this.src='./config.js';"></script>
-  <script src="./assets/js/serveasy-api-bridge.js"></script>
+  <script src="../config.js?v=20261118v2" onerror="this.onerror=null;this.src='./config.js?v=20261118v2';"></script>
+  <script src="./assets/js/serveasy-api-bridge.js?v=20261118v2"></script>
 
   <!-- Favicon -->
   <link rel="shortcut icon" href="./assets/favicon.svg" type="image/svg+xml">

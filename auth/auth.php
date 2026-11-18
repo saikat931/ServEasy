@@ -40,8 +40,8 @@ if (isset($_SESSION['user_id'])) {
 <html lang="en">
 
 <head>
-  <script src="../config.js"></script>
-  <script src="../pages/assets/js/serveasy-api-bridge.js"></script>
+  <script src="../config.js?v=20261118v2"></script>
+  <script src="../pages/assets/js/serveasy-api-bridge.js?v=20261118v2"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | ServEasy</title>

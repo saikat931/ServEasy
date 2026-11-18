@@ -40,9 +40,9 @@ $nav_pages_root = $nav_web_root . '/pages';
 // }
 ?>
   
-  <!-- Solution A: Customer Web Independent Config & API Bridge -->
-  <script src="<?= $nav_web_root ?>/config.js"></script>
-  <script src="<?= $nav_web_root ?>/pages/assets/js/serveasy-api-bridge.js"></script>
+  <!-- Solution A: Customer Web Independent Config & API Bridge (Cache-Busted for Hostinger) -->
+  <script src="<?= $nav_web_root ?>/config.js?v=20261118v2"></script>
+  <script src="<?= $nav_web_root ?>/pages/assets/js/serveasy-api-bridge.js?v=20261118v2"></script>
 
   <!-- Instant Theme Bootstrapper (Zero Flash) -->
   <script>
