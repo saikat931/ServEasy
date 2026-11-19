@@ -455,19 +455,19 @@
 
         if (sCatId === catVal || sCatClass === 'cat-' + catVal || sCatSlug === catVal || sCatSlug.includes(catVal) || sCatName.includes(catVal)) {
           matchesCat = true;
-        } else if (catVal === 'automotive' && (sCatId === '1' || sCatSlug === 'vehicle-services')) {
+        } else if ((catVal === 'automotive' || catVal === 'vehicle-services' || catVal === '1') && (sCatId === '1' || sCatSlug === 'vehicle-services')) {
           matchesCat = true;
-        } else if (catVal === 'home' && (sCatId === '2' || sCatSlug === 'home-services')) {
+        } else if ((catVal === 'home' || catVal === 'home-services' || catVal === '2') && (sCatId === '2' || sCatSlug === 'home-services')) {
           matchesCat = true;
-        } else if (catVal === 'care' && (sCatId === '3' || sCatSlug === 'personal-staff-&-maids')) {
+        } else if ((catVal === 'care' || catVal === 'personal-staff-&-maids' || catVal === '3') && (sCatId === '3' || sCatSlug === 'personal-staff-&-maids')) {
           matchesCat = true;
-        } else if (catVal === 'transport' && (sCatId === '4' || sCatSlug === 'transport-&-rental')) {
+        } else if ((catVal === 'transport' || catVal === 'transport-&-rental' || catVal === '4') && (sCatId === '4' || sCatSlug === 'transport-&-rental')) {
           matchesCat = true;
-        } else if (catVal === 'stay' && (sCatId === '5' || sCatSlug === 'rooms-&-lodging')) {
+        } else if ((catVal === 'stay' || catVal === 'rooms-&-lodging' || catVal === '5') && (sCatId === '5' || sCatSlug === 'rooms-&-lodging')) {
           matchesCat = true;
-        } else if (catVal === 'food' && (sCatId === '6' || sCatSlug === 'food-&-dining')) {
+        } else if ((catVal === 'food' || catVal === 'food-&-dining' || catVal === '6') && (sCatId === '6' || sCatSlug === 'food-&-dining')) {
           matchesCat = true;
-        } else if (catVal === 'emergency' && (sCatId === '7' || sCatSlug === 'emergency-sos')) {
+        } else if ((catVal === 'emergency' || catVal === 'emergency-sos' || catVal === '7') && (sCatId === '7' || sCatSlug === 'emergency-sos')) {
           matchesCat = true;
         }
       }
