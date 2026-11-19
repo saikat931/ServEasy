@@ -410,9 +410,6 @@ if (class_exists('App\Repositories\ServiceRepository')) {
         if (loader) loader.style.display = 'none';
       }
     }
-        if (loader) loader.style.display = 'none';
-      }
-    }
 
     // Bind event listeners
     if (searchInput) {
