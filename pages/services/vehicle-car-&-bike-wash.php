@@ -2944,93 +2944,94 @@ if (isset($_GET['booking_id']) && $db) {
       return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
     }
 
-    /** Save new address via AJAX and auto-select it */
+    /** Save new address and auto-select it immediately (Atomic 1-POST optimization) */
     function saveNewAddressFromModal() {
-      const label = document.getElementById('modal-addr-label').value.trim();
+      const label = document.getElementById('modal-addr-label').value.trim() || 'Home';
       const address = document.getElementById('modal-addr-address').value.trim();
       const landmark = document.getElementById('modal-addr-landmark').value.trim();
       const pincode = document.getElementById('modal-addr-pincode').value.trim();
       const lat = document.getElementById('modal-addr-lat').value;
       const lng = document.getElementById('modal-addr-lng').value;
 
-      if (!label || !address || !landmark || !pincode) {
-        if (typeof Notify !== 'undefined') Notify.warning('Please fill in all address fields.');
-        else alert('Please fill in all address fields.');
+      if (!address || !pincode) {
+        if (typeof Notify !== 'undefined') Notify.warning('Please enter your full address and pincode.');
+        else alert('Please enter your full address and pincode.');
         return;
       }
 
-      const body = new URLSearchParams({
-        ajax_action: 'save_user_address',
+      // Populate bookingState locally immediately (0 wait time, atomic booking)
+      bookingState.address = address;
+      bookingState.landmark = landmark;
+      bookingState.pincode = pincode;
+      bookingState.lat = parseFloat(lat) || null;
+      bookingState.lng = parseFloat(lng) || null;
+      bookingState.addressLabel = label;
+      bookingState.isNewAddress = true;
+
+      // Update location input display
+      const locInput = document.getElementById('loc-address');
+      if (locInput) locInput.value = address;
+      const locLandmark = document.getElementById('loc-landmark');
+      if (locLandmark) locLandmark.value = landmark;
+      const locPincode = document.getElementById('loc-pincode');
+      if (locPincode) locPincode.value = pincode;
+
+      const addrObj = {
+        id: 'new_' + Date.now(),
         label: label,
         address: address,
-        landmark: landmark,
+        landmark: landmark || 'N/A',
         pincode: pincode,
         latitude: lat,
         longitude: lng
-      });
+      };
 
-      fetch(window.location.pathname + window.location.search, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: body.toString(),
-      })
-      .then(r => r.json())
-      .then(data => {
-        if (data.status === 'ok') {
-          Notify.success(data.already_exists ? '📍 Address already saved — selected!' : '📍 New address saved successfully!');
-          
-          const container = document.getElementById('saved-addresses-radios-container');
-          const notice = document.getElementById('no-addresses-notice');
-          if (notice) notice.remove();
+      const container = document.getElementById('saved-addresses-radios-container');
+      const notice = document.getElementById('no-addresses-notice');
+      if (notice) notice.remove();
 
-          // Check if radio already exists in container to prevent DOM duplication
-          let existingRadio = null;
-          const radios = container.querySelectorAll('input[name="saved-address-choice"]');
-          radios.forEach(r => {
-            try {
-              const parsed = JSON.parse(r.value);
-              if (parsed.id == data.address.id || (parsed.address && data.address.address && parsed.address.toLowerCase().trim() === data.address.address.toLowerCase().trim() && parsed.pincode == data.address.pincode)) {
-                existingRadio = r;
-              }
-            } catch(e) {}
-          });
+      // Check if radio already exists in container to prevent DOM duplication
+      let existingRadio = null;
+      if (container) {
+        const radios = container.querySelectorAll('input[name="saved-address-choice"]');
+        radios.forEach(r => {
+          try {
+            const parsed = JSON.parse(r.value);
+            if (parsed.address && parsed.address.toLowerCase().trim() === address.toLowerCase().trim() && parsed.pincode == pincode) {
+              existingRadio = r;
+            }
+          } catch(e) {}
+        });
 
-          if (existingRadio) {
-            existingRadio.value = JSON.stringify(data.address);
-            existingRadio.checked = true;
-            onSavedAddressRadioChange(existingRadio);
-          } else {
-            const labelVal = data.address.label;
-            const addressVal = data.address.address;
-            const landmarkVal = data.address.landmark || 'N/A';
-            const pincodeVal = data.address.pincode;
-            const jsonDataStr = JSON.stringify(data.address);
-
-            const wrapper = document.createElement('label');
-            wrapper.className = 'saved-address-radio-item';
-            wrapper.innerHTML = `
-              <input type="radio" name="saved-address-choice" value="${escapeHtmlForAttr(jsonDataStr)}" checked onclick="onSavedAddressRadioChange(this)">
-              <div>
-                <div>
-                  <strong>${escapeHtml(labelVal)}</strong>
-                </div>
-                <p>${escapeHtml(addressVal)}</p>
-                <small>Landmark: ${escapeHtml(landmarkVal)} | Pincode: ${escapeHtml(pincodeVal)}</small>
-              </div>
-            `;
-            container.appendChild(wrapper);
-            
-            // Trigger change handler
-            onSavedAddressRadioChange(wrapper.querySelector('input[type="radio"]'));
-          }
-          closeAddAddressModal();
+        if (existingRadio) {
+          existingRadio.value = JSON.stringify(addrObj);
+          existingRadio.checked = true;
+          onSavedAddressRadioChange(existingRadio);
         } else {
-          Notify.error('Failed to save address: ' + data.message);
+          const jsonDataStr = JSON.stringify(addrObj);
+          const wrapper = document.createElement('label');
+          wrapper.className = 'saved-address-radio-item';
+          wrapper.innerHTML = `
+            <input type="radio" name="saved-address-choice" value="${escapeHtmlForAttr(jsonDataStr)}" checked onclick="onSavedAddressRadioChange(this)">
+            <div>
+              <div>
+                <strong>${escapeHtml(label)}</strong>
+              </div>
+              <p>${escapeHtml(address)}</p>
+              <small>Landmark: ${escapeHtml(landmark || 'N/A')} | Pincode: ${escapeHtml(pincode)}</small>
+            </div>
+          `;
+          container.appendChild(wrapper);
+          onSavedAddressRadioChange(wrapper.querySelector('input[type="radio"]'));
         }
-      })
-      .catch(() => {
-        Notify.error('Error connecting to server.');
-      });
+      }
+
+      closeAddAddressModal();
+      if (typeof Notify !== 'undefined') {
+        Notify.success('📍 Address selected — saved atomically with your booking!');
+      }
+
+      validateStepRequirements();
     }
 
     /** Auto-fill form fields when a saved address radio option is checked */
@@ -3044,6 +3045,10 @@ if (isset($_GET['booking_id']) && $db) {
         document.getElementById('loc-pincode').value = addr.pincode || '';
         document.getElementById('loc-lat').value = addr.latitude || '';
         document.getElementById('loc-lng').value = addr.longitude || '';
+        bookingState.address = addr.address || '';
+        bookingState.landmark = addr.landmark || '';
+        bookingState.pincode = addr.pincode || '';
+        bookingState.addressLabel = addr.label || 'Home';
         if (addr.latitude && !isNaN(parseFloat(addr.latitude))) {
           bookingState.lat = parseFloat(addr.latitude);
         }
@@ -3205,6 +3210,19 @@ if (isset($_GET['booking_id']) && $db) {
     const dbCategoryMap = <?php echo json_encode($categoryMap); ?>;
     const dbBranches = <?php echo json_encode($providerBranches); ?>;
     const dbSubcategories = <?php echo json_encode($allSubcategories); ?>;
+
+    // SessionStorage Cache (15-min TTL) to ensure 0 HTTP requests on reload/catalog revisit
+    try {
+      const CACHE_KEY = 'serveasy_vwash_cache';
+      if (dbAllServices && dbAllServices.length > 0) {
+        sessionStorage.setItem(CACHE_KEY, JSON.stringify({
+          time: Date.now(),
+          services: dbAllServices,
+          providers: dbProviders,
+          categoryMap: dbCategoryMap
+        }));
+      }
+    } catch (ce) {}
 
     const preselectedServiceId = <?php echo $preselectedServiceId ? $preselectedServiceId : 'null'; ?>;
     const preselectedPackageId = <?php echo $preselectedPackageId ? $preselectedPackageId : 'null'; ?>;
@@ -4425,7 +4443,7 @@ if (isset($_GET['booking_id']) && $db) {
         ? bookingState.lng
         : (parseFloat(document.getElementById('loc-lng')?.value) || parseFloat(document.getElementById('modal-addr-lng')?.value) || null);
 
-      // Build payload – status=PENDING, no payment info yet
+      // Build payload – status=PENDING, no payment info yet (Atomic Booking with Address & Slot Validation)
       const effectiveCustomerId = bookingState.customerId || <?= (int)($_SESSION['user_id'] ?? 0) ?>;
       const payload = {
         customer_id: effectiveCustomerId,
@@ -4435,6 +4453,11 @@ if (isset($_GET['booking_id']) && $db) {
         schedule_date: bookingState.date,
         schedule_time: String(bookingState.timeSlot || '').split(/\s*[–-]\s*/)[0].trim(),
         address: formattedAddress,
+        raw_address: bookingState.address || null,
+        address_label: bookingState.addressLabel || 'Home',
+        landmark: bookingState.landmark || null,
+        pincode: bookingState.pincode || null,
+        save_address: 1,
         latitude: latVal,
         longitude: lngVal,
         lat: latVal,
@@ -4446,8 +4469,6 @@ if (isset($_GET['booking_id']) && $db) {
         vehicle_reg_no: bookingState.regNo,
         vehicle_color: bookingState.color || null,
         location_type: bookingState.locationType,
-        landmark: bookingState.landmark || null,
-        pincode: bookingState.pincode || null,
         extras: JSON.stringify(bookingState.extras),
         total_amount: bookingState.totalAmount,
         status: 'PENDING'
