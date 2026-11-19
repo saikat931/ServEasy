@@ -3,6 +3,12 @@
 # ==========================================================
 Options -Indexes
 
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Safeguard: Automatically normalize accidental /pages/pages/ URLs to /pages/
+    RewriteRule ^pages/pages/(.*)$ pages/$1 [R=301,L]
+</IfModule>
+
 # Protect sensitive files
 <FilesMatch "(\.env|\.env\..*|\.log|\.sql|\.git|composer\.(json|lock))$">
     <IfModule mod_authz_core.c>

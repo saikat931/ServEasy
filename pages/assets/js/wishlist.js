@@ -283,8 +283,9 @@
 
     // Book service action from aside drawer
     bookService: function(serviceId, serviceSlug, serviceName) {
+      const hasPagesBase = document.querySelector('base') && (document.querySelector('base').getAttribute('href') || '').includes('pages');
       const isPages = window.location.pathname.includes('/pages/');
-      const pagesBase = isPages ? './' : './pages/';
+      const pagesBase = (isPages || hasPagesBase) ? './' : './pages/';
       if (serviceSlug === 'vehicle-car-and-bike-wash' || serviceSlug === 'vehicle-car-&-bike-wash') {
         window.location.href = `${pagesBase}services/vehicle-car-&-bike-wash.php?service=vehicle-car-and-bike-wash&select_vehicle=1`;
       } else if (serviceSlug === 'personal-staff-and-maids' || serviceSlug === 'personal-staff-&-maids') {

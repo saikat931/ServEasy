@@ -13,7 +13,11 @@
   }
 
   function getPagesBase() {
-    return window.location.pathname.includes('/pages/') ? './' : './pages/';
+    const hasPagesBase = document.querySelector('base') && (document.querySelector('base').getAttribute('href') || '').includes('pages');
+    if (hasPagesBase || window.location.pathname.includes('/pages/')) {
+      return './';
+    }
+    return './pages/';
   }
 
   // Subcategory mappings to Icons and Badges

@@ -6,7 +6,7 @@
 
 if (!isset($categoriesData) || empty($categoriesData) || !isset($subcategoriesData) || empty($subcategoriesData)) {
     $isHomePage = isset($isHomeContext) && $isHomeContext;
-    $pagesPrefix = $isHomePage ? './pages/' : './';
+    $pagesPrefix = './';
     try {
         $dbConfigPath = file_exists(__DIR__ . '/../../../backend/config/db_connection.php')
             ? __DIR__ . '/../../../backend/config/db_connection.php'
@@ -328,7 +328,7 @@ if (!isset($categoriesData) || empty($categoriesData) || !isset($subcategoriesDa
                 'price_unit'    => '',
                 'description'   => "Explore verified " . strtolower($cat['name']) . " available directly on ServEasy.",
                 'subcategories' => $subs,
-                'service_link'  => (isset($nav_pages_root) ? $nav_pages_root : (isset($isHomeContext) && $isHomeContext ? './pages' : '.')) . "/services.php?category=" . urlencode($cat['slug'])
+                'service_link'  => "./services.php?category=" . urlencode($cat['slug'])
             ];
         }
     } catch (\Throwable $e) {
