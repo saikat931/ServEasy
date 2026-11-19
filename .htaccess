@@ -5,6 +5,10 @@ Options -Indexes
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    # Profile Aliases
+    RewriteRule ^profile/?$ pages/user-profile.php [L,QSA]
+    RewriteRule ^pages/profile/?$ pages/user-profile.php [L,QSA]
+
     # Safeguard: Automatically normalize accidental /pages/pages/ URLs to /pages/
     RewriteRule ^pages/pages/(.*)$ pages/$1 [R=301,L]
 </IfModule>

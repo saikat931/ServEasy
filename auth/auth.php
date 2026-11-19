@@ -21,7 +21,8 @@ $otpLabel = $otpConfig['label'] ?? 'Email or Phone Number';
 $otpPlaceholder = $otpConfig['placeholder'] ?? 'Please enter your phone number or email';
 $otpValidationMsg = $otpConfig['validation_message'] ?? 'Please enter a valid email or 10-digit mobile number.';
 $otpInputType = $otpConfig['input_type'] ?? 'text';
-session_start();
+
+require_once __DIR__ . '/../common/auth_session.php';
 
 $redirect_param = $_GET['redirect'] ?? $_SESSION['auth_redirect'] ?? '';
 if (!empty($_GET['redirect'])) {
@@ -42,6 +43,30 @@ if (isset($_SESSION['user_id'])) {
 <head>
   <script src="../config.js?v=20261118v2"></script>
   <script src="../pages/assets/js/serveasy-api-bridge.js?v=20261118v2"></script>
+  <script>
+    // Seamless client-side auto-rehydration: if user has active JWT in localStorage, auto-sync and redirect
+    (async function() {
+      try {
+        const token = localStorage.getItem('serveasy_access_token');
+        if (token) {
+          const res = await fetch('./session-sync.php', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'access_token=' + encodeURIComponent(token)
+          });
+          const data = await res.json();
+          if (data && data.status === 'success') {
+            const urlParams = new URLSearchParams(window.location.search);
+            const target = urlParams.get('redirect') || '../index.php';
+            window.location.replace(target);
+          }
+        }
+      } catch (e) {
+        console.warn("Client auto-sync error:", e);
+      }
+    })();
+  </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | ServEasy</title>

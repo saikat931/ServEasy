@@ -1,7 +1,5 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) { 
-    session_start(); 
-}
+require_once __DIR__ . '/../../common/auth_session.php';
 
 // Determine web root to generate robust, base-tag-immune URLs
 $script_path = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
@@ -574,10 +572,85 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
+// Client-side Profile Drawer Rehydration from localStorage (prevents flashing "Guest User" when token exists)
+(function() {
+  try {
+    const rawUser = localStorage.getItem('serveasy_user');
+    const token = localStorage.getItem('serveasy_access_token');
+    if (token) {
+      // Background sync to ensure PHP session cookie is alive
+      fetch('<?php echo htmlspecialchars($web_root); ?>/auth/session-sync.php', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'access_token=' + encodeURIComponent(token)
+      }).catch(function() {});
+
+      if (rawUser) {
+        const u = JSON.parse(rawUser);
+        const name = (u.full_name || u.name || '').trim();
+        const email = (u.email || u.email_address || '').trim();
+        const phone = (u.phone || u.phone_number || '').trim();
+
+        const nameEl = document.querySelector('.user-profile-meta .user-name');
+        if (nameEl && (nameEl.textContent.trim() === 'Guest User' || nameEl.textContent.trim() === 'Login or Register')) {
+          if (name) nameEl.textContent = name;
+          else if (email) nameEl.textContent = email;
+          else if (phone) nameEl.textContent = phone;
+        }
+
+        const identEl = document.querySelector('.user-identifier .user-email');
+        if (identEl && (identEl.textContent.trim() === 'Login or Register' || identEl.textContent.trim() === '')) {
+          identEl.textContent = phone || email || 'Verified Customer';
+        }
+
+        const subEl = document.querySelector('.user-profile-meta .user-subtext');
+        if (subEl) {
+          subEl.textContent = (email && phone) ? email : 'Verified Customer';
+        }
+
+        const monogramEl = document.querySelector('.user-avatar-badge .user-monogram');
+        if (monogramEl && monogramEl.querySelector('ion-icon[name="person"]')) {
+          let initials = 'SE';
+          if (name) {
+            const parts = name.split(/\s+/);
+            initials = parts.length >= 2 ? (parts[0][0] + parts[1][0]).toUpperCase() : name.substring(0, 2).toUpperCase();
+          } else if (email) {
+            initials = email.substring(0, 2).toUpperCase();
+          }
+          monogramEl.textContent = initials;
+        }
+
+        const statusDot = document.querySelector('.user-status-indicator');
+        if (statusDot) {
+          statusDot.classList.remove('offline');
+          statusDot.classList.add('online');
+          statusDot.title = 'Active Session';
+        }
+
+        // Hide guest auth banner
+        const guestBanner = document.querySelector('.guest-auth-banner');
+        if (guestBanner) guestBanner.style.display = 'none';
+
+        // Ensure nav links point directly to profile/orders
+        const profileLink = document.querySelector('.user-menu a[href*="user-profile.php"]');
+        if (profileLink) profileLink.setAttribute('href', '<?php echo htmlspecialchars($link_profile); ?>');
+        const ordersLink = document.querySelector('.user-menu a[href*="orders.php"]');
+        if (ordersLink) ordersLink.setAttribute('href', '<?php echo htmlspecialchars($link_orders); ?>');
+      }
+    }
+  } catch (e) {}
+})();
+
 // Logout confirmation alert handler
 function confirmLogout(event, href) {
   if (event && event.preventDefault) event.preventDefault();
   var logoutUrl = href || '<?php echo htmlspecialchars($link_logout); ?>';
+
+  try {
+    localStorage.removeItem('serveasy_access_token');
+    localStorage.removeItem('serveasy_user');
+  } catch (e) {}
 
   if (typeof Notify !== 'undefined' && typeof Notify.confirm === 'function') {
     Notify.confirm('Are you sure you want to log out of your ServEasy account?', {

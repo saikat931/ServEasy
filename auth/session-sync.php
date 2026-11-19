@@ -4,9 +4,7 @@
  * Cryptographically verifies the JWT issued by the Central Backend API
  * and establishes the local PHP $_SESSION['user_id'] on the Customer Web domain.
  */
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once __DIR__ . '/../common/auth_session.php';
 header('Content-Type: application/json');
 
 require_once __DIR__ . '/../common/ApiBridge.php';

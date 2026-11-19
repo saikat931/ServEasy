@@ -71,9 +71,9 @@ if (!class_exists('ServEasyWebDB')) {
 
             $dbHost = $get(['DB_HOST'], $isLocal ? '127.0.0.1' : 'localhost');
             $dbPort = $get(['DB_PORT'], '3306');
-            $dbName = $get(['DB_DATABASE', 'DB_NAME'], $isLocal ? 'serveasy_v2' : '');
-            $dbUser = $get(['DB_USERNAME', 'DB_USER'], $isLocal ? 'root' : '');
-            $dbPass = $get(['DB_PASSWORD', 'DB_PASS'], '');
+            $dbName = $get(['DB_DATABASE', 'DB_NAME'], $isLocal ? 'serveasy_v2' : 'u923365340_serveasy');
+            $dbUser = $get(['DB_USERNAME', 'DB_USER'], $isLocal ? 'root' : 'u923365340_serveasy');
+            $dbPass = $get(['DB_PASSWORD', 'DB_PASS'], $isLocal ? '' : 'Serveasy@931');
 
             if (empty($dbName) || empty($dbUser)) {
                 return null;
