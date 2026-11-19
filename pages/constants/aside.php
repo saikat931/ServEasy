@@ -71,24 +71,24 @@ if (isset($_SESSION['user_id'])) {
         } else {
             $user_initials = strtoupper(mb_substr($full_name, 0, 2));
         }
-        $display_identity = !empty($phone) ? $phone : (!empty($email) ? $email : "Member #$user_id");
+        $display_identity = !empty($phone) ? $phone : (!empty($email) ? $email : "Verified Customer");
         $display_sub      = (!empty($email) && !empty($phone)) ? $email : "Verified Customer";
     } else {
-        if (!empty($phone)) {
-            $display_name     = "My Account";
-            $display_identity = $phone;
-            $user_initials    = strtoupper(substr($phone, -2));
-            $display_sub      = "Member #" . $user_id;
-        } elseif (!empty($email)) {
+        if (!empty($email)) {
             $display_name     = "My Account";
             $display_identity = $email;
             $user_initials    = strtoupper(substr($email, 0, 2));
-            $display_sub      = "Member #" . $user_id;
+            $display_sub      = "Verified Customer";
+        } elseif (!empty($phone)) {
+            $display_name     = "My Account";
+            $display_identity = $phone;
+            $user_initials    = strtoupper(substr($phone, -2));
+            $display_sub      = "Verified Customer";
         } else {
             $display_name     = "ServEasy Member";
-            $display_identity = "Member #" . $user_id;
+            $display_identity = "Customer";
             $user_initials    = "SE";
-            $display_sub      = "Active Account";
+            $display_sub      = "Verified Customer";
         }
     }
 }

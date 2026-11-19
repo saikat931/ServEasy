@@ -269,7 +269,7 @@ if ($db) {
 }
 
 // Dynamic display values
-$displayName = !empty($user['full_name']) ? htmlspecialchars($user['full_name']) : 'Verified Customer #' . $user_id;
+$displayName = !empty($user['full_name']) ? htmlspecialchars($user['full_name']) : 'Verified Customer';
 $displayEmail = !empty($user['email_address']) ? htmlspecialchars($user['email_address']) : 'Not provided yet';
 $displayPhone = !empty($user['phone_number']) ? htmlspecialchars($user['phone_number']) : 'Not provided yet';
 $memberSince = !empty($user['created_at']) ? date('F Y', strtotime($user['created_at'])) : 'October 2026';
