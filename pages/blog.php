@@ -1,7 +1,5 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once __DIR__ . '/../common/auth_session.php';
 
 $dbPath = file_exists(__DIR__ . '/../../backend/config/db_connection.php')
     ? __DIR__ . '/../../backend/config/db_connection.php'

@@ -47,6 +47,14 @@ if (isset($_SESSION['user_id'])) {
     // Seamless client-side auto-rehydration: if user has active JWT in localStorage, auto-sync and redirect
     (async function() {
       try {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('logged_out')) {
+          localStorage.removeItem('serveasy_access_token');
+          localStorage.removeItem('serveasy_user');
+          sessionStorage.clear();
+          return;
+        }
+
         const token = localStorage.getItem('serveasy_access_token');
         if (token) {
           const res = await fetch('./session-sync.php', {
@@ -57,9 +65,12 @@ if (isset($_SESSION['user_id'])) {
           });
           const data = await res.json();
           if (data && data.status === 'success') {
-            const urlParams = new URLSearchParams(window.location.search);
             const target = urlParams.get('redirect') || '../index.php';
             window.location.replace(target);
+          } else {
+            // Token is invalid/expired, purge client credentials
+            localStorage.removeItem('serveasy_access_token');
+            localStorage.removeItem('serveasy_user');
           }
         }
       } catch (e) {

@@ -347,47 +347,41 @@ if (isset($_SESSION['user_id'])) {
       <div class="user-profile-card">
         <div class="user-avatar-wrap">
           <div class="user-avatar-badge">
-            <span class="user-monogram">
+            <span class="user-monogram" id="aside-user-monogram">
               <?php if ($is_logged_in): ?>
                 <?php echo htmlspecialchars($user_initials); ?>
               <?php else: ?>
                 <ion-icon name="person"></ion-icon>
               <?php endif; ?>
             </span>
-            <span class="user-status-indicator <?php echo $is_logged_in ? 'online' : 'offline'; ?>" title="<?php echo $is_logged_in ? 'Active Session' : 'Guest'; ?>"></span>
+            <span class="user-status-indicator <?php echo $is_logged_in ? 'online' : 'offline'; ?>" id="aside-status-indicator" title="<?php echo $is_logged_in ? 'Active Session' : 'Guest'; ?>"></span>
           </div>
         </div>
 
         <div class="user-profile-meta">
           <div class="user-profile-header-row">
-            <h4 class="user-name"><?php echo htmlspecialchars($display_name); ?></h4>
-            <?php if ($is_logged_in): ?>
-              <span class="badge-verified" title="Verified ServEasy Member">
-                <ion-icon name="shield-checkmark"></ion-icon>
-              </span>
-            <?php endif; ?>
+            <h4 class="user-name" id="aside-user-name"><?php echo htmlspecialchars($display_name); ?></h4>
+            <span class="badge-verified" id="aside-verified-badge" title="Verified ServEasy Member" style="<?php echo $is_logged_in ? '' : 'display: none;'; ?>">
+              <ion-icon name="shield-checkmark"></ion-icon>
+            </span>
           </div>
 
           <div class="user-identifier">
             <ion-icon name="<?php echo (preg_match('/^[0-9+\s\-]+$/', $display_identity)) ? 'call-outline' : 'mail-outline'; ?>"></ion-icon>
-            <span class="user-email"><?php echo htmlspecialchars($display_identity); ?></span>
+            <span class="user-email" id="aside-user-ident"><?php echo htmlspecialchars($display_identity); ?></span>
           </div>
 
-          <?php if (!empty($display_sub)): ?>
-            <p class="user-subtext"><?php echo htmlspecialchars($display_sub); ?></p>
-          <?php endif; ?>
+          <p class="user-subtext" id="aside-user-sub" style="<?php echo !empty($display_sub) ? '' : 'display: none;'; ?>"><?php echo htmlspecialchars($display_sub); ?></p>
         </div>
       </div>
 
-      <?php if (!$is_logged_in): ?>
       <!-- Guest Auth Callout -->
-      <div class="guest-auth-banner">
+      <div class="guest-auth-banner" id="aside-guest-banner" style="<?php echo $is_logged_in ? 'display: none;' : ''; ?>">
         <a href="<?php echo htmlspecialchars($link_auth . (!empty($_SERVER['REQUEST_URI']) ? '?redirect=' . urlencode($_SERVER['REQUEST_URI']) : '')); ?>" class="btn-sidebar-auth">
           <ion-icon name="log-in-outline"></ion-icon>
           <span>Sign In / Create Account</span>
         </a>
       </div>
-      <?php endif; ?>
 
       <!-- Quick Navigation Label -->
       <div class="sidebar-section-label">Quick Navigation</div>
@@ -396,7 +390,7 @@ if (isset($_SESSION['user_id'])) {
       <ul class="user-menu-list user-menu">
 
         <li>
-          <a href="<?php echo $is_logged_in ? htmlspecialchars($link_profile) : htmlspecialchars($link_auth . '?redirect=' . urlencode($link_profile)); ?>" class="panel-nav-card panel-link">
+          <a href="<?php echo htmlspecialchars($link_profile); ?>" id="aside-profile-link" class="panel-nav-card panel-link">
             <div class="nav-icon-box cyan">
               <ion-icon name="person-outline"></ion-icon>
             </div>
@@ -409,7 +403,7 @@ if (isset($_SESSION['user_id'])) {
         </li>
 
         <li>
-          <a href="<?php echo $is_logged_in ? htmlspecialchars($link_orders) : htmlspecialchars($link_auth . '?redirect=' . urlencode($link_orders)); ?>" class="panel-nav-card panel-link">
+          <a href="<?php echo htmlspecialchars($link_orders); ?>" id="aside-orders-link" class="panel-nav-card panel-link">
             <div class="nav-icon-box purple">
               <ion-icon name="bag-handle-outline"></ion-icon>
             </div>
@@ -422,7 +416,7 @@ if (isset($_SESSION['user_id'])) {
         </li>
 
         <li>
-          <a href="<?php echo $is_logged_in ? htmlspecialchars($link_addresses) : htmlspecialchars($link_auth . '?redirect=' . urlencode($link_addresses)); ?>" class="panel-nav-card panel-link">
+          <a href="<?php echo htmlspecialchars($link_addresses); ?>" id="aside-addresses-link" class="panel-nav-card panel-link">
             <div class="nav-icon-box emerald">
               <ion-icon name="location-outline"></ion-icon>
             </div>
@@ -447,8 +441,8 @@ if (isset($_SESSION['user_id'])) {
           </a>
         </li>
 
-        <?php if ($is_logged_in): ?>
-        <li>
+        <!-- Logout Item (always in DOM, visibility controlled by session and token state) -->
+        <li id="aside-logout-li" style="<?php echo $is_logged_in ? '' : 'display: none;'; ?>">
           <a href="<?php echo htmlspecialchars($link_logout); ?>" class="panel-nav-card panel-link logout-card" onclick="confirmLogout(event, this.href)">
             <div class="nav-icon-box red">
               <ion-icon name="log-out-outline"></ion-icon>
@@ -460,7 +454,6 @@ if (isset($_SESSION['user_id'])) {
             <ion-icon name="chevron-forward-outline" class="nav-arrow"></ion-icon>
           </a>
         </li>
-        <?php endif; ?>
 
       </ul>
 
@@ -572,72 +565,121 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-// Client-side Profile Drawer Rehydration from localStorage (prevents flashing "Guest User" when token exists)
-(function() {
+// Dual-Channel Auth Synchronization Controller (Server Session + Client Token)
+(function initServEasyAuth() {
+  function applyAuthState(isLoggedIn, user) {
+    const statusDot = document.getElementById('aside-status-indicator');
+    if (statusDot) {
+      statusDot.className = 'user-status-indicator ' + (isLoggedIn ? 'online' : 'offline');
+      statusDot.title = isLoggedIn ? 'Active Session' : 'Guest';
+    }
+
+    const headerDot = document.getElementById('header-user-dot');
+    if (headerDot) {
+      if (isLoggedIn) {
+        headerDot.classList.add('online');
+        headerDot.title = 'Active Session';
+      } else {
+        headerDot.classList.remove('online');
+        headerDot.title = 'Guest';
+      }
+    }
+
+    const guestBanner = document.getElementById('aside-guest-banner');
+    if (guestBanner) guestBanner.style.display = isLoggedIn ? 'none' : 'block';
+
+    const logoutLi = document.getElementById('aside-logout-li');
+    if (logoutLi) logoutLi.style.display = isLoggedIn ? 'block' : 'none';
+
+    const verifiedBadge = document.getElementById('aside-verified-badge');
+    if (verifiedBadge) verifiedBadge.style.display = isLoggedIn ? 'inline-flex' : 'none';
+
+    if (isLoggedIn && user) {
+      const name = (user.full_name || user.name || '').trim();
+      const email = (user.email || user.email_address || '').trim();
+      const phone = (user.phone || user.phone_number || '').trim();
+
+      const nameEl = document.getElementById('aside-user-name');
+      if (nameEl) nameEl.textContent = name || email || phone || 'ServEasy Member';
+
+      const identEl = document.getElementById('aside-user-ident');
+      if (identEl) identEl.textContent = phone || email || 'Verified Customer';
+
+      const subEl = document.getElementById('aside-user-sub');
+      if (subEl) {
+        subEl.textContent = (email && phone) ? email : 'Verified Customer';
+        subEl.style.display = 'block';
+      }
+
+      const monogramEl = document.getElementById('aside-user-monogram');
+      if (monogramEl) {
+        let initials = 'SE';
+        if (name) {
+          const parts = name.split(/\s+/);
+          initials = parts.length >= 2 ? (parts[0][0] + parts[1][0]).toUpperCase() : name.substring(0, 2).toUpperCase();
+        } else if (email) {
+          initials = email.substring(0, 2).toUpperCase();
+        }
+        monogramEl.textContent = initials;
+      }
+    } else if (!isLoggedIn) {
+      const nameEl = document.getElementById('aside-user-name');
+      if (nameEl) nameEl.textContent = 'Guest User';
+
+      const identEl = document.getElementById('aside-user-ident');
+      if (identEl) identEl.textContent = 'Login or Register';
+
+      const subEl = document.getElementById('aside-user-sub');
+      if (subEl) {
+        subEl.textContent = 'Access your bookings & profile';
+        subEl.style.display = 'block';
+      }
+
+      const monogramEl = document.getElementById('aside-user-monogram');
+      if (monogramEl) {
+        monogramEl.innerHTML = '<ion-icon name="person"></ion-icon>';
+      }
+    }
+  }
+
+  window.setServEasyAuthState = applyAuthState;
+
   try {
-    const rawUser = localStorage.getItem('serveasy_user');
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('logged_out')) {
+      try {
+        localStorage.removeItem('serveasy_access_token');
+        localStorage.removeItem('serveasy_user');
+        sessionStorage.clear();
+      } catch (e) {}
+      applyAuthState(false);
+      // Clean query parameter from address bar
+      urlParams.delete('logged_out');
+      const newQuery = urlParams.toString();
+      const newUrl = window.location.pathname + (newQuery ? '?' + newQuery : '') + window.location.hash;
+      window.history.replaceState({}, '', newUrl);
+      return;
+    }
+
     const token = localStorage.getItem('serveasy_access_token');
     if (token) {
-      // Background sync to ensure PHP session cookie is alive
+      const rawUser = localStorage.getItem('serveasy_user');
+      const user = rawUser ? JSON.parse(rawUser) : null;
+      applyAuthState(true, user);
+
+      // Silent sync with PHP session if server rendered as guest
+      <?php if (!$is_logged_in): ?>
       fetch('<?php echo htmlspecialchars($web_root); ?>/auth/session-sync.php', {
         method: 'POST',
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'access_token=' + encodeURIComponent(token)
       }).catch(function() {});
-
-      if (rawUser) {
-        const u = JSON.parse(rawUser);
-        const name = (u.full_name || u.name || '').trim();
-        const email = (u.email || u.email_address || '').trim();
-        const phone = (u.phone || u.phone_number || '').trim();
-
-        const nameEl = document.querySelector('.user-profile-meta .user-name');
-        if (nameEl && (nameEl.textContent.trim() === 'Guest User' || nameEl.textContent.trim() === 'Login or Register')) {
-          if (name) nameEl.textContent = name;
-          else if (email) nameEl.textContent = email;
-          else if (phone) nameEl.textContent = phone;
-        }
-
-        const identEl = document.querySelector('.user-identifier .user-email');
-        if (identEl && (identEl.textContent.trim() === 'Login or Register' || identEl.textContent.trim() === '')) {
-          identEl.textContent = phone || email || 'Verified Customer';
-        }
-
-        const subEl = document.querySelector('.user-profile-meta .user-subtext');
-        if (subEl) {
-          subEl.textContent = (email && phone) ? email : 'Verified Customer';
-        }
-
-        const monogramEl = document.querySelector('.user-avatar-badge .user-monogram');
-        if (monogramEl && monogramEl.querySelector('ion-icon[name="person"]')) {
-          let initials = 'SE';
-          if (name) {
-            const parts = name.split(/\s+/);
-            initials = parts.length >= 2 ? (parts[0][0] + parts[1][0]).toUpperCase() : name.substring(0, 2).toUpperCase();
-          } else if (email) {
-            initials = email.substring(0, 2).toUpperCase();
-          }
-          monogramEl.textContent = initials;
-        }
-
-        const statusDot = document.querySelector('.user-status-indicator');
-        if (statusDot) {
-          statusDot.classList.remove('offline');
-          statusDot.classList.add('online');
-          statusDot.title = 'Active Session';
-        }
-
-        // Hide guest auth banner
-        const guestBanner = document.querySelector('.guest-auth-banner');
-        if (guestBanner) guestBanner.style.display = 'none';
-
-        // Ensure nav links point directly to profile/orders
-        const profileLink = document.querySelector('.user-menu a[href*="user-profile.php"]');
-        if (profileLink) profileLink.setAttribute('href', '<?php echo htmlspecialchars($link_profile); ?>');
-        const ordersLink = document.querySelector('.user-menu a[href*="orders.php"]');
-        if (ordersLink) ordersLink.setAttribute('href', '<?php echo htmlspecialchars($link_orders); ?>');
-      }
+      <?php endif; ?>
+    } else {
+      <?php if (!$is_logged_in): ?>
+      applyAuthState(false);
+      <?php endif; ?>
     }
   } catch (e) {}
 })();
@@ -647,10 +689,21 @@ function confirmLogout(event, href) {
   if (event && event.preventDefault) event.preventDefault();
   var logoutUrl = href || '<?php echo htmlspecialchars($link_logout); ?>';
 
-  try {
-    localStorage.removeItem('serveasy_access_token');
-    localStorage.removeItem('serveasy_user');
-  } catch (e) {}
+  var executeLogout = function() {
+    try {
+      localStorage.removeItem('serveasy_access_token');
+      localStorage.removeItem('serveasy_user');
+      sessionStorage.clear();
+      document.cookie = 'access_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax; Secure';
+      document.cookie = 'access_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      document.cookie = 'PHPSESSID=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax; Secure';
+      document.cookie = 'PHPSESSID=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    } catch (e) {}
+    if (window.setServEasyAuthState) {
+      window.setServEasyAuthState(false);
+    }
+    window.location.href = logoutUrl;
+  };
 
   if (typeof Notify !== 'undefined' && typeof Notify.confirm === 'function') {
     Notify.confirm('Are you sure you want to log out of your ServEasy account?', {
@@ -660,11 +713,11 @@ function confirmLogout(event, href) {
       type: 'danger'
     }).then(function (confirmed) {
       if (confirmed) {
-        window.location.href = logoutUrl;
+        executeLogout();
       }
     });
   } else if (window.confirm('Are you sure you want to log out of your account?')) {
-    window.location.href = logoutUrl;
+    executeLogout();
   }
 }
 </script>

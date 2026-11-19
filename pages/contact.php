@@ -1,7 +1,5 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once __DIR__ . '/../common/auth_session.php';
 
 // ── Handle Contact AJAX Submission ──
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['ajax_action']) && $_POST['ajax_action'] === 'submit_contact' || isset($_POST['is_ajax']))) {

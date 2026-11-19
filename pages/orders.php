@@ -1,10 +1,61 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once __DIR__ . '/../common/auth_session.php';
+
 if (!isset($_SESSION['user_id'])) {
+    if (isset($_POST['ajax_action']) || !empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
+        header('Content-Type: application/json');
+        http_response_code(401);
+        echo json_encode(['status' => 'error', 'message' => 'Unauthorized session. Please log in.']);
+        exit;
+    }
+    // Client-side auto-rehydration fallback before redirecting to login
     $target_url = $_SERVER['REQUEST_URI'] ?? './orders.php';
-    header("Location: ../auth/auth.php?redirect=" . urlencode($target_url));
+    ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authenticating | ServEasy</title>
+    <style>
+        body { margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f172a; color: #fff; }
+        .spinner-box { text-align: center; }
+        .spinner { width: 44px; height: 44px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #06b6d4; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        p { color: #94a3b8; font-size: 15px; margin: 0; }
+    </style>
+</head>
+<body>
+    <div class="spinner-box">
+        <div class="spinner"></div>
+        <p>Verifying secure session...</p>
+    </div>
+    <script>
+        (async function() {
+            try {
+                const token = localStorage.getItem('serveasy_access_token');
+                if (token) {
+                    const res = await fetch('../auth/session-sync.php', {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: 'access_token=' + encodeURIComponent(token)
+                    });
+                    const data = await res.json();
+                    if (data && data.status === 'success') {
+                        window.location.reload();
+                        return;
+                    }
+                }
+            } catch (e) {
+                console.error("Auto-sync error:", e);
+            }
+            window.location.href = '../auth/auth.php?redirect=' + encodeURIComponent(window.location.href);
+        })();
+    </script>
+</body>
+</html>
+    <?php
     exit;
 }
 

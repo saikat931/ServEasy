@@ -20,8 +20,14 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// If explicit logout flag was passed in URL, enforce clean unauthenticated state
+if (isset($_GET['logged_out'])) {
+    $_SESSION = [];
+    unset($_COOKIE['access_token']);
+}
+
 // Automatic Session Rehydration from access_token cookie if session was cleared or expired
-if (!isset($_SESSION['user_id']) && !empty($_COOKIE['access_token'])) {
+if (!isset($_SESSION['user_id']) && !empty($_COOKIE['access_token']) && !isset($_GET['logged_out'])) {
     $token = trim($_COOKIE['access_token']);
     $bridgePath = __DIR__ . '/ApiBridge.php';
     if (file_exists($bridgePath)) {
@@ -37,6 +43,18 @@ if (!isset($_SESSION['user_id']) && !empty($_COOKIE['access_token'])) {
                 $_SESSION['email']        = $verifyRes['user']['email'] ?? '';
                 $_SESSION['phone']        = $verifyRes['user']['phone'] ?? '';
                 $_SESSION['access_token'] = $token;
+            } else {
+                // Token invalid or revoked - expire cookie immediately
+                $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
+                setcookie('access_token', '', [
+                    'expires'  => time() - 86400,
+                    'path'     => '/',
+                    'domain'   => '',
+                    'secure'   => $isSecure,
+                    'httponly' => true,
+                    'samesite' => 'Lax'
+                ]);
+                unset($_COOKIE['access_token']);
             }
         } catch (\Throwable $t) {
             error_log("Session auto-rehydration error: " . $t->getMessage());

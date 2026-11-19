@@ -1,7 +1,5 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once __DIR__ . '/common/auth_session.php';
 if (!defined('SERVEASY_ASSET_VER')) {
     define('SERVEASY_ASSET_VER', '20261119v1');
 }

@@ -1,10 +1,17 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_cache_limiter('private_no_expire');
+$authSessionPath = file_exists(__DIR__ . '/../../common/auth_session.php')
+    ? __DIR__ . '/../../common/auth_session.php'
+    : (file_exists(__DIR__ . '/../common/auth_session.php') ? __DIR__ . '/../common/auth_session.php' : null);
+if ($authSessionPath) {
+    require_once $authSessionPath;
+} elseif (session_status() === PHP_SESSION_NONE) {
     session_start();
-    if (!headers_sent()) {
-        header("Cache-Control: private, max-age=300, stale-while-revalidate=60");
-    }
+}
+
+if (!headers_sent()) {
+    header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+    header("Pragma: no-cache");
+    header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 }
 $systemLogPath = __DIR__ . '/../../../../Backend/logs/systemlog.php';
 $errorLogPath = __DIR__ . '/../../../../Backend/logs/errorlog.php';
@@ -72,6 +79,26 @@ if (!defined('SERVEASY_ASSET_VER')) {
 
   <!-- Header & Dashboard Container Width Synchronization -->
   <style>
+    .user-header-btn {
+      position: relative !important;
+    }
+    .user-active-dot {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #94a3b8;
+      border: 2px solid rgba(15, 23, 42, 0.85);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+    }
+    .user-active-dot.online {
+      background: #10b981;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.85);
+    }
+
     .header .container,
     .nav-wrapper .container,
     .top-bar .container {
@@ -449,8 +476,9 @@ if (!defined('SERVEASY_ASSET_VER')) {
             <data class="btn-badge" value="2">02</data>
           </button>
 
-          <button class="header-action-btn" aria-label="Open user profile" data-panel-btn="user">
+          <button class="header-action-btn user-header-btn" aria-label="Open user profile" data-panel-btn="user">
             <ion-icon name="person-outline"></ion-icon>
+            <span class="user-active-dot <?= !empty($_SESSION['user_id']) ? 'online' : '' ?>" id="header-user-dot" title="<?= !empty($_SESSION['user_id']) ? 'Active Session' : 'Guest' ?>"></span>
           </button>
 
         </div>
