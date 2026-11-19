@@ -2,6 +2,9 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+if (!defined('SERVEASY_ASSET_VER')) {
+    define('SERVEASY_ASSET_VER', '20261119v1');
+}
 $bootstrapPath = file_exists(__DIR__ . '/../../backend/api/bootstrap.php')
     ? __DIR__ . '/../../backend/api/bootstrap.php'
     : (file_exists(__DIR__ . '/../../../backend/api/bootstrap.php') ? __DIR__ . '/../../../backend/api/bootstrap.php' : null);
@@ -47,6 +50,12 @@ if (class_exists('App\Repositories\ServiceRepository')) {
 
   <!-- Favicon -->
   <link rel="shortcut icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#4361ee">
+
+  <!-- Smart Catalog Cache & Service Worker Registration -->
+  <script src="./assets/js/serveasy-catalog-cache.js?v=<?= SERVEASY_ASSET_VER ?>"></script>
+  <script src="./assets/js/sw-register.js?v=<?= SERVEASY_ASSET_VER ?>"></script>
 
   <!-- Font & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,11 +63,11 @@ if (class_exists('App\Repositories\ServiceRepository')) {
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
   <!-- Core Stylesheet imports -->
-  <link rel="stylesheet" href="./assets/css/main.css?v=<?= time(); ?>">
-  <link rel="stylesheet" href="./assets/css/global.css?v=<?= time(); ?>">
-  <link rel="stylesheet" href="./assets/css/home.css?v=<?= time(); ?>">
-  <link rel="stylesheet" href="./assets/css/notify.css?v=<?= time(); ?>">
-  <link rel="stylesheet" href="./assets/css/wishlist.css?v=<?= time(); ?>">
+  <link rel="stylesheet" href="./assets/css/main.css?v=<?= SERVEASY_ASSET_VER ?>">
+  <link rel="stylesheet" href="./assets/css/global.css?v=<?= SERVEASY_ASSET_VER ?>">
+  <link rel="stylesheet" href="./assets/css/home.css?v=<?= SERVEASY_ASSET_VER ?>">
+  <link rel="stylesheet" href="./assets/css/notify.css?v=<?= SERVEASY_ASSET_VER ?>">
+  <link rel="stylesheet" href="./assets/css/wishlist.css?v=<?= SERVEASY_ASSET_VER ?>">
 </head>
 
 <body id="top">
@@ -316,34 +325,62 @@ if (class_exists('App\Repositories\ServiceRepository')) {
       });
     });
 
-    // Dynamic Category Loading for dropdown
+    // Category Dropdown Population Helper
+    function populateCategoryDropdown(categories) {
+      if (!categorySelect || !Array.isArray(categories)) return;
+      const currentVal = categorySelect.value;
+      categorySelect.innerHTML = '<option value="all">All Categories</option>';
+      categories.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat.id;
+        opt.textContent = cat.name;
+        opt.dataset.slug = cat.slug;
+        categorySelect.appendChild(opt);
+      });
+      if (currentVal && currentVal !== 'all') {
+        categorySelect.value = currentVal;
+      }
+    }
+
+    // Dynamic Category Loading with Smart Catalog Cache
     async function loadCategories() {
+      // 1. Check local catalog cache first (0 network roundtrips)
+      if (window.ServEasyCache) {
+        const cached = window.ServEasyCache.getCachedCategories();
+        if (cached && Array.isArray(cached) && cached.length > 0) {
+          populateCategoryDropdown(cached);
+          return;
+        }
+      }
+
       try {
         const apiBase = window.SERVEASY_API_BASE || (window.location.pathname.match(/^(.*?)Frontend\//i) ? window.location.pathname.match(/^(.*?)Frontend\//i)[1] + 'backend/api/' : '/backend/api/');
         const apiUrl = window.serveasyApiUrl ? window.serveasyApiUrl('categories.php') : (apiBase + 'categories.php');
         const res = await fetch(apiUrl);
         const data = await res.json();
         if (data.success && data.data && categorySelect) {
-          const currentVal = categorySelect.value;
-          categorySelect.innerHTML = '<option value="all">All Categories</option>';
-          data.data.forEach(cat => {
-            const opt = document.createElement('option');
-            opt.value = cat.id;
-            opt.textContent = cat.name;
-            opt.dataset.slug = cat.slug;
-            categorySelect.appendChild(opt);
-          });
-          if (currentVal && currentVal !== 'all') {
-            categorySelect.value = currentVal;
+          if (window.ServEasyCache) {
+            window.ServEasyCache.setCachedCategories(data.data);
           }
+          populateCategoryDropdown(data.data);
         }
       } catch (err) {
         console.error("Error loading categories", err);
       }
     }
 
-    // Dynamic Services Retrieval from Database API
+    // Dynamic Services Retrieval from Database API with Smart Catalog Cache
     async function fetchServices() {
+      // 1. Check local catalog cache first (0 network roundtrips)
+      if (window.ServEasyCache) {
+        const cached = window.ServEasyCache.getCachedServices();
+        if (cached && Array.isArray(cached) && cached.length > 0) {
+          allServices = cached;
+          renderServices();
+          return;
+        }
+      }
+
       loading = true;
       if (servicesGrid && (!allServices || allServices.length === 0)) {
         if (window.ServEasyCards && typeof window.ServEasyCards.renderSkeletonCards === 'function') {
@@ -358,6 +395,9 @@ if (class_exists('App\Repositories\ServiceRepository')) {
         const data = await res.json();
         if (data.success && data.data) {
           allServices = data.data;
+          if (window.ServEasyCache) {
+            window.ServEasyCache.setCachedServices(allServices);
+          }
           renderServices();
         } else if (countLabel && (!allServices || allServices.length === 0)) {
           countLabel.textContent = "No services currently available.";
@@ -369,6 +409,9 @@ if (class_exists('App\Repositories\ServiceRepository')) {
         }
       } finally {
         loading = false;
+        if (loader) loader.style.display = 'none';
+      }
+    }
         if (loader) loader.style.display = 'none';
       }
     }
@@ -485,6 +528,9 @@ if (class_exists('App\Repositories\ServiceRepository')) {
 
       // Initial render immediately with all URL filters applied!
       if (allServices && allServices.length > 0) {
+        if (window.ServEasyCache) {
+          window.ServEasyCache.setCachedServices(allServices);
+        }
         renderServices();
       }
 

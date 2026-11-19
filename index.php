@@ -2,6 +2,9 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+if (!defined('SERVEASY_ASSET_VER')) {
+    define('SERVEASY_ASSET_VER', '20261119v1');
+}
 $bootstrapPath = file_exists(__DIR__ . '/../backend/api/bootstrap.php')
     ? __DIR__ . '/../backend/api/bootstrap.php'
     : (file_exists(__DIR__ . '/../../backend/api/bootstrap.php') ? __DIR__ . '/../../backend/api/bootstrap.php' : null);
@@ -48,8 +51,13 @@ if (class_exists('App\Repositories\ServiceRepository')) {
   <base href="pages/">
 
   <!-- Solution A: Customer Web Independent Config & API Bridge -->
-  <script src="../config.js?v=20261118v2" onerror="this.onerror=null;this.src='./config.js?v=20261118v2';"></script>
-  <script src="./assets/js/serveasy-api-bridge.js?v=20261118v2"></script>
+  <script src="../config.js?v=<?= SERVEASY_ASSET_VER ?>" onerror="this.onerror=null;this.src='./config.js?v=<?= SERVEASY_ASSET_VER ?>';"></script>
+  <script src="./assets/js/serveasy-api-bridge.js?v=<?= SERVEASY_ASSET_VER ?>"></script>
+  <!-- Smart Catalog Cache & Service Worker Registration -->
+  <script src="./assets/js/serveasy-catalog-cache.js?v=<?= SERVEASY_ASSET_VER ?>"></script>
+  <script src="./assets/js/sw-register.js?v=<?= SERVEASY_ASSET_VER ?>"></script>
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#4361ee">
 
   <!-- Favicon -->
   <link rel="shortcut icon" href="./assets/favicon.svg" type="image/svg+xml">
@@ -60,12 +68,12 @@ if (class_exists('App\Repositories\ServiceRepository')) {
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
   <!-- Core Stylesheet imports (for general structure compatibility) -->
-  <link rel="stylesheet" href="./assets/css/main.css?v=<?= time(); ?>">
-  <link rel="stylesheet" href="./assets/css/global.css?v=<?= time(); ?>">
-  <link rel="stylesheet" href="./assets/css/home.css?v=<?= time(); ?>">
-  <link rel="stylesheet" href="./assets/css/notify.css?v=<?= time(); ?>">
-  <link rel="stylesheet" href="./assets/css/category.css?v=<?= time(); ?>">
-  <link rel="stylesheet" href="./assets/css/wishlist.css?v=<?= time(); ?>">
+  <link rel="stylesheet" href="./assets/css/main.css?v=<?= SERVEASY_ASSET_VER ?>">
+  <link rel="stylesheet" href="./assets/css/global.css?v=<?= SERVEASY_ASSET_VER ?>">
+  <link rel="stylesheet" href="./assets/css/home.css?v=<?= SERVEASY_ASSET_VER ?>">
+  <link rel="stylesheet" href="./assets/css/notify.css?v=<?= SERVEASY_ASSET_VER ?>">
+  <link rel="stylesheet" href="./assets/css/category.css?v=<?= SERVEASY_ASSET_VER ?>">
+  <link rel="stylesheet" href="./assets/css/wishlist.css?v=<?= SERVEASY_ASSET_VER ?>">
 
 
 </head>
@@ -241,8 +249,20 @@ if (class_exists('App\Repositories\ServiceRepository')) {
       });
     }
 
-    // Dynamic Services Fetching from Database API
+    // Dynamic Services Fetching from Database API with Smart Catalog Cache
     async function loadHomeServices() {
+      // 1. Check local catalog cache first (0 network roundtrips)
+      if (window.ServEasyCache) {
+        const cached = window.ServEasyCache.getCachedServices();
+        if (cached && Array.isArray(cached) && cached.length > 0) {
+          allServices = cached;
+          renderGrid();
+          restoreUrlState();
+          checkAutoOpenService();
+          return;
+        }
+      }
+
       if (servicesGrid && (!allServices || allServices.length === 0)) {
         ServEasyCards.renderSkeletonCards(servicesGrid, 6);
       }
@@ -252,6 +272,10 @@ if (class_exists('App\Repositories\ServiceRepository')) {
         const data = await res.json();
         if (data.success && data.data && data.data.length > 0) {
           allServices = data.data;
+          // Store in smart catalog cache for 15-min instant access
+          if (window.ServEasyCache) {
+            window.ServEasyCache.setCachedServices(allServices);
+          }
           renderGrid();
           restoreUrlState();
           checkAutoOpenService();
@@ -327,8 +351,11 @@ if (class_exists('App\Repositories\ServiceRepository')) {
     // Initialize Booking Modal with session login status
     ServEasyCards.initModal(<?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>);
 
-    // Initial Render
+    // Initial Render & Catalog Cache Seed
     if (allServices && allServices.length > 0) {
+      if (window.ServEasyCache) {
+        window.ServEasyCache.setCachedServices(allServices);
+      }
       renderGrid();
       restoreUrlState();
       checkAutoOpenService();

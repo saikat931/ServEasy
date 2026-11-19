@@ -1,0 +1,18 @@
+{
+  "name": "ServEasy - Premium Local Services Hub",
+  "short_name": "ServEasy",
+  "description": "Book verified local car wash, home cleaning, repairs and professional doorstep services.",
+  "start_url": "./index.php",
+  "display": "standalone",
+  "background_color": "#0b1120",
+  "theme_color": "#4361ee",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

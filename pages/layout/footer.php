@@ -10,7 +10,8 @@
             $logo_path = __DIR__ . '/../assets/images/logo.png';
             if (file_exists($logo_path)) {
                 $footer_web_root = isset($nav_web_root) ? $nav_web_root : (isset($web_root) ? $web_root : '.');
-                echo '<img src="' . $footer_web_root . '/pages/assets/images/logo.png?t=' . time() . '" alt="ServEasy Logo" style="max-height: 40px; width: auto; display: block;">';
+                $assetVer = defined('SERVEASY_ASSET_VER') ? SERVEASY_ASSET_VER : '20261119v1';
+                echo '<img src="' . $footer_web_root . '/pages/assets/images/logo.png?v=' . $assetVer . '" alt="ServEasy Logo" style="max-height: 40px; width: auto; display: block;">';
             } else {
                 echo 'Serv<span class="span">Easy</span>';
             }

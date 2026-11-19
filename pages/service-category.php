@@ -2,7 +2,9 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
+if (!defined('SERVEASY_ASSET_VER')) {
+    define('SERVEASY_ASSET_VER', '20261119v1');
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,6 +18,12 @@ if (session_status() === PHP_SESSION_NONE) {
 
   <!-- Favicon -->
   <link rel="shortcut icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#4361ee">
+
+  <!-- Smart Catalog Cache & Service Worker Registration -->
+  <script src="./assets/js/serveasy-catalog-cache.js?v=<?= SERVEASY_ASSET_VER ?>"></script>
+  <script src="./assets/js/sw-register.js?v=<?= SERVEASY_ASSET_VER ?>"></script>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,11 +31,11 @@ if (session_status() === PHP_SESSION_NONE) {
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
   <!-- Core Stylesheets -->
-  <link rel="stylesheet" href="./assets/css/main.css?v=<?= time(); ?>">
-  <link rel="stylesheet" href="./assets/css/global.css?v=<?= time(); ?>">
-  <link rel="stylesheet" href="./assets/css/home.css?v=<?= time(); ?>">
-  <link rel="stylesheet" href="./assets/css/notify.css?v=<?= time(); ?>">
-  <link rel="stylesheet" href="./assets/css/category.css?v=<?= time(); ?>">
+  <link rel="stylesheet" href="./assets/css/main.css?v=<?= SERVEASY_ASSET_VER ?>">
+  <link rel="stylesheet" href="./assets/css/global.css?v=<?= SERVEASY_ASSET_VER ?>">
+  <link rel="stylesheet" href="./assets/css/home.css?v=<?= SERVEASY_ASSET_VER ?>">
+  <link rel="stylesheet" href="./assets/css/notify.css?v=<?= SERVEASY_ASSET_VER ?>">
+  <link rel="stylesheet" href="./assets/css/category.css?v=<?= SERVEASY_ASSET_VER ?>">
 </head>
 
 <body id="top">

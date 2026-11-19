@@ -38,11 +38,19 @@ $nav_pages_root = $nav_web_root . '/pages';
 //   header("Location: ../../../../login.php");
 //   exit;
 // }
+if (!defined('SERVEASY_ASSET_VER')) {
+    define('SERVEASY_ASSET_VER', '20261119v1');
+}
 ?>
   
   <!-- Solution A: Customer Web Independent Config & API Bridge (Cache-Busted for Hostinger) -->
-  <script src="<?= $nav_web_root ?>/config.js?v=20261118v2"></script>
-  <script src="<?= $nav_web_root ?>/pages/assets/js/serveasy-api-bridge.js?v=20261118v2"></script>
+  <script src="<?= $nav_web_root ?>/config.js?v=<?= SERVEASY_ASSET_VER ?>"></script>
+  <script src="<?= $nav_web_root ?>/pages/assets/js/serveasy-api-bridge.js?v=<?= SERVEASY_ASSET_VER ?>"></script>
+  <!-- Smart Catalog Cache & Service Worker Registration -->
+  <script src="<?= $nav_web_root ?>/pages/assets/js/serveasy-catalog-cache.js?v=<?= SERVEASY_ASSET_VER ?>"></script>
+  <script src="<?= $nav_web_root ?>/pages/assets/js/sw-register.js?v=<?= SERVEASY_ASSET_VER ?>"></script>
+  <link rel="manifest" href="<?= $nav_web_root ?>/manifest.json">
+  <meta name="theme-color" content="#4361ee">
 
   <!-- Instant Theme Bootstrapper (Zero Flash) -->
   <script>
@@ -58,7 +66,7 @@ $nav_pages_root = $nav_web_root . '/pages';
     })();
   </script>
 
-  <link rel="stylesheet" href="./assets/css/theme.css?v=<?= time(); ?>">
+  <link rel="stylesheet" href="./assets/css/theme.css?v=<?= SERVEASY_ASSET_VER ?>">
   <!-- Razorpay Official Checkout Library -->
   <script src="https://checkout.razorpay.com/v1/checkout.js" async></script>
 
@@ -339,7 +347,8 @@ $nav_pages_root = $nav_web_root . '/pages';
           <?php
             $logo_path = __DIR__ . '/../assets/images/logo.png';
             if (file_exists($logo_path)) {
-                echo '<img src="' . $nav_web_root . '/pages/assets/images/logo.png?t=' . time() . '" alt="ServEasy Logo" style="max-height: 40px; width: auto; display: block;">';
+                $assetVer = defined('SERVEASY_ASSET_VER') ? SERVEASY_ASSET_VER : '20261119v1';
+                echo '<img src="' . $nav_web_root . '/pages/assets/images/logo.png?v=' . $assetVer . '" alt="ServEasy Logo" style="max-height: 40px; width: auto; display: block;">';
             } else {
                 echo 'Serv<span class="span">Easy</span>';
             }
