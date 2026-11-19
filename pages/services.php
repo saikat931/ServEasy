@@ -235,18 +235,21 @@ if (class_exists('App\Repositories\ServiceRepository')) {
     // Unified Grid Rendering using shared ServEasyCards engine
     function renderServices() {
       const headingEl = document.getElementById('services-section-heading');
-      if (headingEl && categorySelect) {
+      let catVal = 'all';
+      if (categorySelect && categorySelect.selectedIndex >= 0) {
         const selectedOpt = categorySelect.options[categorySelect.selectedIndex];
-        const selectedText = selectedOpt ? selectedOpt.textContent : '';
+        const selectedText = selectedOpt ? selectedOpt.textContent.trim() : '';
         if (categorySelect.value === 'all' || !selectedText) {
-          headingEl.textContent = 'All Services';
+          if (headingEl) headingEl.textContent = 'All Services';
+          catVal = 'all';
         } else {
-          headingEl.textContent = selectedText;
+          if (headingEl) headingEl.textContent = selectedText;
+          catVal = selectedOpt.dataset.slug || categorySelect.value;
         }
       }
 
       ServEasyCards.renderGrid(allServices, servicesGrid, countLabel, {
-        category: categorySelect ? categorySelect.value : 'all',
+        category: catVal,
         query: searchInput ? searchInput.value : '',
         serviceSlug: currentServiceSlug,
         serviceId: currentServiceId,
@@ -291,7 +294,17 @@ if (class_exists('App\Repositories\ServiceRepository')) {
         if (categorySelect) {
           for (let i = 0; i < categorySelect.options.length; i++) {
             const opt = categorySelect.options[i];
-            if (opt.value === filterVal || opt.dataset.slug === filterVal || (filterVal === 'automotive' && opt.dataset.slug === 'vehicle-services')) {
+            const optVal = String(opt.value);
+            const optSlug = (opt.dataset.slug || '').toLowerCase();
+            if (optVal === filterVal || optSlug === filterVal 
+                || (filterVal === 'automotive' && (optSlug === 'vehicle-services' || optVal === '1'))
+                || (filterVal === '1' && (optSlug === 'vehicle-services' || optVal === '1'))
+                || (filterVal === 'home' && (optSlug === 'home-services' || optVal === '2'))
+                || (filterVal === 'care' && (optSlug === 'personal-staff-&-maids' || optVal === '3'))
+                || (filterVal === 'transport' && (optSlug === 'transport-&-rental' || optVal === '4'))
+                || (filterVal === 'stay' && (optSlug === 'rooms-&-lodging' || optVal === '5'))
+                || (filterVal === 'food' && (optSlug === 'food-&-dining' || optVal === '6'))
+                || (filterVal === 'emergency' && (optSlug === 'emergency-sos' || optVal === '7'))) {
               categorySelect.selectedIndex = i;
               break;
             } else if (filterVal === 'all') {
@@ -307,7 +320,8 @@ if (class_exists('App\Repositories\ServiceRepository')) {
     async function loadCategories() {
       try {
         const apiBase = window.SERVEASY_API_BASE || (window.location.pathname.match(/^(.*?)Frontend\//i) ? window.location.pathname.match(/^(.*?)Frontend\//i)[1] + 'backend/api/' : '/backend/api/');
-        const res = await fetch(apiBase + 'categories.php');
+        const apiUrl = window.serveasyApiUrl ? window.serveasyApiUrl('categories.php') : (apiBase + 'categories.php');
+        const res = await fetch(apiUrl);
         const data = await res.json();
         if (data.success && data.data && categorySelect) {
           const currentVal = categorySelect.value;
@@ -339,7 +353,8 @@ if (class_exists('App\Repositories\ServiceRepository')) {
       if (loader && (!allServices || allServices.length === 0)) loader.style.display = 'flex';
       try {
         const apiBase = window.SERVEASY_API_BASE || (window.location.pathname.match(/^(.*?)Frontend\//i) ? window.location.pathname.match(/^(.*?)Frontend\//i)[1] + 'backend/api/' : '/backend/api/');
-        const res = await fetch(apiBase + 'services.php?limit=100&sort=default');
+        const apiUrl = window.serveasyApiUrl ? window.serveasyApiUrl('services.php?limit=100&sort=default') : (apiBase + 'services.php?limit=100&sort=default');
+        const res = await fetch(apiUrl);
         const data = await res.json();
         if (data.success && data.data) {
           allServices = data.data;
@@ -401,6 +416,8 @@ if (class_exists('App\Repositories\ServiceRepository')) {
       const urlCat = urlParams.get('category') || urlParams.get('cat') || urlParams.get('category_id');
       const urlServiceSlug = urlParams.get('service') || urlParams.get('slug') || urlParams.get('service_slug');
       const urlServiceId = urlParams.get('service_id') || urlParams.get('id') || sessionStorage.getItem('serveasy_auto_open_service_id');
+      const urlPrice = urlParams.get('price') || urlParams.get('max_price') || urlParams.get('budget');
+      const urlSort = urlParams.get('sort');
       const shouldAutoBook = (urlParams.get('book') === '1') || !!sessionStorage.getItem('serveasy_auto_open_service_id');
 
       try {
@@ -412,29 +429,52 @@ if (class_exists('App\Repositories\ServiceRepository')) {
         searchInput.value = urlQuery;
       }
 
-      // Instant render if server prefetched services are available
-      if (allServices && allServices.length > 0) {
-        renderServices();
-      }
-
-      await loadCategories();
-
-      if (urlCat && categorySelect) {
-        const target = urlCat.toLowerCase();
+      function applyCategoryFilter(catVal) {
+        if (!catVal || !categorySelect) return false;
+        const target = String(catVal).toLowerCase();
         for (let i = 0; i < categorySelect.options.length; i++) {
           const opt = categorySelect.options[i];
           const optVal = String(opt.value);
           const optSlug = (opt.dataset.slug || '').toLowerCase();
           const optText = opt.textContent.toLowerCase();
           if (optSlug === target || optVal === target 
-              || (target === 'automotive' && optSlug === 'vehicle-services')
+              || (target === 'automotive' && (optSlug === 'vehicle-services' || optVal === '1'))
               || (target === 'vehicle-services' && (optSlug === 'vehicle-services' || optVal === '1'))
+              || (target === 'home' && (optSlug === 'home-services' || optVal === '2'))
+              || (target === 'home-services' && (optSlug === 'home-services' || optVal === '2'))
+              || (target === 'care' && (optSlug === 'personal-staff-&-maids' || optVal === '3'))
+              || (target === 'personal-staff-&-maids' && (optSlug === 'personal-staff-&-maids' || optVal === '3'))
+              || (target === 'transport' && (optSlug === 'transport-&-rental' || optVal === '4'))
+              || (target === 'transport-&-rental' && (optSlug === 'transport-&-rental' || optVal === '4'))
+              || (target === 'stay' && (optSlug === 'rooms-&-lodging' || optVal === '5'))
+              || (target === 'rooms-&-lodging' && (optSlug === 'rooms-&-lodging' || optVal === '5'))
+              || (target === 'food' && (optSlug === 'food-&-dining' || optVal === '6'))
+              || (target === 'food-&-dining' && (optSlug === 'food-&-dining' || optVal === '6'))
+              || (target === 'emergency' && (optSlug === 'emergency-sos' || optVal === '7'))
+              || (target === 'emergency-sos' && (optSlug === 'emergency-sos' || optVal === '7'))
               || optText.includes(target)) {
             categorySelect.selectedIndex = i;
             syncPills(opt.dataset.slug || opt.value);
-            break;
+            return true;
           }
         }
+        return false;
+      }
+
+      if (urlCat) {
+        applyCategoryFilter(urlCat);
+      }
+
+      if (urlPrice && priceRange) {
+        const p = parseInt(urlPrice, 10);
+        if (!isNaN(p) && p > 0) {
+          priceRange.value = p;
+          if (priceVal) priceVal.textContent = p >= 500 ? '$500+ (All)' : '$' + p;
+        }
+      }
+
+      if (urlSort && sortSelect) {
+        sortSelect.value = urlSort;
       }
 
       if (urlServiceSlug) {
@@ -443,6 +483,19 @@ if (class_exists('App\Repositories\ServiceRepository')) {
         currentServiceId = urlServiceId;
       }
 
+      // Initial render immediately with all URL filters applied!
+      if (allServices && allServices.length > 0) {
+        renderServices();
+      }
+
+      // Refresh categories from API in background if needed
+      await loadCategories();
+      if (urlCat) {
+        applyCategoryFilter(urlCat);
+        renderServices();
+      }
+
+      // Refresh services from API in background
       await fetchServices();
 
       // Check if service was requested by slug or id

@@ -5,6 +5,8 @@
  */
 
 if (!isset($categoriesData) || empty($categoriesData) || !isset($subcategoriesData) || empty($subcategoriesData)) {
+    $isHomePage = isset($isHomeContext) && $isHomeContext;
+    $pagesPrefix = $isHomePage ? './pages/' : './';
     try {
         $dbConfigPath = file_exists(__DIR__ . '/../../../backend/config/db_connection.php')
             ? __DIR__ . '/../../../backend/config/db_connection.php'
@@ -207,22 +209,22 @@ if (!isset($categoriesData) || empty($categoriesData) || !isset($subcategoriesDa
             if ($sSlug === 'vehicle-car-and-bike-wash' || $sSlug === 'vehicle-car-&-bike-wash' || $subSlug === 'car-wash' || $subSlug === 'bike-wash' || stripos($subName, 'wash') !== false) {
                 $subLower = strtolower($subSlug . ' ' . $subName);
                 if (stripos($subLower, 'bike') !== false || stripos($subLower, 'motorcycle') !== false) {
-                    $targetLink = "./services/vehicle-car-&-bike-wash.php?service=vehicle-car-and-bike-wash&subcat=bike-wash&vehicle=Bike";
+                    $targetLink = $pagesPrefix . "services/vehicle-car-&-bike-wash.php?service=vehicle-car-and-bike-wash&subcat=bike-wash&vehicle=Bike";
                 } elseif (stripos($subLower, 'scooter') !== false) {
-                    $targetLink = "./services/vehicle-car-&-bike-wash.php?service=vehicle-car-and-bike-wash&subcat=bike-wash&vehicle=Scooter";
+                    $targetLink = $pagesPrefix . "services/vehicle-car-&-bike-wash.php?service=vehicle-car-and-bike-wash&subcat=bike-wash&vehicle=Scooter";
                 } elseif (stripos($subLower, 'suv') !== false) {
-                    $targetLink = "./services/vehicle-car-&-bike-wash.php?service=vehicle-car-and-bike-wash&subcat=car-wash&vehicle=SUV";
+                    $targetLink = $pagesPrefix . "services/vehicle-car-&-bike-wash.php?service=vehicle-car-and-bike-wash&subcat=car-wash&vehicle=SUV";
                 } elseif (stripos($subLower, 'luxury') !== false) {
-                    $targetLink = "./services/vehicle-car-&-bike-wash.php?service=vehicle-car-and-bike-wash&subcat=car-wash&vehicle=Luxury";
+                    $targetLink = $pagesPrefix . "services/vehicle-car-&-bike-wash.php?service=vehicle-car-and-bike-wash&subcat=car-wash&vehicle=Luxury";
                 } else {
-                    $targetLink = "./services/vehicle-car-&-bike-wash.php?service=vehicle-car-and-bike-wash&subcat=car-wash&vehicle=Car";
+                    $targetLink = $pagesPrefix . "services/vehicle-car-&-bike-wash.php?service=vehicle-car-and-bike-wash&subcat=car-wash&vehicle=Car";
                 }
             } elseif ($sSlug === 'personal-staff-and-maids' || $sSlug === 'personal-staff-&-maids' || $cid === 3 || $subSlug === 'house-maid') {
-                $targetLink = "./services/personal-staff-&-maids.php?service=personal-staff-and-maids&subcat=" . urlencode($subSlug);
+                $targetLink = $pagesPrefix . "services/personal-staff-&-maids.php?service=personal-staff-and-maids&subcat=" . urlencode($subSlug);
             } elseif (!empty($sSlug)) {
-                $targetLink = "./services.php?category=" . urlencode($catSlug) . "&service=" . urlencode($sSlug);
+                $targetLink = $pagesPrefix . "services.php?category=" . urlencode($catSlug) . "&service=" . urlencode($sSlug);
             } else {
-                $targetLink = "./services.php?category=" . urlencode($catSlug) . "&query=" . urlencode($subName);
+                $targetLink = $pagesPrefix . "services.php?category=" . urlencode($catSlug) . "&query=" . urlencode($subName);
             }
 
             if (!isset($seen_subs[$subId])) {
@@ -326,7 +328,7 @@ if (!isset($categoriesData) || empty($categoriesData) || !isset($subcategoriesDa
                 'price_unit'    => '',
                 'description'   => "Explore verified " . strtolower($cat['name']) . " available directly on ServEasy.",
                 'subcategories' => $subs,
-                'service_link'  => "./services.php?category=" . urlencode($cat['slug'])
+                'service_link'  => $pagesPrefix . "services.php?category=" . urlencode($cat['slug'])
             ];
         }
     } catch (\Throwable $e) {
@@ -395,15 +397,9 @@ $displayedCategories = $isHomePage ? array_slice($categoriesData, 0, 6) : $categ
             <div class="cat-subs-container">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                 <span class="cat-subs-label">Specializations</span>
-                <?php if ($isHomePage): ?>
-                  <a href="./service-category.php?view=subcategories&domain=<?= urlencode((string)($cat['filter_tag'] ?? '')) ?>" class="btn-view-subs-inline" style="text-decoration: none;">
-                    View all <?= count($cat['subcategories']) ?> &rarr;
-                  </a>
-                <?php else: ?>
-                  <button type="button" class="btn-view-subs-inline" onclick="window.switchCategoryView('subcategories', '<?= htmlspecialchars((string)($cat['filter_tag'] ?? ''), ENT_QUOTES) ?>')">
-                    View all <?= count($cat['subcategories']) ?> &rarr;
-                  </button>
-                <?php endif; ?>
+                <a href="<?= htmlspecialchars((string)($cat['service_link'] ?? '')) ?>" class="btn-view-subs-inline" style="text-decoration: none;" title="Explore all services in <?= htmlspecialchars((string)($cat['title'] ?? '')) ?>">
+                  View all <?= count($cat['subcategories']) ?> &rarr;
+                </a>
               </div>
               <div class="cat-sub-tags">
                 <?php foreach (array_slice($cat['subcategories'], 0, 5) as $sub): ?>
@@ -413,15 +409,9 @@ $displayedCategories = $isHomePage ? array_slice($categoriesData, 0, 6) : $categ
                   </a>
                 <?php endforeach; ?>
                 <?php if (count($cat['subcategories']) > 5): ?>
-                  <?php if ($isHomePage): ?>
-                    <a href="./service-category.php?view=subcategories&domain=<?= urlencode((string)($cat['filter_tag'] ?? '')) ?>" class="cat-sub-tag more-tag" style="text-decoration: none;">
-                      <span>+<?= count($cat['subcategories']) - 5 ?> more</span>
-                    </a>
-                  <?php else: ?>
-                    <a href="javascript:void(0)" onclick="window.switchCategoryView('subcategories', '<?= htmlspecialchars((string)($cat['filter_tag'] ?? ''), ENT_QUOTES) ?>')" class="cat-sub-tag more-tag">
-                      <span>+<?= count($cat['subcategories']) - 5 ?> more</span>
-                    </a>
-                  <?php endif; ?>
+                  <a href="<?= htmlspecialchars((string)($cat['service_link'] ?? '')) ?>" class="cat-sub-tag more-tag" style="text-decoration: none;" title="Explore all services in <?= htmlspecialchars((string)($cat['title'] ?? '')) ?>">
+                    <span>+<?= count($cat['subcategories']) - 5 ?> more</span>
+                  </a>
                 <?php endif; ?>
               </div>
             </div>
