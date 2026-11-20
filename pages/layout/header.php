@@ -115,8 +115,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
     })();
   </script>
 
-    <link rel="stylesheet" href="./assets/css/theme.css?v=<?= SERVEASY_ASSET_VER ?>">
-  <link rel="stylesheet" href="<?= $nav_web_root ?>/pages/assets/css/chocolate-theme.css?v=<?= SERVEASY_ASSET_VER ?>">
+  <link rel="stylesheet" href="./assets/css/theme.css?v=<?= SERVEASY_ASSET_VER ?>">
   <!-- Razorpay Official Checkout Library -->
   <script src="https://checkout.razorpay.com/v1/checkout.js" async></script>
 
@@ -405,7 +404,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
 
     <div class="top-bar">
       <div class="container">
-        <p><ion-icon name="checkmark-circle-outline"></ion-icon> Verified Doorstep Services &bull; <ion-icon name="pricetag-outline"></ion-icon> Transparent Pricing &bull; <ion-icon name="calendar-outline"></ion-icon> On-Demand Booking</p>
+        <p>Verified Doorstep Services &bull; Transparent Pricing &bull; On-Demand Booking</p>
       </div>
     </div>
 
@@ -474,7 +473,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
               <div class="theme-dropdown-header">Color Themes</div>
               <button type="button" class="theme-opt-btn" data-theme="default">
                 <span class="theme-swatch theme-swatch-cosmic"></span>
-                <span class="theme-label">Lighter Chocolate (Default)</span>
+                <span class="theme-label">Cosmic (Default)</span>
                 <ion-icon name="checkmark-outline" class="theme-check"></ion-icon>
               </button>
               <button type="button" class="theme-opt-btn" data-theme="black">
