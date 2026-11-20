@@ -58,6 +58,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
   <script src="<?= $nav_web_root ?>/pages/assets/js/sw-register.js?v=<?= SERVEASY_ASSET_VER ?>"></script>
   <link rel="manifest" href="<?= $nav_web_root ?>/manifest.json">
   <meta name="theme-color" content="#4361ee">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
 
   <!-- Schema.org JSON-LD Structured Data (Phase 6 SEO) -->
   <script type="application/ld+json">

@@ -6,6 +6,11 @@ Options -Indexes
 # Custom Error Pages
 ErrorDocument 404 /pages/404.php
 
+# Pre-Launch Staging: Block all search engine indexing across all files
+<IfModule mod_headers.c>
+    Header set X-Robots-Tag "noindex, nofollow, noarchive, nosnippet"
+</IfModule>
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
     # Profile Aliases
