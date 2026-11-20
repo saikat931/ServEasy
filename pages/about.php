@@ -1,11 +1,11 @@
 <?php
 /**
- * ServEasy Customer Web Portal - About Us & Visual Team Organization Tree
- * Hierarchical Org Chart: Level 1 (Sharthak Sen) -> Level 2 (3 Directorate Heads) -> Level 3 (7 Functional Leads)
+ * ServEasy Customer Web Portal - About Us & Interactive Team Organization Tree
+ * High-Tech, Cyber-Glassmorphic Visual Organogram with Animated Glowing Branch Connectors
  */
 require_once __DIR__ . '/../common/auth_session.php';
 if (!defined('SERVEASY_ASSET_VER')) {
-    define('SERVEASY_ASSET_VER', '20261120v2');
+    define('SERVEASY_ASSET_VER', '20261120v3');
 }
 ?>
 <!DOCTYPE html>
@@ -15,8 +15,8 @@ if (!defined('SERVEASY_ASSET_VER')) {
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About ServEasy — Leadership Team & Visual Organization Tree</title>
-  <meta name="description" content="Visual organizational site map and leadership tree for ServEasy, led by Sharthak Sen (Founder & CEO), 3 directorate department heads, and 7 functional specialist leads.">
+  <title>About ServEasy — Leadership Team & Interactive Organization Tree</title>
+  <meta name="description" content="Explore the ServEasy leadership tree: Sharthak Sen (Founder & CEO), 3 executive directors, and 7 functional command leads powering on-demand vehicle and home services.">
   <link rel="canonical" href="https://silver-penguin-156353.hostingersite.com/pages/about.php">
 
   <!-- Favicon -->
@@ -31,411 +31,459 @@ if (!defined('SERVEASY_ASSET_VER')) {
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 
   <style>
+    /* ── Ambient Background Lighting ─────────────────────────────────── */
+    .tree-stage {
+      position: relative;
+      background: radial-gradient(ellipse at 50% 15%, rgba(0, 242, 254, 0.12) 0%, rgba(15, 23, 42, 0) 65%),
+                  radial-gradient(ellipse at 85% 60%, rgba(168, 85, 247, 0.08) 0%, rgba(15, 23, 42, 0) 60%),
+                  radial-gradient(ellipse at 15% 75%, rgba(245, 158, 11, 0.08) 0%, rgba(15, 23, 42, 0) 60%);
+      padding: 30px 10px 80px;
+      border-radius: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8);
+      overflow-x: auto;
+      margin-bottom: 70px;
+    }
+
     /* ── Hero Section ────────────────────────────────────────────────── */
     .about-hero-section {
-      padding: 60px 20px 30px;
+      padding: 50px 20px 35px;
       text-align: center;
       position: relative;
     }
-    .about-badge {
+    .hero-badge-pill {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 18px;
+      gap: 10px;
+      padding: 8px 22px;
       border-radius: 50px;
-      background: rgba(0, 242, 254, 0.1);
-      border: 1px solid rgba(0, 242, 254, 0.3);
+      background: linear-gradient(135deg, rgba(0, 242, 254, 0.12), rgba(79, 172, 254, 0.12));
+      border: 1px solid rgba(0, 242, 254, 0.4);
       color: #00f2fe;
       font-size: 0.85rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      margin-bottom: 20px;
-    }
-    .about-hero-title {
-      font-size: 2.8rem;
       font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.25);
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #00f2fe;
+      box-shadow: 0 0 10px #00f2fe;
+      animation: pulseAnim 2s infinite;
+    }
+    @keyframes pulseAnim {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.6); opacity: 0.5; }
+    }
+
+    .about-hero-title {
+      font-size: 3.2rem;
+      font-weight: 900;
       color: #ffffff;
-      line-height: 1.2;
+      line-height: 1.15;
       max-width: 950px;
       margin: 0 auto 18px;
+      letter-spacing: -1px;
     }
-    .about-hero-title span {
-      background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+    .about-hero-title .gradient-text {
+      background: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #c084fc 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 2px 20px rgba(0, 242, 254, 0.3));
     }
     .about-hero-desc {
       font-size: 1.15rem;
       color: #94a3b8;
       max-width: 820px;
-      margin: 0 auto 30px;
+      margin: 0 auto 35px;
       line-height: 1.7;
     }
 
-    /* ── View Switcher Bar ───────────────────────────────────────────── */
-    .view-switcher-bar {
+    /* ── Controls HUD ────────────────────────────────────────────────── */
+    .tree-hud-bar {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 15px;
-      margin-bottom: 35px;
+      gap: 12px;
+      margin-bottom: 30px;
       flex-wrap: wrap;
     }
-    .btn-view-toggle {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 22px;
+    .hud-chip {
+      padding: 8px 18px;
       border-radius: 50px;
-      background: rgba(30, 41, 59, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       color: #cbd5e1;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
-    .btn-view-toggle:hover,
-    .btn-view-toggle.active {
-      background: linear-gradient(135deg, rgba(0, 242, 254, 0.25), rgba(79, 172, 254, 0.25));
+    .hud-chip:hover, .hud-chip.active {
+      background: linear-gradient(135deg, rgba(0, 242, 254, 0.25), rgba(99, 102, 241, 0.25));
       border-color: #00f2fe;
       color: #00f2fe;
-      box-shadow: 0 4px 15px rgba(0, 242, 254, 0.25);
+      box-shadow: 0 4px 20px rgba(0, 242, 254, 0.3);
+      transform: translateY(-2px);
     }
-
-    .tree-scroll-hint {
+    .scroll-hint-pill {
       display: none;
       text-align: center;
-      color: #94a3b8;
-      font-size: 0.85rem;
-      margin-bottom: 15px;
+      color: #64748b;
+      font-size: 0.82rem;
+      margin-bottom: 20px;
+      font-family: 'JetBrains Mono', monospace;
     }
-    @media (max-width: 1024px) {
-      .tree-scroll-hint { display: block; }
-    }
-
-    /* ── PURE CSS ORGANIZATIONAL TREE DIAGRAM ────────────────────────── */
-    .org-chart-wrapper {
-      width: 100%;
-      overflow-x: auto;
-      padding: 30px 10px 60px;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 24px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-      margin-bottom: 60px;
+    @media (max-width: 1100px) {
+      .scroll-hint-pill { display: block; }
     }
 
-    .tree {
+    /* ── PURE CSS ELECTRIC TREE CHART ─────────────────────────────────── */
+    .org-tree {
       display: flex;
       justify-content: center;
-      min-width: 980px;
+      min-width: 1120px;
+      padding: 20px 0;
     }
-
-    .tree ul {
-      padding-top: 30px;
+    .org-tree ul {
+      padding-top: 40px;
       position: relative;
-      transition: all 0.5s;
+      transition: all 0.5s ease;
       display: flex;
       justify-content: center;
       margin: 0;
       padding-left: 0;
       list-style-type: none;
     }
-
-    .tree li {
+    .org-tree li {
       float: left;
       text-align: center;
       list-style-type: none;
       position: relative;
-      padding: 30px 14px 0 14px;
-      transition: all 0.5s;
+      padding: 40px 14px 0 14px;
+      transition: all 0.5s ease;
     }
 
-    /* Tree Branch Connectors using ::before and ::after */
-    .tree li::before, .tree li::after {
+    /* Animated Branch Connectors with Glowing Pulses */
+    .org-tree li::before, .org-tree li::after {
       content: '';
       position: absolute;
       top: 0;
       right: 50%;
       border-top: 2px solid #00f2fe;
       width: 50%;
-      height: 30px;
+      height: 40px;
+      filter: drop-shadow(0 0 6px rgba(0, 242, 254, 0.6));
     }
-    .tree li::after {
+    .org-tree li::after {
       right: auto;
       left: 50%;
       border-left: 2px solid #00f2fe;
     }
-
-    .tree li:only-child::after, .tree li:only-child::before {
+    .org-tree li:only-child::after, .org-tree li:only-child::before {
       display: none;
     }
-    .tree li:only-child {
+    .org-tree li:only-child {
       padding-top: 0;
     }
-
-    .tree li:first-child::before, .tree li:last-child::after {
+    .org-tree li:first-child::before, .org-tree li:last-child::after {
       border: 0 none;
     }
-
-    .tree li:last-child::before {
+    .org-tree li:last-child::before {
       border-right: 2px solid #00f2fe;
-      border-radius: 0 10px 0 0;
+      border-radius: 0 14px 0 0;
     }
-    .tree li:first-child::after {
-      border-radius: 10px 0 0 0;
+    .org-tree li:first-child::after {
+      border-radius: 14px 0 0 0;
     }
-
-    /* Downward connector line from parent node */
-    .tree ul ul::before {
+    .org-tree ul ul::before {
       content: '';
       position: absolute;
       top: 0;
       left: 50%;
       border-left: 2px solid #00f2fe;
       width: 0;
-      height: 30px;
+      height: 40px;
+      filter: drop-shadow(0 0 6px rgba(0, 242, 254, 0.6));
     }
 
-    /* Node Card Base Styling */
-    .tree-node-box {
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 20px 18px;
-      text-decoration: none;
-      color: #cbd5e1;
+    /* ── CARD BASE DESIGN SYSTEM ─────────────────────────────────────── */
+    .cyber-node {
       display: inline-block;
-      border-radius: 18px;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      background: rgba(15, 23, 42, 0.95);
-      backdrop-filter: blur(12px);
+      text-align: center;
+      text-decoration: none;
       position: relative;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      border-radius: 24px;
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.85));
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
     }
-    .tree-node-box:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 15px 35px rgba(0, 242, 254, 0.25);
+    .cyber-node:hover {
+      transform: translateY(-8px) scale(1.02);
+      z-index: 10;
     }
 
-    /* ── Node Tiers ─────────────────────────────────────────────────── */
-    /* Level 1: Sharthak Sen */
-    .node-l1 {
-      width: 380px;
+    /* ── LEVEL 1: SHARTHAK SEN (FOUNDER & CEO / SUPREME LEADER) ──────── */
+    .node-crown {
+      width: 440px;
+      padding: 35px 28px 30px;
       border: 2px solid #00f2fe;
-      background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.9));
-      box-shadow: 0 0 30px rgba(0, 242, 254, 0.25), inset 0 0 20px rgba(0, 242, 254, 0.08);
-      padding: 26px 22px;
+      box-shadow: 0 0 40px rgba(0, 242, 254, 0.3), inset 0 0 30px rgba(0, 242, 254, 0.1);
+      background: linear-gradient(160deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.92));
     }
-    .avatar-l1 {
-      width: 76px;
-      height: 76px;
+    .node-crown::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 26px;
+      background: linear-gradient(135deg, #00f2fe, #f59e0b, #4facfe, #00f2fe);
+      background-size: 300% 300%;
+      z-index: -1;
+      opacity: 0.7;
+      animation: borderGlow 6s ease infinite;
+    }
+    @keyframes borderGlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .crown-banner {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(217, 119, 6, 0.25));
+      border: 1px solid rgba(245, 158, 11, 0.6);
+      color: #fbbf24;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 5px 16px;
+      border-radius: 50px;
+      margin-bottom: 16px;
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+    }
+    .crown-avatar-frame {
+      width: 90px;
+      height: 90px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #6366f1 100%);
+      background: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #f59e0b 100%);
       color: #0b132b;
-      font-size: 1.8rem;
+      font-size: 2.2rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 15px;
+      border: 3px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 0 30px rgba(0, 242, 254, 0.5);
+      position: relative;
+    }
+    .status-badge-online {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #10b981;
+      border: 3px solid #0f172a;
+      box-shadow: 0 0 10px #10b981;
+    }
+    .node-title-l1 {
+      font-size: 1.85rem;
+      font-weight: 900;
+      color: #ffffff;
+      margin-bottom: 4px;
+      letter-spacing: -0.5px;
+    }
+    .node-role-l1 {
+      font-size: 1.02rem;
+      font-weight: 800;
+      color: #00f2fe;
+      margin-bottom: 12px;
+      letter-spacing: 0.2px;
+    }
+    .node-bio-l1 {
+      color: #94a3b8;
+      font-size: 0.92rem;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+    .chip-group {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .skill-chip {
+      font-size: 0.72rem;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 3px 10px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      color: #cbd5e1;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .skill-chip.gold { background: rgba(245, 158, 11, 0.12); color: #fbbf24; border-color: rgba(245, 158, 11, 0.3); }
+    .skill-chip.cyan { background: rgba(0, 242, 254, 0.12); color: #00f2fe; border-color: rgba(0, 242, 254, 0.3); }
+    .skill-chip.purple { background: rgba(168, 85, 247, 0.12); color: #c084fc; border-color: rgba(168, 85, 247, 0.3); }
+
+    /* ── LEVEL 2: 3 DIRECTORATE CHIEFS ──────────────────────────────── */
+    .node-l2 {
+      width: 320px;
+      padding: 26px 20px 22px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    }
+    .node-l2.cyan-theme {
+      border-top: 4px solid #00f2fe;
+      box-shadow: 0 10px 30px rgba(0, 242, 254, 0.15);
+    }
+    .node-l2.purple-theme {
+      border-top: 4px solid #c084fc;
+      box-shadow: 0 10px 30px rgba(168, 85, 247, 0.15);
+    }
+    .node-l2.amber-theme {
+      border-top: 4px solid #f59e0b;
+      box-shadow: 0 10px 30px rgba(245, 158, 11, 0.15);
+    }
+
+    .avatar-l2-frame {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      font-size: 1.6rem;
       font-weight: 900;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto 12px;
-      border: 3px solid rgba(255, 255, 255, 0.25);
-      box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+      position: relative;
     }
-    .name-l1 {
-      font-size: 1.6rem;
+    .avatar-l2-frame.cyan { background: linear-gradient(135deg, rgba(0,242,254,0.3), rgba(79,172,254,0.5)); color: #00f2fe; border: 2px solid #00f2fe; }
+    .avatar-l2-frame.purple { background: linear-gradient(135deg, rgba(168,85,247,0.3), rgba(192,132,252,0.5)); color: #c084fc; border: 2px solid #c084fc; }
+    .avatar-l2-frame.amber { background: linear-gradient(135deg, rgba(245,158,11,0.3), rgba(251,191,36,0.5)); color: #fbbf24; border: 2px solid #f59e0b; }
+
+    .node-name-l2 {
+      font-size: 1.35rem;
       font-weight: 800;
       color: #ffffff;
       margin-bottom: 4px;
     }
-    .role-l1 {
-      font-size: 0.95rem;
+    .node-role-l2 {
+      font-size: 0.88rem;
       font-weight: 700;
-      color: #00f2fe;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
-    .badge-l1 {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      background: rgba(245, 158, 11, 0.15);
-      border: 1px solid rgba(245, 158, 11, 0.4);
-      color: #fbbf24;
-      padding: 4px 14px;
-      border-radius: 50px;
-      font-size: 0.78rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
+    .node-desc-l2 {
+      font-size: 0.84rem;
+      color: #94a3b8;
+      line-height: 1.55;
+      margin-bottom: 14px;
     }
 
-    /* Level 2: Directorate Heads (3 Members) */
-    .node-l2 {
-      width: 280px;
-      padding: 20px 16px;
+    /* ── LEVEL 3: 7 FUNCTIONAL SPECIALISTS ──────────────────────────── */
+    .node-l3 {
+      width: 200px;
+      padding: 18px 14px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(30, 41, 59, 0.75);
+      border-radius: 18px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
     }
-    .node-l2.cyan { border-top: 4px solid #00f2fe; border-color: rgba(0, 242, 254, 0.3); }
-    .node-l2.purple { border-top: 4px solid #c084fc; border-color: rgba(192, 132, 252, 0.3); }
-    .node-l2.amber { border-top: 4px solid #f59e0b; border-color: rgba(245, 158, 11, 0.3); }
-
-    .avatar-l2 {
-      width: 56px;
-      height: 56px;
+    .node-l3:hover {
+      border-color: #00f2fe;
+      background: rgba(30, 41, 59, 0.95);
+      box-shadow: 0 12px 30px rgba(0, 242, 254, 0.25);
+    }
+    .avatar-l3-frame {
+      width: 46px;
+      height: 46px;
       border-radius: 50%;
-      font-size: 1.35rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      color: #38bdf8;
+      font-size: 1.1rem;
       font-weight: 800;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto 10px;
     }
-    .avatar-l2.cyan { background: rgba(0, 242, 254, 0.15); color: #00f2fe; border: 2px solid rgba(0, 242, 254, 0.3); }
-    .avatar-l2.purple { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 2px solid rgba(168, 85, 247, 0.3); }
-    .avatar-l2.amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 2px solid rgba(245, 158, 11, 0.3); }
-
-    .name-l2 {
-      font-size: 1.25rem;
+    .node-name-l3 {
+      font-size: 1.05rem;
       font-weight: 700;
       color: #ffffff;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
+      line-height: 1.25;
     }
-    .role-l2 {
-      font-size: 0.82rem;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-    .role-l2.cyan { color: #00f2fe; }
-    .role-l2.purple { color: #c084fc; }
-    .role-l2.amber { color: #fbbf24; }
-
-    .dept-l2 {
-      display: inline-block;
-      font-size: 0.72rem;
+    .node-role-l3 {
+      font-size: 0.78rem;
+      color: #38bdf8;
       font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 8px;
+      margin-bottom: 8px;
+      line-height: 1.35;
+    }
+    .tag-l3-pill {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(0, 242, 254, 0.08);
+      color: #7dd3fc;
+      border: 1px solid rgba(0, 242, 254, 0.2);
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-    .dept-l2.cyan { background: rgba(0, 242, 254, 0.1); color: #00f2fe; border: 1px solid rgba(0, 242, 254, 0.25); }
-    .dept-l2.purple { background: rgba(168, 85, 247, 0.1); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.25); }
-    .dept-l2.amber { background: rgba(245, 158, 11, 0.1); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.25); }
 
-    /* Level 3: Functional Leads & Specialists (7 Members) */
-    .node-l3 {
-      width: 175px;
-      padding: 14px 10px;
-      border-radius: 14px;
-      background: rgba(30, 41, 59, 0.7);
-    }
-    .avatar-l3 {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #38bdf8;
-      font-size: 1rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 8px;
-    }
-    .name-l3 {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 2px;
-      line-height: 1.2;
-    }
-    .role-l3 {
-      font-size: 0.74rem;
-      color: #38bdf8;
-      font-weight: 600;
-      margin-bottom: 6px;
-      line-height: 1.3;
-    }
-    .tag-l3 {
-      display: inline-block;
-      font-size: 0.65rem;
-      font-weight: 600;
-      padding: 2px 6px;
-      border-radius: 6px;
-      background: rgba(255, 255, 255, 0.06);
-      color: #cbd5e1;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    /* ── Alternate Mobile/List View ─────────────────────────────────── */
-    .org-list-view {
-      display: none;
-      max-width: 900px;
-      margin: 0 auto 60px;
-    }
-    .list-tier-block {
-      background: rgba(15, 23, 42, 0.8);
-      backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
-      padding: 25px;
-      margin-bottom: 25px;
-    }
-    .list-tier-title {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: #00f2fe;
-      margin-bottom: 18px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .list-members-grid {
+    /* ── Live Stats HUD Bar ─────────────────────────────────────────── */
+    .hud-metrics-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 15px;
-    }
-    .list-member-card {
-      background: rgba(30, 41, 59, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 12px;
-      padding: 15px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    /* ── Stats & Pillars ────────────────────────────────────────────── */
-    .stats-banner-glass {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
       gap: 20px;
-      background: rgba(15, 23, 42, 0.7);
+      background: rgba(15, 23, 42, 0.75);
       backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 20px;
-      padding: 35px 25px;
-      margin: 40px 0 60px;
+      padding: 30px 25px;
+      margin: 20px 0 65px;
       text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     }
-    .stat-number {
-      font-size: 2.4rem;
-      font-weight: 800;
-      color: #00f2fe;
+    .hud-stat-num {
+      font-size: 2.6rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #00f2fe, #4facfe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
       line-height: 1;
       margin-bottom: 8px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
     }
-    .stat-label {
+    .hud-stat-lbl {
       color: #94a3b8;
-      font-size: 0.9rem;
-      font-weight: 600;
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
     }
 
+    /* ── Core Value Pillars ─────────────────────────────────────────── */
     .about-grid-3 {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -443,21 +491,22 @@ if (!defined('SERVEASY_ASSET_VER')) {
       margin-bottom: 60px;
     }
     .about-card {
-      background: rgba(15, 23, 42, 0.7);
+      background: rgba(15, 23, 42, 0.75);
       backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
+      border-radius: 22px;
       padding: 35px 30px;
       transition: all 0.3s ease;
+      position: relative;
     }
     .about-card:hover {
       transform: translateY(-5px);
       border-color: rgba(0, 242, 254, 0.4);
-      box-shadow: 0 12px 30px rgba(0, 242, 254, 0.15);
+      box-shadow: 0 15px 35px rgba(0, 242, 254, 0.15);
     }
     .about-card-icon {
-      width: 56px;
-      height: 56px;
+      width: 58px;
+      height: 58px;
       border-radius: 16px;
       background: rgba(0, 242, 254, 0.1);
       display: flex;
@@ -466,52 +515,97 @@ if (!defined('SERVEASY_ASSET_VER')) {
       font-size: 1.8rem;
       color: #00f2fe;
       margin-bottom: 20px;
+      border: 1px solid rgba(0, 242, 254, 0.25);
     }
-    .about-card-icon.emerald { background: rgba(16, 185, 129, 0.1); color: #34d399; }
-    .about-card-icon.purple { background: rgba(168, 85, 247, 0.1); color: #c084fc; }
+    .about-card-icon.emerald { background: rgba(16, 185, 129, 0.1); color: #34d399; border-color: rgba(16, 185, 129, 0.25); }
+    .about-card-icon.purple { background: rgba(168, 85, 247, 0.1); color: #c084fc; border-color: rgba(168, 85, 247, 0.25); }
 
+    /* ── CTA Banner ─────────────────────────────────────────────────── */
     .cta-banner-glass {
-      background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(59, 130, 246, 0.15));
-      border: 1px solid rgba(0, 242, 254, 0.3);
-      border-radius: 24px;
-      padding: 50px 30px;
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.18), rgba(99, 102, 241, 0.18));
+      border: 1px solid rgba(0, 242, 254, 0.35);
+      border-radius: 28px;
+      padding: 55px 30px;
       text-align: center;
-      margin: 60px 0;
+      margin: 60px 0 80px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
     }
     .btn-about-primary {
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      padding: 14px 32px;
+      padding: 15px 34px;
       border-radius: 12px;
       background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
       color: #0f172a;
-      font-weight: 700;
+      font-weight: 800;
       text-decoration: none;
       transition: all 0.3s ease;
+      font-size: 1rem;
     }
     .btn-about-primary:hover {
-      box-shadow: 0 8px 25px rgba(0, 242, 254, 0.4);
+      box-shadow: 0 8px 30px rgba(0, 242, 254, 0.45);
       transform: translateY(-2px);
     }
     .btn-about-secondary {
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      padding: 14px 32px;
+      padding: 15px 34px;
       border-radius: 12px;
       background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.18);
       color: #fff;
       font-weight: 700;
       text-decoration: none;
       transition: all 0.3s ease;
       margin-left: 15px;
+      font-size: 1rem;
     }
     .btn-about-secondary:hover {
       background: rgba(255, 255, 255, 0.15);
       transform: translateY(-2px);
     }
+
+    /* ── Interactive Modal for Team Member Details ──────────────────── */
+    .team-modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .team-modal-box {
+      background: #0f172a;
+      border: 1px solid #00f2fe;
+      border-radius: 24px;
+      max-width: 500px;
+      width: 100%;
+      padding: 35px 30px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 25px 60px rgba(0, 242, 254, 0.3);
+      animation: modalPop 0.3s ease;
+    }
+    @keyframes modalPop {
+      0% { transform: scale(0.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .btn-modal-close {
+      position: absolute;
+      top: 15px;
+      right: 18px;
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 1.8rem;
+      cursor: pointer;
+    }
+    .btn-modal-close:hover { color: #00f2fe; }
   </style>
 </head>
 
@@ -529,149 +623,196 @@ if (!defined('SERVEASY_ASSET_VER')) {
       <!-- Breadcrumbs -->
       <div style="padding: 25px 0 10px;">
         <span style="color: #64748b; font-size: 0.9rem;">
-          <a href="../index.php" style="color: #94a3b8; text-decoration: none;">Home</a> / <span style="color: #00f2fe;">About ServEasy & Team Hierarchy Tree</span>
+          <a href="../index.php" style="color: #94a3b8; text-decoration: none;">Home</a> / <span style="color: #00f2fe;">About ServEasy & Organizational Command Tree</span>
         </span>
       </div>
 
-      <!-- Hero Section -->
+      <!-- Hero Header -->
       <section class="about-hero-section">
-        <div class="about-badge">
-          <ion-icon name="git-network-outline"></ion-icon>
-          <span>Leadership & Team Hierarchy Tree</span>
+        <div class="hero-badge-pill">
+          <span class="pulse-dot"></span>
+          <span>Official Organization Command Tree</span>
         </div>
         <h1 class="about-hero-title">
-          ServEasy <span>Team Organization Tree</span>
+          Meet the Minds Behind <span class="gradient-text">ServEasy</span>
         </h1>
         <p class="about-hero-desc">
-          Explore the official organizational site map of ServEasy: structured from top executive leadership under Sharthak Sen down to the 3 directorate department heads and 7 operational specialists.
+          An interactive architectural site map of our executive governance, technology directors, and field specialist command leads steering on-demand excellence across vehicle care, home hygiene, and 24/7 roadside rescue.
         </p>
 
-        <!-- View Toggle Controls -->
-        <div class="view-switcher-bar">
-          <button type="button" class="btn-view-toggle active" id="btn-show-tree" onclick="switchView('tree')">
-            <ion-icon name="git-branch-outline"></ion-icon> Visual Tree Diagram
+        <!-- Interactive HUD Filter Buttons -->
+        <div class="tree-hud-bar">
+          <button type="button" class="hud-chip active" onclick="highlightTree('all', this)">
+            <ion-icon name="git-network-outline"></ion-icon> Complete Network (11 Members)
           </button>
-          <button type="button" class="btn-view-toggle" id="btn-show-list" onclick="switchView('list')">
-            <ion-icon name="list-outline"></ion-icon> Detailed Tier List
+          <button type="button" class="hud-chip" onclick="highlightTree('l1', this)">
+            <ion-icon name="shield-checkmark"></ion-icon> Top Authority (Sharthak Sen)
+          </button>
+          <button type="button" class="hud-chip" onclick="highlightTree('tech', this)">
+            <ion-icon name="code-slash-outline"></ion-icon> Technology Command
+          </button>
+          <button type="button" class="hud-chip" onclick="highlightTree('ops', this)">
+            <ion-icon name="speedometer-outline"></ion-icon> Operations Grid
+          </button>
+          <button type="button" class="hud-chip" onclick="highlightTree('prod', this)">
+            <ion-icon name="car-sport-outline"></ion-icon> Automotive & Fleet
           </button>
         </div>
-        <div class="tree-scroll-hint">
-          <ion-icon name="swap-horizontal-outline"></ion-icon> Scroll horizontally to view complete hierarchy branches
+        <div class="scroll-hint-pill">
+          <ion-icon name="swap-horizontal-outline"></ion-icon> Swipe horizontally to inspect reporting branches
         </div>
       </section>
 
       <!-- ===============================================================
-           1. PURE CSS / SVG VISUAL ORGANIZATIONAL TREE DIAGRAM
+           HIGH-TECH VISUAL ORGANIZATIONAL TREE STAGE
            =============================================================== -->
-      <div class="org-chart-wrapper" id="view-tree-container">
-        <div class="tree">
+      <section class="tree-stage">
+        <div class="org-tree">
           <ul>
             <!-- ROOT / LEVEL 1: SHARTHAK SEN -->
-            <li>
-              <div class="tree-node-box node-l1">
-                <div class="avatar-l1">SS</div>
-                <h2 class="name-l1">Sharthak Sen</h2>
-                <div class="role-l1">Founder & Chief Executive Officer (Super Admin)</div>
-                <div class="badge-l1">
-                  <ion-icon name="ribbon-outline"></ion-icon> Level 1: Top Authority & Vision
+            <li class="branch-all branch-l1">
+              <div class="cyber-node node-crown" onclick="openMemberModal('Sharthak Sen', 'Founder & Chief Executive Officer (Super Admin)', 'Executive Directorate & Supreme Governance', 'Steers the overarching strategic vision, technology roadmap, investment governance, and nationwide expansion of the ServEasy on-demand ecosystem.', ['Strategic Direction', 'Ecosystem Architecture', 'Superadmin Control'])">
+                <div class="crown-banner">
+                  <ion-icon name="sparkles-outline"></ion-icon> Supreme Executive Authority &bull; Level 1
+                </div>
+                <div class="crown-avatar-frame">
+                  SS
+                  <span class="status-badge-online" title="Active on Network"></span>
+                </div>
+                <h2 class="node-title-l1">Sharthak Sen</h2>
+                <div class="node-role-l1">Founder & Chief Executive Officer (Super Admin)</div>
+                <p class="node-bio-l1">
+                  Master architect behind ServEasy's multi-portal on-demand ecosystem, real-time dispatch infrastructure, and verified partner network.
+                </p>
+                <div class="chip-group">
+                  <span class="skill-chip gold">Executive Board</span>
+                  <span class="skill-chip cyan">Platform Architecture</span>
+                  <span class="skill-chip purple">Super Admin Control</span>
                 </div>
               </div>
 
-              <!-- BRANCH DOWN TO LEVEL 2: 3 DIRECTORATE HEADS -->
+              <!-- BRANCH DOWN TO LEVEL 2: 3 DIRECTORATE CHIEFS -->
               <ul>
-                <!-- LEVEL 2 - MEMBER 1: SAIKAT SASMAL (TECH) -->
-                <li>
-                  <div class="tree-node-box node-l2 cyan">
-                    <div class="avatar-l2 cyan">SS</div>
-                    <h3 class="name-l2">Saikat Sasmal</h3>
-                    <div class="role-l2 cyan">Chief Technology Officer & Lead Architect</div>
-                    <span class="dept-l2 cyan">Engineering & Systems</span>
+                <!-- LEVEL 2 &bull; PILLAR 1: SAIKAT SASMAL (TECHNOLOGY) -->
+                <li class="branch-all branch-tech">
+                  <div class="cyber-node node-l2 cyan-theme" onclick="openMemberModal('Saikat Sasmal', 'Chief Technology Officer & Lead Architect', 'Engineering & Technology Command', 'Directs the engineering team, multi-portal API bridges, database integrity, and high-concurrency dispatch telemetry.', ['Cloud Architecture', 'MySQL Security', 'REST APIs', 'System Defense'])">
+                    <div class="avatar-l2-frame cyan">
+                      SS
+                      <span class="status-badge-online"></span>
+                    </div>
+                    <h3 class="node-name-l2">Saikat Sasmal</h3>
+                    <div class="node-role-l2" style="color: #00f2fe;">Chief Technology Officer (CTO)</div>
+                    <p class="node-desc-l2">
+                      Architect of multi-portal security, automated API bridges, and high-availability database engines.
+                    </p>
+                    <div class="chip-group">
+                      <span class="skill-chip cyan">API Architecture</span>
+                      <span class="skill-chip cyan">Database Security</span>
+                    </div>
                   </div>
 
                   <!-- SUB-BRANCH TO LEVEL 3 (2 SPECIALISTS UNDER SAIKAT) -->
                   <ul>
-                    <li>
-                      <div class="tree-node-box node-l3">
-                        <div class="avatar-l3">DC</div>
-                        <h4 class="name-l3">David Chen</h4>
-                        <div class="role-l3">Emergency SOS Dispatch</div>
-                        <span class="tag-l3">Roadside SOS</span>
+                    <li class="branch-all branch-tech">
+                      <div class="cyber-node node-l3" onclick="openMemberModal('David Chen', 'Emergency SOS Dispatch Lead', 'Emergency Rapid Response Unit', 'Manages live GPS roadside breakdown tracking, emergency tow truck dispatch, and technician response times.', ['24/7 Roadside SOS', 'GPS Telemetry', 'Towing Logistics'])">
+                        <div class="avatar-l3-frame">DC</div>
+                        <h4 class="node-name-l3">David Chen</h4>
+                        <div class="node-role-l3">Emergency SOS Dispatch</div>
+                        <span class="tag-l3-pill">Rapid SOS</span>
                       </div>
                     </li>
-                    <li>
-                      <div class="tree-node-box node-l3">
-                        <div class="avatar-l3">SL</div>
-                        <h4 class="name-l3">Sophia Lin</h4>
-                        <div class="role-l3">Cybersecurity Lead</div>
-                        <span class="tag-l3">AppSec & Privacy</span>
+                    <li class="branch-all branch-tech">
+                      <div class="cyber-node node-l3" onclick="openMemberModal('Sophia Lin', 'Cybersecurity & Privacy Lead', 'Information Security Directorate', 'Audits OWASP defenses, executes penetration testing, and ensures end-to-end customer credential encryption.', ['AppSec Hardening', 'Zero Trust', 'Data Privacy'])">
+                        <div class="avatar-l3-frame">SL</div>
+                        <h4 class="node-name-l3">Sophia Lin</h4>
+                        <div class="node-role-l3">Cybersecurity Lead</div>
+                        <span class="tag-l3-pill">AppSec & Privacy</span>
                       </div>
                     </li>
                   </ul>
                 </li>
 
-                <!-- LEVEL 2 - MEMBER 2: ELENA ROSTOVA (OPERATIONS) -->
-                <li>
-                  <div class="tree-node-box node-l2 purple">
-                    <div class="avatar-l2 purple">ER</div>
-                    <h3 class="name-l2">Elena Rostova</h3>
-                    <div class="role-l2 purple">Chief Operating Officer (COO)</div>
-                    <span class="dept-l2 purple">Operations & Service Grid</span>
+                <!-- LEVEL 2 &bull; PILLAR 2: ELENA ROSTOVA (OPERATIONS) -->
+                <li class="branch-all branch-ops">
+                  <div class="cyber-node node-l2 purple-theme" onclick="openMemberModal('Elena Rostova', 'Chief Operating Officer (COO)', 'Field Operations & Service Grid', 'Oversees nationwide technician fulfillment, partner vetting compliance, dispute arbitration, and customer satisfaction.', ['Field Operations', 'SLA Enforcement', 'Partner Network', 'Service Quality'])">
+                    <div class="avatar-l2-frame purple">
+                      ER
+                      <span class="status-badge-online"></span>
+                    </div>
+                    <h3 class="node-name-l2">Elena Rostova</h3>
+                    <div class="node-role-l2" style="color: #c084fc;">Chief Operating Officer (COO)</div>
+                    <p class="node-desc-l2">
+                      Enforces doorstep service standards, partner SLA compliance, and multi-channel customer concierge.
+                    </p>
+                    <div class="chip-group">
+                      <span class="skill-chip purple">Operations Grid</span>
+                      <span class="skill-chip purple">SLA Quality</span>
+                    </div>
                   </div>
 
                   <!-- SUB-BRANCH TO LEVEL 3 (3 SPECIALISTS UNDER ELENA) -->
                   <ul>
-                    <li>
-                      <div class="tree-node-box node-l3">
-                        <div class="avatar-l3">PS</div>
-                        <h4 class="name-l3">Priya Sharma</h4>
-                        <div class="role-l3">Customer Concierge</div>
-                        <span class="tag-l3">Concierge Desk</span>
+                    <li class="branch-all branch-ops">
+                      <div class="cyber-node node-l3" onclick="openMemberModal('Priya Sharma', 'Customer Concierge Lead', 'Customer Success & Experience', 'Coordinates live booking assistance, rescheduling requests, and VIP customer concierge desk.', ['Concierge Desk', 'Support Resolution', 'Customer NPS'])">
+                        <div class="avatar-l3-frame">PS</div>
+                        <h4 class="node-name-l3">Priya Sharma</h4>
+                        <div class="node-role-l3">Customer Concierge</div>
+                        <span class="tag-l3-pill">Concierge Desk</span>
                       </div>
                     </li>
-                    <li>
-                      <div class="tree-node-box node-l3">
-                        <div class="avatar-l3">RV</div>
-                        <h4 class="name-l3">Rahul Verma</h4>
-                        <div class="role-l3">Partner KYC Lead</div>
-                        <span class="tag-l3">Vetting & Compliance</span>
+                    <li class="branch-all branch-ops">
+                      <div class="cyber-node node-l3" onclick="openMemberModal('Rahul Verma', 'Partner KYC & Vetting Lead', 'Compliance & Onboarding Unit', 'Directs multi-stage government ID checks, trade skill tests, and criminal background verification for providers.', ['Government KYC', 'Criminal Checks', 'Trade Audits'])">
+                        <div class="avatar-l3-frame">RV</div>
+                        <h4 class="node-name-l3">Rahul Verma</h4>
+                        <div class="node-role-l3">Partner KYC Lead</div>
+                        <span class="tag-l3-pill">KYC & Vetting</span>
                       </div>
                     </li>
-                    <li>
-                      <div class="tree-node-box node-l3">
-                        <div class="avatar-l3">AD</div>
-                        <h4 class="name-l3">Ananya Das</h4>
-                        <div class="role-l3">QA & Field Auditor</div>
-                        <span class="tag-l3">Quality Standards</span>
+                    <li class="branch-all branch-ops">
+                      <div class="cyber-node node-l3" onclick="openMemberModal('Ananya Das', 'Quality Assurance & Field Auditor', 'Safety & Sanitation Audit Desk', 'Conducts surprise on-site service inspections, hygienic protocol audits, and customer review reconciliations.', ['Field Audits', 'Hygiene Standards', 'Sanitation Safety'])">
+                        <div class="avatar-l3-frame">AD</div>
+                        <h4 class="node-name-l3">Ananya Das</h4>
+                        <div class="node-role-l3">QA & Field Auditor</div>
+                        <span class="tag-l3-pill">Quality Audit</span>
                       </div>
                     </li>
                   </ul>
                 </li>
 
-                <!-- LEVEL 2 - MEMBER 3: MARCUS STERLING (PRODUCT & AUTOMOTIVE) -->
-                <li>
-                  <div class="tree-node-box node-l2 amber">
-                    <div class="avatar-l2 amber">MS</div>
-                    <h3 class="name-l2">Marcus Sterling</h3>
-                    <div class="role-l2 amber">Chief Product Officer (CPO)</div>
-                    <span class="dept-l2 amber">Automotive & Product Standards</span>
+                <!-- LEVEL 2 &bull; PILLAR 3: MARCUS STERLING (PRODUCT & AUTOMOTIVE) -->
+                <li class="branch-all branch-prod">
+                  <div class="cyber-node node-l2 amber-theme" onclick="openMemberModal('Marcus Sterling', 'Chief Product Officer (CPO)', 'Automotive & Product Engineering', 'Directs automotive mechanical diagnostic standards, car & bike detailing protocols, and equipment partnerships.', ['Automotive Engineering', 'Tooling Specs', 'Product UX', 'Fleet Standards'])">
+                    <div class="avatar-l2-frame amber">
+                      MS
+                      <span class="status-badge-online"></span>
+                    </div>
+                    <h3 class="node-name-l2">Marcus Sterling</h3>
+                    <div class="node-role-l2" style="color: #fbbf24;">Chief Product Officer (CPO)</div>
+                    <p class="node-desc-l2">
+                      Leads automotive mechanical standards, vehicle wash innovations, and fleet equipment specifications.
+                    </p>
+                    <div class="chip-group">
+                      <span class="skill-chip gold">Automotive Standards</span>
+                      <span class="skill-chip gold">Fleet R&D</span>
+                    </div>
                   </div>
 
                   <!-- SUB-BRANCH TO LEVEL 3 (2 SPECIALISTS UNDER MARCUS) -->
                   <ul>
-                    <li>
-                      <div class="tree-node-box node-l3">
-                        <div class="avatar-l3">VM</div>
-                        <h4 class="name-l3">Vikram Malhotra</h4>
-                        <div class="role-l3">Fleet Logistics Manager</div>
-                        <span class="tag-l3">Fleet & Cargo</span>
+                    <li class="branch-all branch-prod">
+                      <div class="cyber-node node-l3" onclick="openMemberModal('Vikram Malhotra', 'Fleet Logistics & Rental Manager', 'Fleet & Transport Logistics', 'Coordinates car and bike rental fleets, cargo carrier operations, and mechanical maintenance schedules.', ['Rental Logistics', 'Cargo Express', 'Vehicle Maintenance'])">
+                        <div class="avatar-l3-frame">VM</div>
+                        <h4 class="node-name-l3">Vikram Malhotra</h4>
+                        <div class="node-role-l3">Fleet Logistics Manager</div>
+                        <span class="tag-l3-pill">Fleet Logistics</span>
                       </div>
                     </li>
-                    <li>
-                      <div class="tree-node-box node-l3">
-                        <div class="avatar-l3">AR</div>
-                        <h4 class="name-l3">Amit Roy</h4>
-                        <div class="role-l3">Merchant Settlements</div>
-                        <span class="tag-l3">Billing & Payouts</span>
+                    <li class="branch-all branch-prod">
+                      <div class="cyber-node node-l3" onclick="openMemberModal('Amit Roy', 'Merchant Billing & Settlements Lead', 'Financial Escrow & Settlements Desk', 'Manages transparent payment gateway settlements, automated technician payouts, and verified dispute refund audits.', ['Instant Payouts', 'Gateway Escrow', 'Refund Audits'])">
+                        <div class="avatar-l3-frame">AR</div>
+                        <h4 class="node-name-l3">Amit Roy</h4>
+                        <div class="node-role-l3">Merchant Settlements</div>
+                        <span class="tag-l3-pill">Billing & Payouts</span>
                       </div>
                     </li>
                   </ul>
@@ -680,136 +821,25 @@ if (!defined('SERVEASY_ASSET_VER')) {
             </li>
           </ul>
         </div>
-      </div>
+      </section>
 
-      <!-- ===============================================================
-           2. DETAILED TIER LIST VIEW (ALTERNATE DISPLAY)
-           =============================================================== -->
-      <div class="org-list-view" id="view-list-container">
-        <!-- Tier 1 -->
-        <div class="list-tier-block">
-          <div class="list-tier-title">
-            <ion-icon name="star"></ion-icon> Level 1: Executive Top Leadership (1 Member)
-          </div>
-          <div class="list-member-card" style="border-left: 4px solid #00f2fe;">
-            <div class="avatar-l1" style="width: 50px; height: 50px; font-size: 1.2rem; margin: 0;">SS</div>
-            <div>
-              <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 2px;">Sharthak Sen</h3>
-              <p style="color: #00f2fe; font-size: 0.85rem; font-weight: 700; margin: 0;">Founder & Chief Executive Officer (Super Admin)</p>
-              <p style="color: #94a3b8; font-size: 0.82rem; margin-top: 4px;">Top platform authority steering strategy, governance, and business expansion.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tier 2 -->
-        <div class="list-tier-block">
-          <div class="list-tier-title">
-            <ion-icon name="layers"></ion-icon> Level 2: Directorate & Department Heads (3 Members)
-          </div>
-          <div class="list-members-grid">
-            <div class="list-member-card" style="border-left: 4px solid #00f2fe;">
-              <div class="avatar-l2 cyan" style="width: 44px; height: 44px; font-size: 1.1rem; margin: 0;">SS</div>
-              <div>
-                <h4 style="color: #fff; font-size: 1.05rem; margin-bottom: 2px;">Saikat Sasmal</h4>
-                <p style="color: #00f2fe; font-size: 0.8rem; font-weight: 600; margin: 0;">Chief Technology Officer</p>
-                <span class="dept-l2 cyan" style="margin-top: 4px;">Engineering</span>
-              </div>
-            </div>
-            <div class="list-member-card" style="border-left: 4px solid #c084fc;">
-              <div class="avatar-l2 purple" style="width: 44px; height: 44px; font-size: 1.1rem; margin: 0;">ER</div>
-              <div>
-                <h4 style="color: #fff; font-size: 1.05rem; margin-bottom: 2px;">Elena Rostova</h4>
-                <p style="color: #c084fc; font-size: 0.8rem; font-weight: 600; margin: 0;">Chief Operating Officer</p>
-                <span class="dept-l2 purple" style="margin-top: 4px;">Operations</span>
-              </div>
-            </div>
-            <div class="list-member-card" style="border-left: 4px solid #fbbf24;">
-              <div class="avatar-l2 amber" style="width: 44px; height: 44px; font-size: 1.1rem; margin: 0;">MS</div>
-              <div>
-                <h4 style="color: #fff; font-size: 1.05rem; margin-bottom: 2px;">Marcus Sterling</h4>
-                <p style="color: #fbbf24; font-size: 0.8rem; font-weight: 600; margin: 0;">Chief Product Officer</p>
-                <span class="dept-l2 amber" style="margin-top: 4px;">Product</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tier 3 -->
-        <div class="list-tier-block">
-          <div class="list-tier-title">
-            <ion-icon name="people"></ion-icon> Level 3: Functional Specialist Leads (7 Members)
-          </div>
-          <div class="list-members-grid">
-            <div class="list-member-card">
-              <div class="avatar-l3" style="margin: 0;">DC</div>
-              <div>
-                <h5 style="color: #fff; font-size: 0.95rem; margin-bottom: 2px;">David Chen</h5>
-                <p style="color: #38bdf8; font-size: 0.75rem; margin: 0;">Emergency SOS Dispatch</p>
-              </div>
-            </div>
-            <div class="list-member-card">
-              <div class="avatar-l3" style="margin: 0;">PS</div>
-              <div>
-                <h5 style="color: #fff; font-size: 0.95rem; margin-bottom: 2px;">Priya Sharma</h5>
-                <p style="color: #38bdf8; font-size: 0.75rem; margin: 0;">Customer Concierge</p>
-              </div>
-            </div>
-            <div class="list-member-card">
-              <div class="avatar-l3" style="margin: 0;">RV</div>
-              <div>
-                <h5 style="color: #fff; font-size: 0.95rem; margin-bottom: 2px;">Rahul Verma</h5>
-                <p style="color: #38bdf8; font-size: 0.75rem; margin: 0;">Partner KYC & Vetting</p>
-              </div>
-            </div>
-            <div class="list-member-card">
-              <div class="avatar-l3" style="margin: 0;">AD</div>
-              <div>
-                <h5 style="color: #fff; font-size: 0.95rem; margin-bottom: 2px;">Ananya Das</h5>
-                <p style="color: #38bdf8; font-size: 0.75rem; margin: 0;">QA & Field Safety Auditor</p>
-              </div>
-            </div>
-            <div class="list-member-card">
-              <div class="avatar-l3" style="margin: 0;">VM</div>
-              <div>
-                <h5 style="color: #fff; font-size: 0.95rem; margin-bottom: 2px;">Vikram Malhotra</h5>
-                <p style="color: #38bdf8; font-size: 0.75rem; margin: 0;">Fleet Logistics Manager</p>
-              </div>
-            </div>
-            <div class="list-member-card">
-              <div class="avatar-l3" style="margin: 0;">SL</div>
-              <div>
-                <h5 style="color: #fff; font-size: 0.95rem; margin-bottom: 2px;">Sophia Lin</h5>
-                <p style="color: #38bdf8; font-size: 0.75rem; margin: 0;">Cybersecurity & Privacy</p>
-              </div>
-            </div>
-            <div class="list-member-card">
-              <div class="avatar-l3" style="margin: 0;">AR</div>
-              <div>
-                <h5 style="color: #fff; font-size: 0.95rem; margin-bottom: 2px;">Amit Roy</h5>
-                <p style="color: #38bdf8; font-size: 0.75rem; margin: 0;">Merchant Settlements</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Metrics Banner -->
-      <div class="stats-banner-glass">
+      <!-- Organization Metrics HUD Bar -->
+      <div class="hud-metrics-row">
         <div>
-          <div class="stat-number">1</div>
-          <div class="stat-label">Executive Leadership</div>
+          <div class="hud-stat-num">1</div>
+          <div class="hud-stat-lbl">Supreme Executive Vision</div>
         </div>
         <div>
-          <div class="stat-number">3</div>
-          <div class="stat-label">Directorate Pillars</div>
+          <div class="hud-stat-num">3</div>
+          <div class="hud-stat-lbl">Directorate Pillars</div>
         </div>
         <div>
-          <div class="stat-number">7</div>
-          <div class="stat-label">Functional Specialist Units</div>
+          <div class="hud-stat-num">7</div>
+          <div class="hud-stat-lbl">Specialist Command Leads</div>
         </div>
         <div>
-          <div class="stat-number">100%</div>
-          <div class="stat-label">Verified Technicians</div>
+          <div class="hud-stat-num">100%</div>
+          <div class="hud-stat-lbl">Verified Field Network</div>
         </div>
       </div>
 
@@ -819,9 +849,9 @@ if (!defined('SERVEASY_ASSET_VER')) {
           <div class="about-card-icon">
             <ion-icon name="ribbon-outline"></ion-icon>
           </div>
-          <h3 style="color: #fff; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Verified Specialists</h3>
-          <p style="color: #94a3b8; font-size: 0.95rem; line-height: 1.6;">
-            Every service professional undergoes multi-tier identity checks, criminal history vetting, and skill trade testing before onboarding.
+          <h3 style="color: #fff; font-size: 1.3rem; font-weight: 800; margin-bottom: 10px;">Verified Specialists</h3>
+          <p style="color: #94a3b8; font-size: 0.95rem; line-height: 1.65;">
+            Every single technician undergoes multi-tier criminal record checks, trade skill tests, and government KYC vetting before deployment.
           </p>
         </div>
 
@@ -829,9 +859,9 @@ if (!defined('SERVEASY_ASSET_VER')) {
           <div class="about-card-icon emerald">
             <ion-icon name="cash-outline"></ion-icon>
           </div>
-          <h3 style="color: #fff; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Transparent Upfront Pricing</h3>
-          <p style="color: #94a3b8; font-size: 0.95rem; line-height: 1.6;">
-            Zero hidden charges. Itemized quotes, add-ons, and convenience fees are stated upfront with secure digital gateway or cash settlement.
+          <h3 style="color: #fff; font-size: 1.3rem; font-weight: 800; margin-bottom: 10px;">Transparent Upfront Pricing</h3>
+          <p style="color: #94a3b8; font-size: 0.95rem; line-height: 1.65;">
+            No surprise price surges or hidden labor fees. Itemized invoices are locked in before technician dispatch with digital or cash settlement.
           </p>
         </div>
 
@@ -839,22 +869,22 @@ if (!defined('SERVEASY_ASSET_VER')) {
           <div class="about-card-icon purple">
             <ion-icon name="navigate-outline"></ion-icon>
           </div>
-          <h3 style="color: #fff; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Live Telemetry & Tracking</h3>
-          <p style="color: #94a3b8; font-size: 0.95rem; line-height: 1.6;">
-            Stay informed with scheduled appointment windows, real-time technician dispatch updates, and verified digital receipts.
+          <h3 style="color: #fff; font-size: 1.3rem; font-weight: 800; margin-bottom: 10px;">Live Telemetry & Tracking</h3>
+          <p style="color: #94a3b8; font-size: 0.95rem; line-height: 1.65;">
+            Real-time appointment slots, live technician GPS navigation tracking, and direct in-app emergency SOS dispatch coordinate support.
           </p>
         </div>
       </div>
 
       <!-- Call to Action Banner -->
       <section class="cta-banner-glass">
-        <h2 style="color: #fff; font-size: 2.2rem; font-weight: 800; margin-bottom: 15px;">Experience ServEasy Excellence Today</h2>
-        <p style="color: #94a3b8; font-size: 1.1rem; max-width: 650px; margin: 0 auto 30px; line-height: 1.6;">
-          Join thousands of satisfied households and drivers who rely on ServEasy for verified doorstep vehicle maintenance and home services.
+        <h2 style="color: #fff; font-size: 2.4rem; font-weight: 900; margin-bottom: 16px; letter-spacing: -0.5px;">Experience ServEasy Excellence Today</h2>
+        <p style="color: #94a3b8; font-size: 1.15rem; max-width: 680px; margin: 0 auto 32px; line-height: 1.7;">
+          Join thousands of satisfied drivers and households who trust ServEasy for high-precision vehicle maintenance and home services.
         </p>
-        <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 15px;">
+        <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 16px;">
           <a href="./services.php" class="btn-about-primary">
-            <span>Browse All Services</span>
+            <span>Explore All Services</span>
             <ion-icon name="arrow-forward-outline"></ion-icon>
           </a>
           <a href="./contact.php" class="btn-about-secondary">
@@ -867,29 +897,82 @@ if (!defined('SERVEASY_ASSET_VER')) {
     </div>
   </main>
 
+  <!-- Interactive Modal for Leader Bios -->
+  <div class="team-modal-backdrop" id="memberModal" onclick="closeMemberModal(event)">
+    <div class="team-modal-box" onclick="event.stopPropagation()">
+      <button type="button" class="btn-modal-close" onclick="closeMemberModal()">&times;</button>
+      <div id="modalAvatar" class="avatar-l1" style="width: 70px; height: 70px; font-size: 1.6rem; margin-bottom: 15px;"></div>
+      <h3 id="modalName" style="color: #fff; font-size: 1.6rem; font-weight: 800; margin-bottom: 4px;"></h3>
+      <div id="modalRole" style="color: #00f2fe; font-size: 0.95rem; font-weight: 700; margin-bottom: 8px;"></div>
+      <div id="modalDept" style="color: #fbbf24; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 16px;"></div>
+      <p id="modalBio" style="color: #94a3b8; font-size: 0.92rem; line-height: 1.65; margin-bottom: 20px;"></p>
+      <div id="modalSkills" class="chip-group"></div>
+    </div>
+  </div>
+
   <!-- Footer -->
   <?php include __DIR__ . '/layout/footer.php'; ?>
 
-  <!-- Interactive Tree / List View Switcher Script -->
+  <!-- Interactive Scripts -->
   <script>
-    function switchView(mode) {
-      const treeBtn = document.getElementById('btn-show-tree');
-      const listBtn = document.getElementById('btn-show-list');
-      const treeContainer = document.getElementById('view-tree-container');
-      const listContainer = document.getElementById('view-list-container');
+    function highlightTree(branch, btn) {
+      document.querySelectorAll('.hud-chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
 
-      if (mode === 'tree') {
-        treeBtn.classList.add('active');
-        listBtn.classList.remove('active');
-        treeContainer.style.display = 'block';
-        listContainer.style.display = 'none';
-      } else {
-        listBtn.classList.add('active');
-        treeBtn.classList.remove('active');
-        treeContainer.style.display = 'none';
-        listContainer.style.display = 'block';
-      }
+      const allNodes = document.querySelectorAll('.cyber-node');
+      allNodes.forEach(node => {
+        node.style.opacity = '1';
+        node.style.filter = 'none';
+      });
+
+      if (branch === 'all') return;
+
+      allNodes.forEach(node => {
+        const parentLi = node.closest('li');
+        if (parentLi && parentLi.classList.contains('branch-' + branch)) {
+          node.style.opacity = '1';
+          node.style.transform = 'scale(1.05)';
+        } else if (branch === 'l1' && parentLi && parentLi.classList.contains('branch-l1')) {
+          node.style.opacity = '1';
+        } else {
+          node.style.opacity = '0.35';
+          node.style.filter = 'grayscale(80%)';
+          node.style.transform = 'scale(0.96)';
+        }
+      });
     }
+
+    function openMemberModal(name, role, dept, bio, skills) {
+      document.getElementById('modalName').textContent = name;
+      document.getElementById('modalRole').textContent = role;
+      document.getElementById('modalDept').textContent = dept;
+      document.getElementById('modalBio').textContent = bio;
+
+      const initials = name.split(' ').map(n => n[0]).join('');
+      document.getElementById('modalAvatar').textContent = initials;
+
+      const skillsContainer = document.getElementById('modalSkills');
+      skillsContainer.innerHTML = '';
+      if (Array.isArray(skills)) {
+        skills.forEach(s => {
+          const sp = document.createElement('span');
+          sp.className = 'skill-chip cyan';
+          sp.textContent = s;
+          skillsContainer.appendChild(sp);
+        });
+      }
+
+      const modal = document.getElementById('memberModal');
+      modal.style.display = 'flex';
+    }
+
+    function closeMemberModal() {
+      document.getElementById('memberModal').style.display = 'none';
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeMemberModal();
+    });
   </script>
 
   <!-- Ionicons -->
