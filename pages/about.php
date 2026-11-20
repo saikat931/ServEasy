@@ -6,7 +6,7 @@
  */
 require_once __DIR__ . '/../common/auth_session.php';
 if (!defined('SERVEASY_ASSET_VER')) {
-    define('SERVEASY_ASSET_VER', '20261120v12');
+    define('SERVEASY_ASSET_VER', '20261120v13');
 }
 ?>
 <!DOCTYPE html>
@@ -198,14 +198,14 @@ if (!defined('SERVEASY_ASSET_VER')) {
       justify-content: center;
       align-items: center;
       width: 100%;
-      max-width: 1540px;
+      max-width: 1600px;
       margin: 0 auto;
       padding: 15px 0 10px;
       overflow: visible !important;
       box-sizing: border-box;
     }
     .org-tree ul {
-      padding-top: 36px;
+      padding-top: 46px;
       position: relative;
       transition: all 0.5s ease;
       display: flex;
@@ -220,7 +220,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
       text-align: center;
       list-style-type: none;
       position: relative;
-      padding: 36px 10px 0 10px;
+      padding: 46px 14px 0 14px;
       transition: all 0.5s ease;
       box-sizing: border-box;
     }
@@ -231,15 +231,15 @@ if (!defined('SERVEASY_ASSET_VER')) {
       position: absolute;
       top: 0;
       right: 50%;
-      border-top: 2px solid #00f2fe;
+      border-top: 2.5px solid #00f2fe;
       width: 50%;
-      height: 36px;
-      filter: drop-shadow(0 0 6px rgba(0, 242, 254, 0.6));
+      height: 46px;
+      filter: drop-shadow(0 0 7px rgba(0, 242, 254, 0.7));
     }
     .org-tree li::after {
       right: auto;
       left: 50%;
-      border-left: 2px solid #00f2fe;
+      border-left: 2.5px solid #00f2fe;
     }
     .org-tree li:only-child::after, .org-tree li:only-child::before {
       display: none;
@@ -251,46 +251,46 @@ if (!defined('SERVEASY_ASSET_VER')) {
       border: 0 none;
     }
     .org-tree li:last-child::before {
-      border-right: 2px solid #00f2fe;
-      border-radius: 0 14px 0 0;
+      border-right: 2.5px solid #00f2fe;
+      border-radius: 0 16px 0 0;
     }
     .org-tree li:first-child::after {
-      border-radius: 14px 0 0 0;
+      border-radius: 16px 0 0 0;
     }
     .org-tree ul ul::before {
       content: '';
       position: absolute;
       top: 0;
       left: 50%;
-      border-left: 2px solid #00f2fe;
+      border-left: 2.5px solid #00f2fe;
       width: 0;
-      height: 36px;
-      filter: drop-shadow(0 0 6px rgba(0, 242, 254, 0.6));
+      height: 46px;
+      filter: drop-shadow(0 0 7px rgba(0, 242, 254, 0.7));
     }
 
-    /* ── COMPACT PROFESSIONAL NODE CARD ─────────────────────────────── */
+    /* ── EXPANSIVE HIGH-DEFINITION NODE CARD ─────────────────────────── */
     .pro-node {
       display: inline-flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
       position: relative;
-      background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.9));
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 20px;
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.92));
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 24px;
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45);
       box-sizing: border-box;
     }
     .pro-node:hover {
-      transform: translateY(-6px) scale(1.04);
+      transform: translateY(-8px) scale(1.04);
       z-index: 20;
     }
 
-    /* Avatar Container with Photo & Online Beacon */
+    /* Avatar Container with Large Photo & Status Beacon */
     .node-avatar-frame {
       position: relative;
       border-radius: 50%;
@@ -322,12 +322,12 @@ if (!defined('SERVEASY_ASSET_VER')) {
       position: absolute;
       bottom: 2px;
       right: 2px;
-      width: 13px;
-      height: 13px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
       background: #10b981;
-      border: 2px solid #0f172a;
-      box-shadow: 0 0 8px #10b981;
+      border: 2.5px solid #0f172a;
+      box-shadow: 0 0 10px #10b981;
       z-index: 2;
     }
 
@@ -335,152 +335,189 @@ if (!defined('SERVEASY_ASSET_VER')) {
     .node-name {
       font-weight: 800;
       color: #ffffff;
-      margin-top: 10px;
-      margin-bottom: 4px;
+      margin-top: 12px;
+      margin-bottom: 5px;
       letter-spacing: -0.2px;
       white-space: nowrap;
     }
     .node-role-pill {
-      font-size: 0.74rem;
       font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 12px;
+      border-radius: 14px;
       white-space: nowrap;
       letter-spacing: 0.3px;
     }
     .node-click-hint {
-      margin-top: 8px;
-      font-size: 0.72rem;
+      margin-top: 10px;
+      font-size: 0.78rem;
       color: #64748b;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
       transition: color 0.2s;
     }
     .pro-node:hover .node-click-hint {
       color: #00f2fe;
     }
 
-    /* ── TIER-SPECIFIC STYLING & SIZING ──────────────────────────────── */
+    /* ── TIER-SPECIFIC STYLING & SIZING (EXPANDED & HIGH VISIBILITY) ──── */
     /* Level 1: Sharthak Sen (Founder & CEO) */
     .pro-node-l1 {
-      width: 250px;
-      padding: 22px 18px 16px;
+      width: 320px;
+      padding: 28px 22px 22px;
       border: 2px solid #00f2fe;
-      box-shadow: 0 0 35px rgba(0, 242, 254, 0.3), inset 0 0 20px rgba(0, 242, 254, 0.08);
+      box-shadow: 0 0 40px rgba(0, 242, 254, 0.35), inset 0 0 25px rgba(0, 242, 254, 0.1);
     }
     .pro-node-l1:hover {
-      box-shadow: 0 0 45px rgba(0, 242, 254, 0.5);
+      box-shadow: 0 0 55px rgba(0, 242, 254, 0.6);
       border-color: #38bdf8;
     }
     .pro-node-l1 .node-avatar-frame {
-      width: 80px;
-      height: 80px;
+      width: 102px;
+      height: 102px;
       border: 3px solid #00f2fe;
-      box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+      box-shadow: 0 0 24px rgba(0, 242, 254, 0.5);
+    }
+    .pro-node-l1 .node-status-dot {
+      width: 16px;
+      height: 16px;
+      bottom: 4px;
+      right: 4px;
     }
     .pro-node-l1 .node-name {
-      font-size: 1.35rem;
+      font-size: 1.55rem;
+      margin-top: 14px;
+      margin-bottom: 6px;
     }
     .pro-node-l1 .node-role-pill {
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.2));
-      border: 1px solid rgba(245, 158, 11, 0.5);
+      font-size: 0.92rem;
+      padding: 5px 16px;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(217, 119, 6, 0.25));
+      border: 1px solid rgba(245, 158, 11, 0.55);
       color: #fbbf24;
+    }
+    .pro-node-l1 .node-click-hint {
+      font-size: 0.82rem;
     }
 
     /* Level 2: 3 Directorate Heads */
     .pro-node-l2 {
-      width: 175px;
-      padding: 16px 12px 14px;
+      width: 230px;
+      padding: 22px 16px 18px;
     }
     .li-l2 {
-      padding: 36px 14px 0 14px !important;
+      padding: 46px 20px 0 20px !important;
     }
     .pro-node-l2 .node-avatar-frame {
-      width: 58px;
-      height: 58px;
+      width: 80px;
+      height: 80px;
+    }
+    .pro-node-l2 .node-status-dot {
+      width: 14px;
+      height: 14px;
+      bottom: 3px;
+      right: 3px;
     }
     .pro-node-l2.cyan {
-      border-top: 3px solid #00f2fe;
-      box-shadow: 0 10px 25px rgba(0, 242, 254, 0.15);
+      border-top: 3.5px solid #00f2fe;
+      box-shadow: 0 12px 28px rgba(0, 242, 254, 0.18);
     }
-    .pro-node-l2.cyan .node-avatar-frame { border: 2px solid #00f2fe; }
-    .pro-node-l2.cyan .node-role-pill { background: rgba(0, 242, 254, 0.12); color: #00f2fe; border: 1px solid rgba(0, 242, 254, 0.3); }
+    .pro-node-l2.cyan .node-avatar-frame { border: 2.5px solid #00f2fe; }
+    .pro-node-l2.cyan .node-role-pill { background: rgba(0, 242, 254, 0.14); color: #00f2fe; border: 1px solid rgba(0, 242, 254, 0.35); font-size: 0.82rem; padding: 4px 12px; }
 
     .pro-node-l2.purple {
-      border-top: 3px solid #c084fc;
-      box-shadow: 0 10px 25px rgba(168, 85, 247, 0.15);
+      border-top: 3.5px solid #c084fc;
+      box-shadow: 0 12px 28px rgba(168, 85, 247, 0.18);
     }
-    .pro-node-l2.purple .node-avatar-frame { border: 2px solid #c084fc; }
-    .pro-node-l2.purple .node-role-pill { background: rgba(168, 85, 247, 0.12); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+    .pro-node-l2.purple .node-avatar-frame { border: 2.5px solid #c084fc; }
+    .pro-node-l2.purple .node-role-pill { background: rgba(168, 85, 247, 0.14); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.35); font-size: 0.82rem; padding: 4px 12px; }
 
     .pro-node-l2.amber {
-      border-top: 3px solid #f59e0b;
-      box-shadow: 0 10px 25px rgba(245, 158, 11, 0.15);
+      border-top: 3.5px solid #f59e0b;
+      box-shadow: 0 12px 28px rgba(245, 158, 11, 0.18);
     }
-    .pro-node-l2.amber .node-avatar-frame { border: 2px solid #f59e0b; }
-    .pro-node-l2.amber .node-role-pill { background: rgba(245, 158, 11, 0.12); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .pro-node-l2.amber .node-avatar-frame { border: 2.5px solid #f59e0b; }
+    .pro-node-l2.amber .node-role-pill { background: rgba(245, 158, 11, 0.14); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); font-size: 0.82rem; padding: 4px 12px; }
 
     .pro-node-l2 .node-name {
-      font-size: 1.1rem;
+      font-size: 1.25rem;
+      margin-top: 12px;
+      margin-bottom: 5px;
+    }
+    .pro-node-l2 .node-click-hint {
+      font-size: 0.78rem;
     }
 
-    /* Level 3: 7 Functional Leads (Clean Fit inside 1600px without cut or scroll) */
+    /* Level 3: 7 Functional Leads (Generous, Clear & Expandable within 1600px) */
     .li-l3 {
-      padding: 30px 5px 0 5px !important;
+      padding: 42px 9px 0 9px !important;
     }
     .pro-node-l3 {
-      width: 125px;
-      padding: 12px 6px 10px;
-      background: rgba(30, 41, 59, 0.75);
+      width: 172px;
+      padding: 18px 12px 16px;
+      background: rgba(30, 41, 59, 0.82);
     }
     .pro-node-l3:hover {
       border-color: #00f2fe;
-      background: rgba(30, 41, 59, 0.95);
-      box-shadow: 0 12px 25px rgba(0, 242, 254, 0.25);
+      background: rgba(30, 41, 59, 0.98);
+      box-shadow: 0 14px 28px rgba(0, 242, 254, 0.3);
     }
     .pro-node-l3 .node-avatar-frame {
-      width: 44px;
-      height: 44px;
-      border: 2px solid rgba(255, 255, 255, 0.15);
+      width: 66px;
+      height: 66px;
+      border: 2px solid rgba(255, 255, 255, 0.22);
+    }
+    .pro-node-l3 .node-status-dot {
+      width: 13px;
+      height: 13px;
+      bottom: 2px;
+      right: 2px;
     }
     .pro-node-l3 .node-name {
-      font-size: 0.88rem;
+      font-size: 1.05rem;
+      font-weight: 800;
       letter-spacing: -0.2px;
-      margin-top: 8px;
-      margin-bottom: 3px;
+      margin-top: 10px;
+      margin-bottom: 5px;
     }
     .pro-node-l3 .node-role-pill {
-      font-size: 0.67rem;
-      background: rgba(255, 255, 255, 0.06);
-      color: #94a3b8;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 2px 6px;
-      max-width: 112px;
+      font-size: 0.78rem;
+      background: rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 3px 10px;
+      max-width: 154px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+    .pro-node-l3 .node-click-hint {
+      font-size: 0.74rem;
+    }
 
     /* Responsive Adaptive Scaling: Guarantee 0 Scroll & 0 Clipping across viewports */
-    @media (max-width: 1240px) {
+    @media (max-width: 1550px) {
       .org-tree {
-        zoom: 0.90;
+        zoom: 0.92;
       }
     }
-    @media (max-width: 1024px) {
+    @media (max-width: 1350px) {
       .org-tree {
-        zoom: 0.76;
+        zoom: 0.82;
       }
     }
-    @media (max-width: 768px) {
+    @media (max-width: 1100px) {
       .org-tree {
-        zoom: 0.60;
+        zoom: 0.70;
       }
     }
-    @media (max-width: 480px) {
+    @media (max-width: 850px) {
       .org-tree {
-        zoom: 0.48;
+        zoom: 0.58;
+      }
+    }
+    @media (max-width: 600px) {
+      .org-tree {
+        zoom: 0.46;
       }
     }
 
