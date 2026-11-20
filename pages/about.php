@@ -6,7 +6,7 @@
  */
 require_once __DIR__ . '/../common/auth_session.php';
 if (!defined('SERVEASY_ASSET_VER')) {
-    define('SERVEASY_ASSET_VER', '20261120v9');
+    define('SERVEASY_ASSET_VER', '20261120v10');
 }
 ?>
 <!DOCTYPE html>
@@ -747,7 +747,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
             <li>
               <div class="pro-node pro-node-l1" onclick="openMemberModal('sharthak')">
                 <div class="node-avatar-frame">
-                  <img src="./assets/images/avatars/sharthak.svg?v=<?= SERVEASY_ASSET_VER ?>" alt="Sharthak Sen" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                  <img src="./assets/images/avatars/sharthak.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Sharthak Sen" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                   <div class="node-avatar-fallback" style="background: linear-gradient(135deg, #00f2fe, #4facfe);">SS</div>
                   <span class="node-status-dot"></span>
                 </div>
@@ -762,7 +762,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
                 <li class="li-l2">
                   <div class="pro-node pro-node-l2 cyan" onclick="openMemberModal('saikat')">
                     <div class="node-avatar-frame">
-                      <img src="./assets/images/avatars/saikat.svg?v=<?= SERVEASY_ASSET_VER ?>" alt="Saikat Sasmal" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                      <img src="./assets/images/avatars/saikat.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Saikat Sasmal" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                       <div class="node-avatar-fallback" style="background: #00f2fe; color: #0b132b;">SS</div>
                       <span class="node-status-dot"></span>
                     </div>
@@ -776,7 +776,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
                     <li class="li-l3">
                       <div class="pro-node pro-node-l3" onclick="openMemberModal('david')">
                         <div class="node-avatar-frame">
-                          <img src="./assets/images/avatars/david.svg?v=<?= SERVEASY_ASSET_VER ?>" alt="David Chen" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                          <img src="./assets/images/avatars/david.png?v=<?= SERVEASY_ASSET_VER ?>" alt="David Chen" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                           <div class="node-avatar-fallback" style="background: #38bdf8; color: #0b132b;">DC</div>
                           <span class="node-status-dot"></span>
                         </div>
@@ -788,7 +788,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
                     <li class="li-l3">
                       <div class="pro-node pro-node-l3" onclick="openMemberModal('sophia')">
                         <div class="node-avatar-frame">
-                          <img src="./assets/images/avatars/sophia.svg?v=<?= SERVEASY_ASSET_VER ?>" alt="Sophia Lin" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                          <img src="./assets/images/avatars/sophia.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Sophia Lin" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                           <div class="node-avatar-fallback" style="background: #38bdf8; color: #0b132b;">SL</div>
                           <span class="node-status-dot"></span>
                         </div>
@@ -804,7 +804,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
                 <li class="li-l2">
                   <div class="pro-node pro-node-l2 purple" onclick="openMemberModal('elena')">
                     <div class="node-avatar-frame">
-                      <img src="./assets/images/avatars/elena.svg?v=<?= SERVEASY_ASSET_VER ?>" alt="Elena Rostova" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                      <img src="./assets/images/avatars/elena.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Elena Rostova" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                       <div class="node-avatar-fallback" style="background: #c084fc; color: #0b132b;">ER</div>
                       <span class="node-status-dot"></span>
                     </div>
@@ -818,7 +818,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
                     <li class="li-l3">
                       <div class="pro-node pro-node-l3" onclick="openMemberModal('priya')">
                         <div class="node-avatar-frame">
-                          <img src="./assets/images/avatars/priya.svg?v=<?= SERVEASY_ASSET_VER ?>" alt="Priya Sharma" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                          <img src="./assets/images/avatars/priya.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Priya Sharma" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                           <div class="node-avatar-fallback" style="background: #c084fc; color: #0b132b;">PS</div>
                           <span class="node-status-dot"></span>
                         </div>
@@ -830,7 +830,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
                     <li class="li-l3">
                       <div class="pro-node pro-node-l3" onclick="openMemberModal('rahul')">
                         <div class="node-avatar-frame">
-                          <img src="./assets/images/avatars/rahul.svg?v=<?= SERVEASY_ASSET_VER ?>" alt="Rahul Verma" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                          <img src="./assets/images/avatars/rahul.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Rahul Verma" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                           <div class="node-avatar-fallback" style="background: #c084fc; color: #0b132b;">RV</div>
                           <span class="node-status-dot"></span>
                         </div>
@@ -842,7 +842,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
                     <li class="li-l3">
                       <div class="pro-node pro-node-l3" onclick="openMemberModal('ananya')">
                         <div class="node-avatar-frame">
-                          <img src="./assets/images/avatars/ananya.svg?v=<?= SERVEASY_ASSET_VER ?>" alt="Ananya Das" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                          <img src="./assets/images/avatars/ananya.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Ananya Das" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                           <div class="node-avatar-fallback" style="background: #c084fc; color: #0b132b;">AD</div>
                           <span class="node-status-dot"></span>
                         </div>
@@ -858,7 +858,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
                 <li class="li-l2">
                   <div class="pro-node pro-node-l2 amber" onclick="openMemberModal('marcus')">
                     <div class="node-avatar-frame">
-                      <img src="./assets/images/avatars/marcus.svg?v=<?= SERVEASY_ASSET_VER ?>" alt="Marcus Sterling" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                      <img src="./assets/images/avatars/marcus.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Marcus Sterling" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                       <div class="node-avatar-fallback" style="background: #fbbf24; color: #0b132b;">MS</div>
                       <span class="node-status-dot"></span>
                     </div>
@@ -872,7 +872,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
                     <li class="li-l3">
                       <div class="pro-node pro-node-l3" onclick="openMemberModal('vikram')">
                         <div class="node-avatar-frame">
-                          <img src="./assets/images/avatars/vikram.svg?v=<?= SERVEASY_ASSET_VER ?>" alt="Vikram Malhotra" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                          <img src="./assets/images/avatars/vikram.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Vikram Malhotra" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                           <div class="node-avatar-fallback" style="background: #fbbf24; color: #0b132b;">VM</div>
                           <span class="node-status-dot"></span>
                         </div>
@@ -884,7 +884,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
                     <li class="li-l3">
                       <div class="pro-node pro-node-l3" onclick="openMemberModal('amit')">
                         <div class="node-avatar-frame">
-                          <img src="./assets/images/avatars/amit.svg?v=<?= SERVEASY_ASSET_VER ?>" alt="Amit Roy" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                          <img src="./assets/images/avatars/amit.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Amit Roy" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                           <div class="node-avatar-fallback" style="background: #fbbf24; color: #0b132b;">AR</div>
                           <span class="node-status-dot"></span>
                         </div>
@@ -1019,7 +1019,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
         role: 'Founder & Chief Executive Officer (Super Admin)',
         dept: 'Executive Directorate & Supreme Governance',
         reportsTo: 'Directing Supreme Board',
-        img: './assets/images/avatars/sharthak.svg?v=<?= SERVEASY_ASSET_VER ?>',
+        img: './assets/images/avatars/sharthak.png?v=<?= SERVEASY_ASSET_VER ?>',
         bio: 'Sharthak Sen steers the overarching strategic vision, technology roadmap, capital investments, governance, and nationwide expansion of the ServEasy on-demand ecosystem. He leads the multi-portal architecture connecting customers, service providers, and administrators into one unified platform.',
         skills: ['Strategic Governance', 'Platform Architecture', 'Superadmin Control', 'Partner Network Scaling', 'Product Innovation'],
         email: 'mailto:support@serveasy.in?subject=Inquiry for CEO Office (Sharthak Sen)'
@@ -1029,7 +1029,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
         role: 'Co-Founder & Chief Technology Officer (Lead Architect)',
         dept: 'Engineering & Technology Command',
         reportsTo: 'Sharthak Sen (Founder & CEO)',
-        img: './assets/images/avatars/saikat.svg?v=<?= SERVEASY_ASSET_VER ?>',
+        img: './assets/images/avatars/saikat.png?v=<?= SERVEASY_ASSET_VER ?>',
         bio: 'Saikat Sasmal directs core software engineering, multi-portal API architecture, database integrity, real-time GPS telemetry, and OWASP application security. He oversees continuous deployment reliability across our cloud hosting infrastructure.',
         skills: ['API Architecture', 'Database Security', 'High Availability', 'System Defense', 'Microservices'],
         email: 'mailto:support@serveasy.in?subject=Inquiry for CTO Desk (Saikat Sasmal)'
@@ -1039,7 +1039,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
         role: 'Chief Operating Officer (COO)',
         dept: 'Field Operations & Service Grid',
         reportsTo: 'Sharthak Sen (Founder & CEO)',
-        img: './assets/images/avatars/elena.svg?v=<?= SERVEASY_ASSET_VER ?>',
+        img: './assets/images/avatars/elena.png?v=<?= SERVEASY_ASSET_VER ?>',
         bio: 'Elena Rostova manages daily field fulfillment, service provider network compliance, quality benchmarks, and multi-channel customer concierge. She ensures every booking meets strict hygiene, punctuality, and satisfaction standards.',
         skills: ['Field Operations', 'SLA Enforcement', 'Partner Network', 'Service Quality', 'Dispute Shield'],
         email: 'mailto:support@serveasy.in?subject=Inquiry for COO Desk (Elena Rostova)'
@@ -1049,7 +1049,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
         role: 'Chief Product Officer (CPO)',
         dept: 'Automotive & Product Standards',
         reportsTo: 'Sharthak Sen (Founder & CEO)',
-        img: './assets/images/avatars/marcus.svg?v=<?= SERVEASY_ASSET_VER ?>',
+        img: './assets/images/avatars/marcus.png?v=<?= SERVEASY_ASSET_VER ?>',
         bio: 'Marcus Sterling directs automotive technical standards, mechanical diagnostic protocols, doorstep vehicle detailing specs, and rental fleet logistics. He ensures technicians deploy with certified commercial-grade tooling.',
         skills: ['Automotive Engineering', 'Fleet Standards', 'Mechanical R&D', 'Tooling Specs', 'Product UX'],
         email: 'mailto:support@serveasy.in?subject=Inquiry for CPO Desk (Marcus Sterling)'
@@ -1059,7 +1059,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
         role: 'Emergency SOS Dispatch Lead',
         dept: 'Rapid Response Unit',
         reportsTo: 'Saikat Sasmal (CTO)',
-        img: './assets/images/avatars/david.svg?v=<?= SERVEASY_ASSET_VER ?>',
+        img: './assets/images/avatars/david.png?v=<?= SERVEASY_ASSET_VER ?>',
         bio: 'Coordinates 24/7 live GPS roadside breakdown tracking, emergency tow truck dispatch, battery jumpstarts, and flat-tire rescue across major highway corridors.',
         skills: ['24/7 Roadside SOS', 'GPS Telemetry', 'Towing Logistics', 'Emergency Incident Response'],
         email: 'mailto:support@serveasy.in?subject=Emergency SOS Operations (David Chen)'
@@ -1069,7 +1069,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
         role: 'Cybersecurity & Privacy Lead',
         dept: 'Information Security Directorate',
         reportsTo: 'Saikat Sasmal (CTO)',
-        img: './assets/images/avatars/sophia.svg?v=<?= SERVEASY_ASSET_VER ?>',
+        img: './assets/images/avatars/sophia.png?v=<?= SERVEASY_ASSET_VER ?>',
         bio: 'Conducts continuous penetration testing, audits OWASP defensive controls, and secures customer payment gateway tokens and session encryption.',
         skills: ['AppSec Hardening', 'Zero Trust Architecture', 'Data Privacy', 'Penetration Testing'],
         email: 'mailto:support@serveasy.in?subject=Security & Privacy Desk (Sophia Lin)'
@@ -1079,7 +1079,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
         role: 'Customer Concierge Lead',
         dept: 'Customer Success & Experience',
         reportsTo: 'Elena Rostova (COO)',
-        img: './assets/images/avatars/priya.svg?v=<?= SERVEASY_ASSET_VER ?>',
+        img: './assets/images/avatars/priya.png?v=<?= SERVEASY_ASSET_VER ?>',
         bio: 'Leads our multi-channel customer concierge team, resolving scheduling adjustments, booking preferences, and customer satisfaction tickets.',
         skills: ['Concierge Desk', 'Support Resolution', 'Customer NPS', 'Booking Logistics'],
         email: 'mailto:support@serveasy.in?subject=Customer Concierge (Priya Sharma)'
@@ -1089,7 +1089,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
         role: 'Partner KYC & Vetting Lead',
         dept: 'Compliance & Onboarding Unit',
         reportsTo: 'Elena Rostova (COO)',
-        img: './assets/images/avatars/rahul.svg?v=<?= SERVEASY_ASSET_VER ?>',
+        img: './assets/images/avatars/rahul.png?v=<?= SERVEASY_ASSET_VER ?>',
         bio: 'Enforces rigorous 4-step partner onboarding: government identity verification, criminal background checks, skill testing, and trade certification.',
         skills: ['Government KYC', 'Criminal Checks', 'Trade Audits', 'Compliance Verification'],
         email: 'mailto:support@serveasy.in?subject=Partner KYC Compliance (Rahul Verma)'
@@ -1099,7 +1099,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
         role: 'Quality Assurance & Field Auditor',
         dept: 'Safety & Sanitation Audit Desk',
         reportsTo: 'Elena Rostova (COO)',
-        img: './assets/images/avatars/ananya.svg?v=<?= SERVEASY_ASSET_VER ?>',
+        img: './assets/images/avatars/ananya.png?v=<?= SERVEASY_ASSET_VER ?>',
         bio: 'Conducts unannounced on-site quality spot checks, verifies technician sanitation gear, and ensures residential cleaning protocols meet hospital-grade standards.',
         skills: ['Field Audits', 'Hygiene Standards', 'Sanitation Safety', 'Service Spot Checks'],
         email: 'mailto:support@serveasy.in?subject=Field Quality Audit (Ananya Das)'
@@ -1109,7 +1109,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
         role: 'Fleet Logistics & Rental Manager',
         dept: 'Fleet & Transport Logistics',
         reportsTo: 'Marcus Sterling (CPO)',
-        img: './assets/images/avatars/vikram.svg?v=<?= SERVEASY_ASSET_VER ?>',
+        img: './assets/images/avatars/vikram.png?v=<?= SERVEASY_ASSET_VER ?>',
         bio: 'Manages the ServEasy car and bike rental fleets, cargo carrier dispatch, vehicle health inspections, and preventative maintenance rotations.',
         skills: ['Rental Logistics', 'Cargo Express', 'Vehicle Maintenance', 'Fleet Telematics'],
         email: 'mailto:support@serveasy.in?subject=Fleet Logistics (Vikram Malhotra)'
@@ -1119,7 +1119,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
         role: 'Merchant Billing & Settlements Lead',
         dept: 'Financial Escrow & Settlements Desk',
         reportsTo: 'Marcus Sterling (CPO)',
-        img: './assets/images/avatars/amit.svg?v=<?= SERVEASY_ASSET_VER ?>',
+        img: './assets/images/avatars/amit.png?v=<?= SERVEASY_ASSET_VER ?>',
         bio: 'Oversees payment gateway reconciliations, escrow accounts, same-day technician payouts, and verified customer refund disbursements.',
         skills: ['Instant Payouts', 'Gateway Escrow', 'Refund Audits', 'Financial Reconciliation'],
         email: 'mailto:support@serveasy.in?subject=Billing & Settlements (Amit Roy)'
