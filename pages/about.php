@@ -6,7 +6,7 @@
  */
 require_once __DIR__ . '/../common/auth_session.php';
 if (!defined('SERVEASY_ASSET_VER')) {
-    define('SERVEASY_ASSET_VER', '20261120v10');
+    define('SERVEASY_ASSET_VER', '20261120v11');
 }
 ?>
 <!DOCTYPE html>
@@ -40,31 +40,26 @@ if (!defined('SERVEASY_ASSET_VER')) {
       max-width: 100vw;
     }
 
-    /* ── 1600px Master Layout Container ──────────────────────────────── */
-    .tree-container-1600 {
-      max-width: 1600px !important;
+    /* ── Standard Default Header/Footer Container Width (1300px) ───────────────── */
+    .about-default-container {
+      max-width: 1300px !important;
       width: 100% !important;
       margin-inline: auto !important;
-      padding-inline: 24px;
-      box-sizing: border-box;
-      overflow: visible;
+      padding-inline: 20px !important;
+      box-sizing: border-box !important;
     }
 
-    /* ── Ambient Glow Stage (Exact 1600px Box, No Overflow, No Scroll) ── */
+    /* ── Seamless Tree Stage (Exact 1600px Box Width, No Border, Seamless Background) ── */
     .tree-stage {
       position: relative;
       max-width: 1600px !important;
       width: 100% !important;
-      margin: 0 auto 70px !important;
+      margin: 0 auto 50px !important;
       box-sizing: border-box !important;
-      background: radial-gradient(ellipse at 50% 12%, rgba(0, 242, 254, 0.12) 0%, rgba(15, 23, 42, 0) 65%),
-                  radial-gradient(ellipse at 85% 60%, rgba(168, 85, 247, 0.08) 0%, rgba(15, 23, 42, 0) 60%),
-                  radial-gradient(ellipse at 15% 75%, rgba(245, 158, 11, 0.08) 0%, rgba(15, 23, 42, 0) 60%),
-                  rgba(15, 23, 42, 0.65);
-      padding: 45px 25px 65px;
-      border-radius: 32px;
-      border: 1px solid rgba(0, 242, 254, 0.22);
-      box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 242, 254, 0.08);
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 10px 15px 40px;
       overflow: visible !important;
     }
 
@@ -707,8 +702,8 @@ if (!defined('SERVEASY_ASSET_VER')) {
   <?php include __DIR__ . '/constants/aside.php'; ?>
 
   <main style="overflow-x: hidden;">
-    <!-- 1600px Max-Width Master Container -->
-    <div class="tree-container-1600">
+    <!-- Standard Default Width Container (Matches Header & Footer Box Width) -->
+    <div class="about-default-container">
 
       <!-- Breadcrumbs -->
       <div style="padding: 25px 0 10px;">
@@ -736,170 +731,175 @@ if (!defined('SERVEASY_ASSET_VER')) {
         </div>
       </section>
 
-      <!-- ===============================================================
-           EXACT 1600PX BOX WIDTH TREE SECTION
-           (Zero Left/Right Cut, Zero X or Y Scrollbar)
-           =============================================================== -->
-      <section class="tree-stage">
-        <div class="org-tree">
-          <ul>
-            <!-- ROOT / LEVEL 1: SHARTHAK SEN (FOUNDER & CEO) -->
-            <li>
-              <div class="pro-node pro-node-l1" onclick="openMemberModal('sharthak')">
-                <div class="node-avatar-frame">
-                  <img src="./assets/images/avatars/sharthak.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Sharthak Sen" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                  <div class="node-avatar-fallback" style="background: linear-gradient(135deg, #00f2fe, #4facfe);">SS</div>
-                  <span class="node-status-dot"></span>
-                </div>
-                <div class="node-name">Sharthak Sen</div>
-                <div class="node-role-pill">Founder & CEO</div>
-                <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> View Profile</div>
+    </div>
+
+    <!-- ===============================================================
+         EXACT 1600PX BOX WIDTH TREE SECTION
+         (No border, seamless background, zero left/right cut, zero scrollbar)
+         =============================================================== -->
+    <section class="tree-stage">
+      <div class="org-tree">
+        <ul>
+          <!-- ROOT / LEVEL 1: SHARTHAK SEN (FOUNDER & CEO) -->
+          <li>
+            <div class="pro-node pro-node-l1" onclick="openMemberModal('sharthak')">
+              <div class="node-avatar-frame">
+                <img src="./assets/images/avatars/sharthak.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Sharthak Sen" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                <div class="node-avatar-fallback" style="background: linear-gradient(135deg, #00f2fe, #4facfe);">SS</div>
+                <span class="node-status-dot"></span>
               </div>
+              <div class="node-name">Sharthak Sen</div>
+              <div class="node-role-pill">Founder & CEO</div>
+              <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> View Profile</div>
+            </div>
 
-              <!-- BRANCH DOWN TO LEVEL 2: 3 DIRECTORATE HEADS -->
-              <ul>
-                <!-- LEVEL 2 &bull; 1. SAIKAT SASMAL (TECH) -->
-                <li class="li-l2">
-                  <div class="pro-node pro-node-l2 cyan" onclick="openMemberModal('saikat')">
-                    <div class="node-avatar-frame">
-                      <img src="./assets/images/avatars/saikat.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Saikat Sasmal" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                      <div class="node-avatar-fallback" style="background: #00f2fe; color: #0b132b;">SS</div>
-                      <span class="node-status-dot"></span>
-                    </div>
-                    <div class="node-name">Saikat Sasmal</div>
-                    <div class="node-role-pill">Co-Founder & CTO</div>
-                    <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Details</div>
+            <!-- BRANCH DOWN TO LEVEL 2: 3 DIRECTORATE HEADS -->
+            <ul>
+              <!-- LEVEL 2 • 1. SAIKAT SASMAL (TECH) -->
+              <li class="li-l2">
+                <div class="pro-node pro-node-l2 cyan" onclick="openMemberModal('saikat')">
+                  <div class="node-avatar-frame">
+                    <img src="./assets/images/avatars/saikat.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Saikat Sasmal" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                    <div class="node-avatar-fallback" style="background: #00f2fe; color: #0b132b;">SS</div>
+                    <span class="node-status-dot"></span>
                   </div>
+                  <div class="node-name">Saikat Sasmal</div>
+                  <div class="node-role-pill">Co-Founder & CTO</div>
+                  <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Details</div>
+                </div>
 
-                  <!-- SUB-BRANCH TO LEVEL 3 (2 SPECIALISTS UNDER SAIKAT) -->
-                  <ul>
-                    <li class="li-l3">
-                      <div class="pro-node pro-node-l3" onclick="openMemberModal('david')">
-                        <div class="node-avatar-frame">
-                          <img src="./assets/images/avatars/david.png?v=<?= SERVEASY_ASSET_VER ?>" alt="David Chen" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                          <div class="node-avatar-fallback" style="background: #38bdf8; color: #0b132b;">DC</div>
-                          <span class="node-status-dot"></span>
-                        </div>
-                        <div class="node-name">David Chen</div>
-                        <div class="node-role-pill">Roadside SOS</div>
-                        <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Info</div>
+                <!-- SUB-BRANCH TO LEVEL 3 (2 SPECIALISTS UNDER SAIKAT) -->
+                <ul>
+                  <li class="li-l3">
+                    <div class="pro-node pro-node-l3" onclick="openMemberModal('david')">
+                      <div class="node-avatar-frame">
+                        <img src="./assets/images/avatars/david.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Saikat Sasmal" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                        <div class="node-avatar-fallback" style="background: #38bdf8; color: #0b132b;">SS</div>
+                        <span class="node-status-dot"></span>
                       </div>
-                    </li>
-                    <li class="li-l3">
-                      <div class="pro-node pro-node-l3" onclick="openMemberModal('sophia')">
-                        <div class="node-avatar-frame">
-                          <img src="./assets/images/avatars/sophia.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Sophia Lin" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                          <div class="node-avatar-fallback" style="background: #38bdf8; color: #0b132b;">SL</div>
-                          <span class="node-status-dot"></span>
-                        </div>
-                        <div class="node-name">Sophia Lin</div>
-                        <div class="node-role-pill">Cybersecurity</div>
-                        <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Info</div>
-                      </div>
-                    </li>
-                  </ul>
-                </li>
-
-                <!-- LEVEL 2 &bull; 2. ELENA ROSTOVA (OPERATIONS) -->
-                <li class="li-l2">
-                  <div class="pro-node pro-node-l2 purple" onclick="openMemberModal('elena')">
-                    <div class="node-avatar-frame">
-                      <img src="./assets/images/avatars/elena.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Elena Rostova" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                      <div class="node-avatar-fallback" style="background: #c084fc; color: #0b132b;">ER</div>
-                      <span class="node-status-dot"></span>
+                      <div class="node-name">Saikat Sasmal</div>
+                      <div class="node-role-pill">Roadside SOS</div>
+                      <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Info</div>
                     </div>
-                    <div class="node-name">Elena Rostova</div>
-                    <div class="node-role-pill">Chief Operating Officer</div>
-                    <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Details</div>
-                  </div>
-
-                  <!-- SUB-BRANCH TO LEVEL 3 (3 SPECIALISTS UNDER ELENA) -->
-                  <ul>
-                    <li class="li-l3">
-                      <div class="pro-node pro-node-l3" onclick="openMemberModal('priya')">
-                        <div class="node-avatar-frame">
-                          <img src="./assets/images/avatars/priya.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Priya Sharma" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                          <div class="node-avatar-fallback" style="background: #c084fc; color: #0b132b;">PS</div>
-                          <span class="node-status-dot"></span>
-                        </div>
-                        <div class="node-name">Priya Sharma</div>
-                        <div class="node-role-pill">Concierge</div>
-                        <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Info</div>
+                  </li>
+                  <li class="li-l3">
+                    <div class="pro-node pro-node-l3" onclick="openMemberModal('sophia')">
+                      <div class="node-avatar-frame">
+                        <img src="./assets/images/avatars/sophia.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Saikat Sasmal" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                        <div class="node-avatar-fallback" style="background: #38bdf8; color: #0b132b;">SS</div>
+                        <span class="node-status-dot"></span>
                       </div>
-                    </li>
-                    <li class="li-l3">
-                      <div class="pro-node pro-node-l3" onclick="openMemberModal('rahul')">
-                        <div class="node-avatar-frame">
-                          <img src="./assets/images/avatars/rahul.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Rahul Verma" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                          <div class="node-avatar-fallback" style="background: #c084fc; color: #0b132b;">RV</div>
-                          <span class="node-status-dot"></span>
-                        </div>
-                        <div class="node-name">Rahul Verma</div>
-                        <div class="node-role-pill">KYC Lead</div>
-                        <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Info</div>
-                      </div>
-                    </li>
-                    <li class="li-l3">
-                      <div class="pro-node pro-node-l3" onclick="openMemberModal('ananya')">
-                        <div class="node-avatar-frame">
-                          <img src="./assets/images/avatars/ananya.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Ananya Das" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                          <div class="node-avatar-fallback" style="background: #c084fc; color: #0b132b;">AD</div>
-                          <span class="node-status-dot"></span>
-                        </div>
-                        <div class="node-name">Ananya Das</div>
-                        <div class="node-role-pill">QA Auditor</div>
-                        <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Info</div>
-                      </div>
-                    </li>
-                  </ul>
-                </li>
-
-                <!-- LEVEL 2 &bull; 3. MARCUS STERLING (AUTOMOTIVE & FLEET) -->
-                <li class="li-l2">
-                  <div class="pro-node pro-node-l2 amber" onclick="openMemberModal('marcus')">
-                    <div class="node-avatar-frame">
-                      <img src="./assets/images/avatars/marcus.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Marcus Sterling" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                      <div class="node-avatar-fallback" style="background: #fbbf24; color: #0b132b;">MS</div>
-                      <span class="node-status-dot"></span>
+                      <div class="node-name">Saikat Sasmal</div>
+                      <div class="node-role-pill">Cybersecurity</div>
+                      <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Info</div>
                     </div>
-                    <div class="node-name">Marcus Sterling</div>
-                    <div class="node-role-pill">Chief Product Officer</div>
-                    <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Details</div>
-                  </div>
+                  </li>
+                </ul>
+              </li>
 
-                  <!-- SUB-BRANCH TO LEVEL 3 (2 SPECIALISTS UNDER MARCUS) -->
-                  <ul>
-                    <li class="li-l3">
-                      <div class="pro-node pro-node-l3" onclick="openMemberModal('vikram')">
-                        <div class="node-avatar-frame">
-                          <img src="./assets/images/avatars/vikram.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Vikram Malhotra" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                          <div class="node-avatar-fallback" style="background: #fbbf24; color: #0b132b;">VM</div>
-                          <span class="node-status-dot"></span>
-                        </div>
-                        <div class="node-name">Vikram Malhotra</div>
-                        <div class="node-role-pill">Fleet Logistics</div>
-                        <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Info</div>
+              <!-- LEVEL 2 • 2. SAIKAT SASMAL (OPERATIONS) -->
+              <li class="li-l2">
+                <div class="pro-node pro-node-l2 purple" onclick="openMemberModal('elena')">
+                  <div class="node-avatar-frame">
+                    <img src="./assets/images/avatars/elena.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Saikat Sasmal" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                    <div class="node-avatar-fallback" style="background: #c084fc; color: #0b132b;">SS</div>
+                    <span class="node-status-dot"></span>
+                  </div>
+                  <div class="node-name">Saikat Sasmal</div>
+                  <div class="node-role-pill">Chief Operating Officer</div>
+                  <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Details</div>
+                </div>
+
+                <!-- SUB-BRANCH TO LEVEL 3 (3 SPECIALISTS UNDER OPERATIONS) -->
+                <ul>
+                  <li class="li-l3">
+                    <div class="pro-node pro-node-l3" onclick="openMemberModal('priya')">
+                      <div class="node-avatar-frame">
+                        <img src="./assets/images/avatars/priya.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Saikat Sasmal" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                        <div class="node-avatar-fallback" style="background: #c084fc; color: #0b132b;">SS</div>
+                        <span class="node-status-dot"></span>
                       </div>
-                    </li>
-                    <li class="li-l3">
-                      <div class="pro-node pro-node-l3" onclick="openMemberModal('amit')">
-                        <div class="node-avatar-frame">
-                          <img src="./assets/images/avatars/amit.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Amit Roy" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                          <div class="node-avatar-fallback" style="background: #fbbf24; color: #0b132b;">AR</div>
-                          <span class="node-status-dot"></span>
-                        </div>
-                        <div class="node-name">Amit Roy</div>
-                        <div class="node-role-pill">Settlements</div>
-                        <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Info</div>
+                      <div class="node-name">Saikat Sasmal</div>
+                      <div class="node-role-pill">Concierge</div>
+                      <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Info</div>
+                    </div>
+                  </li>
+                  <li class="li-l3">
+                    <div class="pro-node pro-node-l3" onclick="openMemberModal('rahul')">
+                      <div class="node-avatar-frame">
+                        <img src="./assets/images/avatars/rahul.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Saikat Sasmal" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                        <div class="node-avatar-fallback" style="background: #c084fc; color: #0b132b;">SS</div>
+                        <span class="node-status-dot"></span>
                       </div>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </section>
+                      <div class="node-name">Saikat Sasmal</div>
+                      <div class="node-role-pill">KYC Lead</div>
+                      <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Info</div>
+                    </div>
+                  </li>
+                  <li class="li-l3">
+                    <div class="pro-node pro-node-l3" onclick="openMemberModal('ananya')">
+                      <div class="node-avatar-frame">
+                        <img src="./assets/images/avatars/ananya.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Saikat Sasmal" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                        <div class="node-avatar-fallback" style="background: #c084fc; color: #0b132b;">SS</div>
+                        <span class="node-status-dot"></span>
+                      </div>
+                      <div class="node-name">Saikat Sasmal</div>
+                      <div class="node-role-pill">QA Auditor</div>
+                      <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Info</div>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+
+              <!-- LEVEL 2 • 3. SAIKAT SASMAL (AUTOMOTIVE & FLEET) -->
+              <li class="li-l2">
+                <div class="pro-node pro-node-l2 amber" onclick="openMemberModal('marcus')">
+                  <div class="node-avatar-frame">
+                    <img src="./assets/images/avatars/marcus.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Saikat Sasmal" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                    <div class="node-avatar-fallback" style="background: #fbbf24; color: #0b132b;">SS</div>
+                    <span class="node-status-dot"></span>
+                  </div>
+                  <div class="node-name">Saikat Sasmal</div>
+                  <div class="node-role-pill">Chief Product Officer</div>
+                  <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Details</div>
+                </div>
+
+                <!-- SUB-BRANCH TO LEVEL 3 (2 SPECIALISTS UNDER PRODUCT) -->
+                <ul>
+                  <li class="li-l3">
+                    <div class="pro-node pro-node-l3" onclick="openMemberModal('vikram')">
+                      <div class="node-avatar-frame">
+                        <img src="./assets/images/avatars/vikram.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Saikat Sasmal" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                        <div class="node-avatar-fallback" style="background: #fbbf24; color: #0b132b;">SS</div>
+                        <span class="node-status-dot"></span>
+                      </div>
+                      <div class="node-name">Saikat Sasmal</div>
+                      <div class="node-role-pill">Fleet Logistics</div>
+                      <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Info</div>
+                    </div>
+                  </li>
+                  <li class="li-l3">
+                    <div class="pro-node pro-node-l3" onclick="openMemberModal('amit')">
+                      <div class="node-avatar-frame">
+                        <img src="./assets/images/avatars/amit.png?v=<?= SERVEASY_ASSET_VER ?>" alt="Saikat Sasmal" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                        <div class="node-avatar-fallback" style="background: #fbbf24; color: #0b132b;">SS</div>
+                        <span class="node-status-dot"></span>
+                      </div>
+                      <div class="node-name">Saikat Sasmal</div>
+                      <div class="node-role-pill">Settlements</div>
+                      <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Info</div>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Standard Default Width Container for Page Bottom Sections (Matches Header & Footer) -->
+    <div class="about-default-container">
 
       <!-- Organization Metrics HUD Bar -->
       <div class="hud-metrics-row">
@@ -1035,94 +1035,94 @@ if (!defined('SERVEASY_ASSET_VER')) {
         email: 'mailto:support@serveasy.in?subject=Inquiry for CTO Desk (Saikat Sasmal)'
       },
       'elena': {
-        name: 'Elena Rostova',
+        name: 'Saikat Sasmal',
         role: 'Chief Operating Officer (COO)',
         dept: 'Field Operations & Service Grid',
         reportsTo: 'Sharthak Sen (Founder & CEO)',
         img: './assets/images/avatars/elena.png?v=<?= SERVEASY_ASSET_VER ?>',
-        bio: 'Elena Rostova manages daily field fulfillment, service provider network compliance, quality benchmarks, and multi-channel customer concierge. She ensures every booking meets strict hygiene, punctuality, and satisfaction standards.',
+        bio: 'Manages daily field fulfillment, service provider network compliance, quality benchmarks, and multi-channel customer concierge. Ensures every booking meets strict hygiene, punctuality, and satisfaction standards.',
         skills: ['Field Operations', 'SLA Enforcement', 'Partner Network', 'Service Quality', 'Dispute Shield'],
-        email: 'mailto:support@serveasy.in?subject=Inquiry for COO Desk (Elena Rostova)'
+        email: 'mailto:support@serveasy.in?subject=Inquiry for COO Desk (Saikat Sasmal)'
       },
       'marcus': {
-        name: 'Marcus Sterling',
+        name: 'Saikat Sasmal',
         role: 'Chief Product Officer (CPO)',
         dept: 'Automotive & Product Standards',
         reportsTo: 'Sharthak Sen (Founder & CEO)',
         img: './assets/images/avatars/marcus.png?v=<?= SERVEASY_ASSET_VER ?>',
-        bio: 'Marcus Sterling directs automotive technical standards, mechanical diagnostic protocols, doorstep vehicle detailing specs, and rental fleet logistics. He ensures technicians deploy with certified commercial-grade tooling.',
+        bio: 'Directs automotive technical standards, mechanical diagnostic protocols, doorstep vehicle detailing specs, and rental fleet logistics. Ensures technicians deploy with certified commercial-grade tooling.',
         skills: ['Automotive Engineering', 'Fleet Standards', 'Mechanical R&D', 'Tooling Specs', 'Product UX'],
-        email: 'mailto:support@serveasy.in?subject=Inquiry for CPO Desk (Marcus Sterling)'
+        email: 'mailto:support@serveasy.in?subject=Inquiry for CPO Desk (Saikat Sasmal)'
       },
       'david': {
-        name: 'David Chen',
+        name: 'Saikat Sasmal',
         role: 'Emergency SOS Dispatch Lead',
         dept: 'Rapid Response Unit',
         reportsTo: 'Saikat Sasmal (CTO)',
         img: './assets/images/avatars/david.png?v=<?= SERVEASY_ASSET_VER ?>',
         bio: 'Coordinates 24/7 live GPS roadside breakdown tracking, emergency tow truck dispatch, battery jumpstarts, and flat-tire rescue across major highway corridors.',
         skills: ['24/7 Roadside SOS', 'GPS Telemetry', 'Towing Logistics', 'Emergency Incident Response'],
-        email: 'mailto:support@serveasy.in?subject=Emergency SOS Operations (David Chen)'
+        email: 'mailto:support@serveasy.in?subject=Emergency SOS Operations (Saikat Sasmal)'
       },
       'sophia': {
-        name: 'Sophia Lin',
+        name: 'Saikat Sasmal',
         role: 'Cybersecurity & Privacy Lead',
         dept: 'Information Security Directorate',
         reportsTo: 'Saikat Sasmal (CTO)',
         img: './assets/images/avatars/sophia.png?v=<?= SERVEASY_ASSET_VER ?>',
         bio: 'Conducts continuous penetration testing, audits OWASP defensive controls, and secures customer payment gateway tokens and session encryption.',
         skills: ['AppSec Hardening', 'Zero Trust Architecture', 'Data Privacy', 'Penetration Testing'],
-        email: 'mailto:support@serveasy.in?subject=Security & Privacy Desk (Sophia Lin)'
+        email: 'mailto:support@serveasy.in?subject=Security & Privacy Desk (Saikat Sasmal)'
       },
       'priya': {
-        name: 'Priya Sharma',
+        name: 'Saikat Sasmal',
         role: 'Customer Concierge Lead',
         dept: 'Customer Success & Experience',
-        reportsTo: 'Elena Rostova (COO)',
+        reportsTo: 'Saikat Sasmal (COO)',
         img: './assets/images/avatars/priya.png?v=<?= SERVEASY_ASSET_VER ?>',
         bio: 'Leads our multi-channel customer concierge team, resolving scheduling adjustments, booking preferences, and customer satisfaction tickets.',
         skills: ['Concierge Desk', 'Support Resolution', 'Customer NPS', 'Booking Logistics'],
-        email: 'mailto:support@serveasy.in?subject=Customer Concierge (Priya Sharma)'
+        email: 'mailto:support@serveasy.in?subject=Customer Concierge (Saikat Sasmal)'
       },
       'rahul': {
-        name: 'Rahul Verma',
+        name: 'Saikat Sasmal',
         role: 'Partner KYC & Vetting Lead',
         dept: 'Compliance & Onboarding Unit',
-        reportsTo: 'Elena Rostova (COO)',
+        reportsTo: 'Saikat Sasmal (COO)',
         img: './assets/images/avatars/rahul.png?v=<?= SERVEASY_ASSET_VER ?>',
         bio: 'Enforces rigorous 4-step partner onboarding: government identity verification, criminal background checks, skill testing, and trade certification.',
         skills: ['Government KYC', 'Criminal Checks', 'Trade Audits', 'Compliance Verification'],
-        email: 'mailto:support@serveasy.in?subject=Partner KYC Compliance (Rahul Verma)'
+        email: 'mailto:support@serveasy.in?subject=Partner KYC Compliance (Saikat Sasmal)'
       },
       'ananya': {
-        name: 'Ananya Das',
+        name: 'Saikat Sasmal',
         role: 'Quality Assurance & Field Auditor',
         dept: 'Safety & Sanitation Audit Desk',
-        reportsTo: 'Elena Rostova (COO)',
+        reportsTo: 'Saikat Sasmal (COO)',
         img: './assets/images/avatars/ananya.png?v=<?= SERVEASY_ASSET_VER ?>',
         bio: 'Conducts unannounced on-site quality spot checks, verifies technician sanitation gear, and ensures residential cleaning protocols meet hospital-grade standards.',
         skills: ['Field Audits', 'Hygiene Standards', 'Sanitation Safety', 'Service Spot Checks'],
-        email: 'mailto:support@serveasy.in?subject=Field Quality Audit (Ananya Das)'
+        email: 'mailto:support@serveasy.in?subject=Field Quality Audit (Saikat Sasmal)'
       },
       'vikram': {
-        name: 'Vikram Malhotra',
+        name: 'Saikat Sasmal',
         role: 'Fleet Logistics & Rental Manager',
         dept: 'Fleet & Transport Logistics',
-        reportsTo: 'Marcus Sterling (CPO)',
+        reportsTo: 'Saikat Sasmal (CPO)',
         img: './assets/images/avatars/vikram.png?v=<?= SERVEASY_ASSET_VER ?>',
         bio: 'Manages the ServEasy car and bike rental fleets, cargo carrier dispatch, vehicle health inspections, and preventative maintenance rotations.',
         skills: ['Rental Logistics', 'Cargo Express', 'Vehicle Maintenance', 'Fleet Telematics'],
-        email: 'mailto:support@serveasy.in?subject=Fleet Logistics (Vikram Malhotra)'
+        email: 'mailto:support@serveasy.in?subject=Fleet Logistics (Saikat Sasmal)'
       },
       'amit': {
-        name: 'Amit Roy',
+        name: 'Saikat Sasmal',
         role: 'Merchant Billing & Settlements Lead',
         dept: 'Financial Escrow & Settlements Desk',
-        reportsTo: 'Marcus Sterling (CPO)',
+        reportsTo: 'Saikat Sasmal (CPO)',
         img: './assets/images/avatars/amit.png?v=<?= SERVEASY_ASSET_VER ?>',
         bio: 'Oversees payment gateway reconciliations, escrow accounts, same-day technician payouts, and verified customer refund disbursements.',
         skills: ['Instant Payouts', 'Gateway Escrow', 'Refund Audits', 'Financial Reconciliation'],
-        email: 'mailto:support@serveasy.in?subject=Billing & Settlements (Amit Roy)'
+        email: 'mailto:support@serveasy.in?subject=Billing & Settlements (Saikat Sasmal)'
       }
     };
 
