@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Homepage -->
+  <url>
+    <loc>https://silver-penguin-156353.hostingersite.com/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- All Services Catalog -->
+  <url>
+    <loc>https://silver-penguin-156353.hostingersite.com/pages/services.php</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Service Categories -->
+  <url>
+    <loc>https://silver-penguin-156353.hostingersite.com/pages/service-category.php</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Dedicated Service Booking Pages -->
+  <url>
+    <loc>https://silver-penguin-156353.hostingersite.com/pages/services/vehicle-car-&amp;-bike-wash.php</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://silver-penguin-156353.hostingersite.com/pages/services/personal-staff-&amp;-maids.php</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Guides & Blog -->
+  <url>
+    <loc>https://silver-penguin-156353.hostingersite.com/pages/blog.php</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://silver-penguin-156353.hostingersite.com/pages/blog.php?slug=top-7-essential-vehicle-maintenance-tips</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://silver-penguin-156353.hostingersite.com/pages/blog.php?slug=deep-home-sanitization-guide</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://silver-penguin-156353.hostingersite.com/pages/blog.php?slug=emergency-roadside-breakdown-checklist</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Company Information -->
+  <url>
+    <loc>https://silver-penguin-156353.hostingersite.com/pages/about.php</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://silver-penguin-156353.hostingersite.com/pages/contact.php</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Legal & Policies -->
+  <url>
+    <loc>https://silver-penguin-156353.hostingersite.com/pages/privacy-policy.php</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://silver-penguin-156353.hostingersite.com/pages/terms-of-service.php</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+</urlset>

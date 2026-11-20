@@ -1,0 +1,33 @@
+# ==========================================================
+# ServEasy Robots.txt File
+# https://silver-penguin-156353.hostingersite.com
+# ==========================================================
+
+User-agent: *
+Allow: /
+Allow: /pages/services.php
+Allow: /pages/about.php
+Allow: /pages/contact.php
+Allow: /pages/privacy-policy.php
+Allow: /pages/terms-of-service.php
+Allow: /pages/blog.php
+Allow: /pages/service-category.php
+Allow: /pages/assets/
+
+# Disallow private, administrative, session, and API internal endpoints
+Disallow: /admin/
+Disallow: /superadmin/
+Disallow: /provider/
+Disallow: /api/
+Disallow: /auth/
+Disallow: /common/
+Disallow: /pages/user-profile.php
+Disallow: /pages/orders.php
+Disallow: /pages/wishlist.php
+Disallow: /logout.php
+
+# Crawl Delay
+Crawl-delay: 1
+
+# Sitemap Location
+Sitemap: https://silver-penguin-156353.hostingersite.com/sitemap.xml

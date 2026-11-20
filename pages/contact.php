@@ -98,13 +98,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['ajax_action']) && $_
         ]);
         exit;
     } catch (\Throwable $e) {
-        // Fallback response with ticket so user experience is never blocked
+        error_log("Support ticket persistence error: " . $e->getMessage());
+        http_response_code(500);
         echo json_encode([
-            'status'        => 'success',
-            'ticket_number' => $ticketNumber,
-            'name'          => htmlspecialchars($name),
-            'category'      => htmlspecialchars($category),
-            'message'       => 'Your message has been received! Our support concierge will get back to you shortly.'
+            'status'  => 'error',
+            'message' => 'Unable to persist your support ticket to the database. Please try again or reach our direct support line.'
         ]);
         exit;
     }
@@ -254,9 +252,9 @@ if (isset($_SESSION['user_id'])) {
             </div>
             <h3 class="channel-title">Email Inquiries</h3>
             <p class="channel-desc">Send us detailed job requests, invoices, or business proposals.</p>
-            <div class="channel-val">support@serveasy.com</div>
+            <div class="channel-val">support@serveasy.in</div>
           </div>
-          <a href="mailto:support@serveasy.com" class="channel-btn">
+          <a href="mailto:support@serveasy.in" class="channel-btn">
             <span>Send Email</span>
             <ion-icon name="arrow-forward-outline"></ion-icon>
           </a>
@@ -510,41 +508,40 @@ if (isset($_SESSION['user_id'])) {
 
             <div class="live-stats-row">
               <div class="live-stat-item">
-                <span class="live-stat-label">Dispatchers Active</span>
-                <span class="live-stat-val">34 Specialists</span>
+                <span class="live-stat-label">Support Status</span>
+                <span class="live-stat-val">Desk Active</span>
               </div>
               <div class="live-stat-item">
-                <span class="live-stat-label">Avg. Response</span>
-                <span class="live-stat-val">~4 Minutes</span>
+                <span class="live-stat-label">Response Time</span>
+                <span class="live-stat-val">Prompt Support</span>
               </div>
             </div>
           </div>
 
           <!-- 2. Dark Themed Interactive Map Card -->
           <div class="contact-map-card" id="hub-map-card">
-            <h3 class="map-card-title">Corporate Headquarters</h3>
+            <h3 class="map-card-title">Regional Support Hub</h3>
             <p class="map-card-address" id="text-hq-address">
-              ServEasy Central Hub, 7 Green Lake Street, Silicon Corridor, IN 47933
+              ServEasy Operations Hub, Greater Kolkata, West Bengal, 700157, India
             </p>
 
-            <div class="map-frame-wrapper">
-              <iframe 
-                title="ServEasy Office Location"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12234.3312!2d-86.90!3d40.04!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8813137a1f26dd75%3A0x633513fa1327!2sCrawfordsville%2C%20IN!5e0!3m2!1sen!2sus!4v1680000000000!5m2!1sen!2sus" 
-                loading="lazy" 
-                referrerpolicy="no-referrer-when-downgrade"
-              ></iframe>
+            <div class="map-frame-wrapper" style="background: rgba(15, 23, 42, 0.8); display: flex; align-items: center; justify-content: center; min-height: 200px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);">
+              <div style="text-align: center; padding: 20px;">
+                <ion-icon name="location-outline" style="font-size: 3rem; color: #00f2fe; margin-bottom: 8px;"></ion-icon>
+                <h4 style="color: #fff; font-size: 1rem; margin-bottom: 4px;">ServEasy Regional Headquarters</h4>
+                <p style="color: #94a3b8; font-size: 0.85rem; max-width: 280px; margin: 0 auto;">Central Operations & Customer Support Hub &bull; Kolkata, West Bengal</p>
+              </div>
             </div>
 
             <div class="map-action-row">
               <a 
-                href="https://maps.google.com/?q=Crawfordsville,+IN+47933" 
+                href="https://maps.google.com/?q=Kolkata,+West+Bengal" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 class="btn-map-directions"
               >
                 <ion-icon name="navigate-outline"></ion-icon>
-                <span>Get Directions</span>
+                <span>View on Map</span>
               </a>
 
               <button type="button" class="btn-copy-address" id="btn-copy-address" title="Copy Address">
@@ -563,7 +560,7 @@ if (isset($_SESSION['user_id'])) {
             <ul class="dept-list">
               <li class="dept-item">
                 <span class="dept-name">Customer Concierge</span>
-                <a href="mailto:support@serveasy.com" class="dept-link">support@serveasy.com</a>
+                <a href="mailto:support@serveasy.in" class="dept-link">support@serveasy.in</a>
               </li>
               <li class="dept-item">
                 <span class="dept-name">Service Providers</span>
@@ -862,18 +859,11 @@ if (isset($_SESSION['user_id'])) {
             }
           } catch (error) {
             console.error('Submission error:', error);
-            // Graceful optimistic fallback
-            const fallbackTicket = 'SRV-' + Math.floor(100000 + Math.random() * 900000);
-            if (modalTicketId) modalTicketId.textContent = fallbackTicket;
-            if (modalDesc) {
-              modalDesc.textContent = `Thank you, ${name}! Your inquiry has been received. Our team will review your message and contact you at ${email}.`;
-            }
-            if (successModal) successModal.classList.add('open');
             if (window.Notify) {
-              Notify.success('Message dispatched successfully!');
+              Notify.error('Network or server error while submitting ticket. Please try again.');
+            } else {
+              alert('Network or server error while submitting ticket. Please try again.');
             }
-            form.reset();
-            if (charCounter) charCounter.textContent = '0 / 1500';
           } finally {
             submitBtn.classList.remove('loading');
           }

@@ -3,11 +3,22 @@
 # ==========================================================
 Options -Indexes
 
+# Custom Error Pages
+ErrorDocument 404 /pages/404.php
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
     # Profile Aliases
     RewriteRule ^profile/?$ pages/user-profile.php [L,QSA]
     RewriteRule ^pages/profile/?$ pages/user-profile.php [L,QSA]
+
+    # Legal & Information Aliases
+    RewriteRule ^privacy-policy/?$ pages/privacy-policy.php [L,QSA]
+    RewriteRule ^terms-of-service/?$ pages/terms-of-service.php [L,QSA]
+    RewriteRule ^about/?$ pages/about.php [L,QSA]
+    RewriteRule ^contact/?$ pages/contact.php [L,QSA]
+    RewriteRule ^services/?$ pages/services.php [L,QSA]
+    RewriteRule ^blog/?$ pages/blog.php [L,QSA]
 
     # Safeguard: Automatically normalize accidental /pages/pages/ URLs to /pages/
     RewriteRule ^pages/pages/(.*)$ pages/$1 [R=301,L]

@@ -39,11 +39,7 @@
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored === null) {
-        // Default starter favorites
-        const defaults = [1, 5, 8];
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(defaults));
-        saveItemsData(DEFAULT_SERVICES);
-        return defaults;
+        return [];
       }
       const parsed = JSON.parse(stored);
       return Array.isArray(parsed) ? parsed.map(Number) : [];

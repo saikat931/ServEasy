@@ -172,6 +172,8 @@ if (!isset($categoriesData) || empty($categoriesData) || !isset($subcategoriesDa
             37 => 'restaurant-orders-and-dining',         // Home Food Delivery -> Service 16 (Restaurant Orders & Dining)
             38 => 'emergency-sos-help',                   // Medical Emergency SOS -> Service 6 (Emergency SOS Help)
             40 => 'emergency-sos-help',                   // Emergency Locksmith -> Service 6
+            42 => 'personal-staff-and-maids',             // Babysitter alias -> Service 5 (Personal Staff & Maids)
+            45 => 'personal-staff-and-maids',             // Elder Care alias -> Service 5 (Personal Staff & Maids)
         ];
 
         $icon_map = [
@@ -201,6 +203,18 @@ if (!isset($categoriesData) || empty($categoriesData) || !isset($subcategoriesDa
             $subId = (int)$s['subcategory_id'];
             $subSlug = $s['subcategory_slug'] ?? '';
             $subName = $s['subcategory_name'] ?? '';
+
+            // Subcategory Normalization (Finding 10: Deduplicate Babysitter & Elder Care)
+            if ($subId === 42 || $subSlug === 'babysitter') {
+                $subId = 21;
+                $subSlug = 'baby-sitter';
+                $subName = 'Baby Sitter';
+            } elseif ($subId === 45 || $subSlug === 'elder-care') {
+                $subId = 22;
+                $subSlug = 'elderly-care';
+                $subName = 'Elderly Care';
+            }
+
             $catSlug = $cat_slugs_by_id[$cid] ?? 'all';
             $sSlug = !empty($s['service_slug']) ? $s['service_slug'] : ($subcat_service_fallback[$subId] ?? '');
             $priceStr = !empty($s['service_price']) ? '$' . number_format((float)$s['service_price'], 2) : 'From $20.00';
@@ -244,7 +258,7 @@ if (!isset($categoriesData) || empty($categoriesData) || !isset($subcategoriesDa
                     'Food & Dining'          => 'Food & Dining',
                 ];
                 $displayCatName = $short_domain_map[$s['category_name']] ?? $s['category_name'];
-                $priceStr = !empty($s['service_price']) ? '$' . number_format((float)$s['service_price'], 2) : 'From $20.00';
+                $priceStr = !empty($s['service_price']) ? '$' . number_format((float)$s['service_price'], 2) : '$20.00';
 
                 $subcategoriesData[] = [
                     'id'            => $subId,
@@ -315,7 +329,7 @@ if (!isset($categoriesData) || empty($categoriesData) || !isset($subcategoriesDa
             $subs = $subs_by_cat[$cid] ?? [];
             $stats = $stats_by_cat[$cid] ?? null;
             $srvCount = $stats ? (int)$stats['service_count'] : 0;
-            $minPrice = $stats && $stats['min_price'] !== null ? '$' . number_format((float)$stats['min_price'], 2) : 'Starts from $10.00';
+            $minPrice = $stats && $stats['min_price'] !== null ? '$' . number_format((float)$stats['min_price'], 2) : '$10.00';
 
             $categoriesData[] = [
                 'id'            => $cid,

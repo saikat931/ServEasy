@@ -59,6 +59,47 @@ if (!defined('SERVEASY_ASSET_VER')) {
   <link rel="manifest" href="<?= $nav_web_root ?>/manifest.json">
   <meta name="theme-color" content="#4361ee">
 
+  <!-- Schema.org JSON-LD Structured Data (Phase 6 SEO) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://silver-penguin-156353.hostingersite.com/#organization",
+        "name": "ServEasy",
+        "url": "https://silver-penguin-156353.hostingersite.com/",
+        "logo": "https://silver-penguin-156353.hostingersite.com/pages/assets/images/logo.png",
+        "description": "On-demand doorstep service marketplace for vehicle care, home cleaning, skilled personal staff, and emergency roadside help.",
+        "telephone": "+919647414029",
+        "email": "support@serveasy.in",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Salt Lake, Sector V",
+          "addressLocality": "Kolkata",
+          "addressRegion": "West Bengal",
+          "postalCode": "700091",
+          "addressCountry": "IN"
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://silver-penguin-156353.hostingersite.com/#website",
+        "url": "https://silver-penguin-156353.hostingersite.com/",
+        "name": "ServEasy",
+        "publisher": {
+          "@id": "https://silver-penguin-156353.hostingersite.com/#organization"
+        },
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://silver-penguin-156353.hostingersite.com/pages/services.php?query={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    ]
+  }
+  </script>
+
   <!-- Instant Theme Bootstrapper (Zero Flash) -->
   <script>
     (function() {
@@ -362,7 +403,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
 
     <div class="top-bar">
       <div class="container">
-        <p>Free shipping for all order of $105</p>
+        <p>Verified Doorstep Services &bull; Transparent Pricing &bull; On-Demand Booking</p>
       </div>
     </div>
 
@@ -467,13 +508,13 @@ if (!defined('SERVEASY_ASSET_VER')) {
           <button class="header-action-btn" aria-label="Open whishlist" data-panel-btn="whishlist">
             <ion-icon name="heart-outline"></ion-icon>
 
-            <data class="btn-badge" value="3">03</data>
+            <data class="btn-badge" id="header-wishlist-badge" value="0">00</data>
           </button>
 
           <button class="header-action-btn" aria-label="Open shopping cart" data-panel-btn="cart">
             <ion-icon name="basket-outline"></ion-icon>
 
-            <data class="btn-badge" value="2">02</data>
+            <data class="btn-badge" id="header-cart-badge" value="0">00</data>
           </button>
 
           <button class="header-action-btn user-header-btn" aria-label="Open user profile" data-panel-btn="user">
@@ -549,10 +590,11 @@ if (!defined('SERVEASY_ASSET_VER')) {
           });
         }
 
-        // Keep wishlist badge in sync across all pages
+        // Keep wishlist and cart badges in sync across all pages
         try {
           const stored = localStorage.getItem('serveasy_wishlist');
-          const list = stored ? JSON.parse(stored) : [1, 5, 8];
+          let list = [];
+          try { if (stored) list = JSON.parse(stored); } catch (e) {}
           const count = Array.isArray(list) ? list.length : 0;
           const countStr = count < 10 ? '0' + count : String(count);
           const badges = document.querySelectorAll('.header-action-btn[data-panel-btn="whishlist"] .btn-badge');
@@ -560,11 +602,15 @@ if (!defined('SERVEASY_ASSET_VER')) {
           const drawerCount = document.getElementById('aside-wishlist-count-badge');
           if (drawerCount) drawerCount.textContent = countStr;
 
-          const cartBadge = document.querySelector('.header-action-btn[data-panel-btn="cart"] .btn-badge');
+          const cartStored = localStorage.getItem('serveasy_cart');
+          let cartList = [];
+          try { if (cartStored) cartList = JSON.parse(cartStored); } catch (e) {}
+          const cartCount = Array.isArray(cartList) ? cartList.length : 0;
+          const cartCountStr = cartCount < 10 ? '0' + cartCount : String(cartCount);
+          const cartBadges = document.querySelectorAll('.header-action-btn[data-panel-btn="cart"] .btn-badge');
+          cartBadges.forEach(function(b) { b.textContent = cartCountStr; b.setAttribute('value', cartCount); });
           const asideCartBadge = document.getElementById('aside-cart-count-badge');
-          if (cartBadge && asideCartBadge) {
-            asideCartBadge.textContent = cartBadge.textContent.trim();
-          }
+          if (asideCartBadge) asideCartBadge.textContent = cartCountStr;
         } catch (e) {}
       }
 
