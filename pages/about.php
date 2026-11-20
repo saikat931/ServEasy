@@ -6,7 +6,7 @@
  */
 require_once __DIR__ . '/../common/auth_session.php';
 if (!defined('SERVEASY_ASSET_VER')) {
-    define('SERVEASY_ASSET_VER', '20261120v11');
+    define('SERVEASY_ASSET_VER', '20261120v12');
 }
 ?>
 <!DOCTYPE html>
@@ -47,6 +47,64 @@ if (!defined('SERVEASY_ASSET_VER')) {
       margin-inline: auto !important;
       padding-inline: 20px !important;
       box-sizing: border-box !important;
+    }
+
+    /* ── Breadcrumb Single Inline Row ────────────────────────────────── */
+    .about-breadcrumb-wrap {
+      padding-top: 25px;
+      margin-bottom: 5px;
+    }
+    .about-breadcrumb-list {
+      display: inline-flex !important;
+      align-items: center !important;
+      flex-direction: row !important;
+      gap: 10px !important;
+      list-style: none !important;
+      padding: 8px 18px !important;
+      background: rgba(255, 255, 255, 0.03) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      border-radius: 30px !important;
+      max-width: max-content !important;
+      backdrop-filter: blur(10px) !important;
+      -webkit-backdrop-filter: blur(10px) !important;
+      margin: 0 !important;
+    }
+    .about-breadcrumb-item {
+      display: inline-flex !important;
+      align-items: center !important;
+      flex-direction: row !important;
+      gap: 8px !important;
+      font-size: 0.88rem !important;
+      color: #94a3b8 !important;
+      white-space: nowrap !important;
+    }
+    .about-breadcrumb-link {
+      color: #94a3b8 !important;
+      text-decoration: none !important;
+      transition: color 0.25s ease !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      flex-direction: row !important;
+      gap: 6px !important;
+      white-space: nowrap !important;
+    }
+    .about-breadcrumb-link:hover {
+      color: #00f2fe !important;
+    }
+    .about-breadcrumb-link span {
+      display: inline !important;
+    }
+    .about-breadcrumb-separator {
+      color: rgba(255, 255, 255, 0.3) !important;
+      font-size: 0.85rem !important;
+      user-select: none !important;
+      display: inline-block !important;
+    }
+    .about-breadcrumb-current {
+      color: #00f2fe !important;
+      font-weight: 600 !important;
+      display: inline !important;
+      white-space: nowrap !important;
     }
 
     /* ── Seamless Tree Stage (Exact 1600px Box Width, No Border, Seamless Background) ── */
@@ -705,11 +763,20 @@ if (!defined('SERVEASY_ASSET_VER')) {
     <!-- Standard Default Width Container (Matches Header & Footer Box Width) -->
     <div class="about-default-container">
 
-      <!-- Breadcrumbs -->
-      <div style="padding: 25px 0 10px;">
-        <span style="color: #64748b; font-size: 0.9rem;">
-          <a href="../index.php" style="color: #94a3b8; text-decoration: none;">Home</a> / <span style="color: #00f2fe;">About ServEasy & Leadership Tree</span>
-        </span>
+      <!-- Breadcrumbs Single Row -->
+      <div class="about-breadcrumb-wrap">
+        <ol class="about-breadcrumb-list">
+          <li class="about-breadcrumb-item">
+            <a href="../index.php" class="about-breadcrumb-link">
+              <ion-icon name="home-outline"></ion-icon>
+              <span>Home</span>
+            </a>
+          </li>
+          <li class="about-breadcrumb-separator">/</li>
+          <li class="about-breadcrumb-item">
+            <span class="about-breadcrumb-current">About ServEasy & Leadership Tree</span>
+          </li>
+        </ol>
       </div>
 
       <!-- Hero Header -->
