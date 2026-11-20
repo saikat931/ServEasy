@@ -1,11 +1,11 @@
 <?php
 /**
- * ServEasy Customer Web Portal - About Us & Leadership Team Hierarchy
- * Comprehensive Team Organization Site Map
+ * ServEasy Customer Web Portal - About Us & Visual Team Organization Tree
+ * Hierarchical Org Chart: Level 1 (Sharthak Sen) -> Level 2 (3 Directorate Heads) -> Level 3 (7 Functional Leads)
  */
 require_once __DIR__ . '/../common/auth_session.php';
 if (!defined('SERVEASY_ASSET_VER')) {
-    define('SERVEASY_ASSET_VER', '20261119v1');
+    define('SERVEASY_ASSET_VER', '20261120v2');
 }
 ?>
 <!DOCTYPE html>
@@ -15,8 +15,8 @@ if (!defined('SERVEASY_ASSET_VER')) {
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About ServEasy — Leadership Team & Organization Hierarchy</title>
-  <meta name="description" content="Explore the ServEasy leadership team tree and organizational site map led by Sharthak Sen, executive directorate members, and 7 functional department specialists.">
+  <title>About ServEasy — Leadership Team & Visual Organization Tree</title>
+  <meta name="description" content="Visual organizational site map and leadership tree for ServEasy, led by Sharthak Sen (Founder & CEO), 3 directorate department heads, and 7 functional specialist leads.">
   <link rel="canonical" href="https://silver-penguin-156353.hostingersite.com/pages/about.php">
 
   <!-- Favicon -->
@@ -61,7 +61,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
       color: #ffffff;
       line-height: 1.2;
       max-width: 950px;
-      margin: 0 auto 20px;
+      margin: 0 auto 18px;
     }
     .about-hero-title span {
       background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
@@ -71,312 +71,346 @@ if (!defined('SERVEASY_ASSET_VER')) {
     .about-hero-desc {
       font-size: 1.15rem;
       color: #94a3b8;
-      max-width: 800px;
-      margin: 0 auto 35px;
+      max-width: 820px;
+      margin: 0 auto 30px;
       line-height: 1.7;
     }
 
-    /* ── Filter Pills ───────────────────────────────────────────────── */
-    .org-filter-bar {
+    /* ── View Switcher Bar ───────────────────────────────────────────── */
+    .view-switcher-bar {
       display: flex;
       justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 35px;
       flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 45px;
     }
-    .org-filter-btn {
-      padding: 10px 22px;
-      border-radius: 50px;
-      background: rgba(30, 41, 59, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #94a3b8;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.25s ease;
+    .btn-view-toggle {
       display: inline-flex;
       align-items: center;
       gap: 8px;
+      padding: 10px 22px;
+      border-radius: 50px;
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #cbd5e1;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s ease;
     }
-    .org-filter-btn:hover,
-    .org-filter-btn.active {
-      background: linear-gradient(135deg, rgba(0, 242, 254, 0.2), rgba(79, 172, 254, 0.2));
+    .btn-view-toggle:hover,
+    .btn-view-toggle.active {
+      background: linear-gradient(135deg, rgba(0, 242, 254, 0.25), rgba(79, 172, 254, 0.25));
       border-color: #00f2fe;
       color: #00f2fe;
-      box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
+      box-shadow: 0 4px 15px rgba(0, 242, 254, 0.25);
     }
 
-    /* ── Organization Tree Wrapper & Connectors ─────────────────────── */
-    .org-tree-container {
-      position: relative;
-      margin-bottom: 80px;
-      padding: 20px 10px;
+    .tree-scroll-hint {
+      display: none;
+      text-align: center;
+      color: #94a3b8;
+      font-size: 0.85rem;
+      margin-bottom: 15px;
+    }
+    @media (max-width: 1024px) {
+      .tree-scroll-hint { display: block; }
     }
 
-    .org-tree-level {
-      position: relative;
+    /* ── PURE CSS ORGANIZATIONAL TREE DIAGRAM ────────────────────────── */
+    .org-chart-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      padding: 30px 10px 60px;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
       margin-bottom: 60px;
     }
 
-    .level-heading-tag {
-      text-align: center;
-      margin-bottom: 25px;
-    }
-    .level-heading-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.78rem;
-      font-weight: 800;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      padding: 5px 14px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: #e2e8f0;
-    }
-
-    /* Tree Branch Connectors */
-    .tree-connector-down {
-      width: 2px;
-      height: 40px;
-      background: linear-gradient(180deg, #00f2fe, #38bdf8);
-      margin: 0 auto;
-      position: relative;
-    }
-    .tree-connector-down::after {
-      content: '';
-      position: absolute;
-      bottom: -4px;
-      left: -3px;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #00f2fe;
-      box-shadow: 0 0 10px #00f2fe;
-    }
-
-    .tree-connector-horizontal {
-      height: 2px;
-      max-width: 780px;
-      margin: 0 auto 35px;
-      background: linear-gradient(90deg, transparent 0%, #00f2fe 15%, #38bdf8 50%, #00f2fe 85%, transparent 100%);
-      position: relative;
-    }
-
-    /* ── Level 1 Card (CEO / Founder) ───────────────────────────────── */
-    .org-l1-wrap {
+    .tree {
       display: flex;
       justify-content: center;
+      min-width: 980px;
     }
-    .org-card-l1 {
-      background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.85));
-      border: 2px solid rgba(0, 242, 254, 0.4);
-      border-radius: 24px;
-      padding: 40px 35px;
-      max-width: 620px;
-      width: 100%;
-      text-align: center;
+
+    .tree ul {
+      padding-top: 30px;
       position: relative;
-      box-shadow: 0 20px 45px rgba(0, 242, 254, 0.15), inset 0 0 25px rgba(0, 242, 254, 0.05);
+      transition: all 0.5s;
+      display: flex;
+      justify-content: center;
+      margin: 0;
+      padding-left: 0;
+      list-style-type: none;
+    }
+
+    .tree li {
+      float: left;
+      text-align: center;
+      list-style-type: none;
+      position: relative;
+      padding: 30px 14px 0 14px;
+      transition: all 0.5s;
+    }
+
+    /* Tree Branch Connectors using ::before and ::after */
+    .tree li::before, .tree li::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 50%;
+      border-top: 2px solid #00f2fe;
+      width: 50%;
+      height: 30px;
+    }
+    .tree li::after {
+      right: auto;
+      left: 50%;
+      border-left: 2px solid #00f2fe;
+    }
+
+    .tree li:only-child::after, .tree li:only-child::before {
+      display: none;
+    }
+    .tree li:only-child {
+      padding-top: 0;
+    }
+
+    .tree li:first-child::before, .tree li:last-child::after {
+      border: 0 none;
+    }
+
+    .tree li:last-child::before {
+      border-right: 2px solid #00f2fe;
+      border-radius: 0 10px 0 0;
+    }
+    .tree li:first-child::after {
+      border-radius: 10px 0 0 0;
+    }
+
+    /* Downward connector line from parent node */
+    .tree ul ul::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      border-left: 2px solid #00f2fe;
+      width: 0;
+      height: 30px;
+    }
+
+    /* Node Card Base Styling */
+    .tree-node-box {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 20px 18px;
+      text-decoration: none;
+      color: #cbd5e1;
+      display: inline-block;
+      border-radius: 18px;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      position: relative;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
     }
-    .org-card-l1:hover {
-      transform: translateY(-6px);
-      border-color: #00f2fe;
-      box-shadow: 0 25px 60px rgba(0, 242, 254, 0.3);
+    .tree-node-box:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 35px rgba(0, 242, 254, 0.25);
     }
-    .org-avatar-l1 {
-      width: 96px;
-      height: 96px;
+
+    /* ── Node Tiers ─────────────────────────────────────────────────── */
+    /* Level 1: Sharthak Sen */
+    .node-l1 {
+      width: 380px;
+      border: 2px solid #00f2fe;
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.9));
+      box-shadow: 0 0 30px rgba(0, 242, 254, 0.25), inset 0 0 20px rgba(0, 242, 254, 0.08);
+      padding: 26px 22px;
+    }
+    .avatar-l1 {
+      width: 76px;
+      height: 76px;
       border-radius: 50%;
       background: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #6366f1 100%);
       color: #0b132b;
-      font-size: 2.2rem;
+      font-size: 1.8rem;
       font-weight: 900;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 18px;
-      border: 4px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 0 25px rgba(0, 242, 254, 0.4);
+      margin: 0 auto 12px;
+      border: 3px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
     }
-    .org-name-l1 {
-      font-size: 1.85rem;
+    .name-l1 {
+      font-size: 1.6rem;
       font-weight: 800;
       color: #ffffff;
-      margin-bottom: 6px;
-      letter-spacing: -0.5px;
+      margin-bottom: 4px;
     }
-    .org-role-l1 {
-      font-size: 1.05rem;
+    .role-l1 {
+      font-size: 0.95rem;
       font-weight: 700;
       color: #00f2fe;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
-    .org-bio-l1 {
-      color: #94a3b8;
-      font-size: 0.96rem;
-      line-height: 1.65;
-      margin-bottom: 18px;
-    }
-    .org-badge-executive {
+    .badge-l1 {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       background: rgba(245, 158, 11, 0.15);
       border: 1px solid rgba(245, 158, 11, 0.4);
       color: #fbbf24;
-      padding: 6px 16px;
+      padding: 4px 14px;
       border-radius: 50px;
-      font-size: 0.82rem;
-      font-weight: 700;
+      font-size: 0.78rem;
+      font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.6px;
     }
 
-    /* ── Level 2 Grid (3 Directorate Members) ───────────────────────── */
-    .org-grid-l2 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 28px;
-      max-width: 1140px;
-      margin: 0 auto;
+    /* Level 2: Directorate Heads (3 Members) */
+    .node-l2 {
+      width: 280px;
+      padding: 20px 16px;
     }
-    .org-card-l2 {
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      padding: 30px 25px;
-      text-align: center;
-      position: relative;
-      transition: all 0.3s ease;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-    }
-    .org-card-l2:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-    }
-    .org-card-l2.card-cyan { border-top: 4px solid #00f2fe; }
-    .org-card-l2.card-purple { border-top: 4px solid #c084fc; }
-    .org-card-l2.card-amber { border-top: 4px solid #f59e0b; }
+    .node-l2.cyan { border-top: 4px solid #00f2fe; border-color: rgba(0, 242, 254, 0.3); }
+    .node-l2.purple { border-top: 4px solid #c084fc; border-color: rgba(192, 132, 252, 0.3); }
+    .node-l2.amber { border-top: 4px solid #f59e0b; border-color: rgba(245, 158, 11, 0.3); }
 
-    .org-avatar-l2 {
-      width: 72px;
-      height: 72px;
+    .avatar-l2 {
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
+      font-size: 1.35rem;
+      font-weight: 800;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 16px;
-      font-size: 1.6rem;
-      font-weight: 800;
-      border: 2px solid rgba(255, 255, 255, 0.15);
+      margin: 0 auto 10px;
     }
-    .org-avatar-l2.bg-cyan { background: linear-gradient(135deg, rgba(0,242,254,0.2), rgba(56,189,248,0.4)); color: #00f2fe; }
-    .org-avatar-l2.bg-purple { background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(192,132,252,0.4)); color: #c084fc; }
-    .org-avatar-l2.bg-amber { background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(251,191,36,0.4)); color: #fbbf24; }
+    .avatar-l2.cyan { background: rgba(0, 242, 254, 0.15); color: #00f2fe; border: 2px solid rgba(0, 242, 254, 0.3); }
+    .avatar-l2.purple { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 2px solid rgba(168, 85, 247, 0.3); }
+    .avatar-l2.amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 2px solid rgba(245, 158, 11, 0.3); }
 
-    .org-name-l2 {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 4px;
-    }
-    .org-role-l2 {
-      font-size: 0.95rem;
-      font-weight: 600;
-      margin-bottom: 12px;
-    }
-    .org-desc-l2 {
-      color: #94a3b8;
-      font-size: 0.88rem;
-      line-height: 1.6;
-      margin-bottom: 16px;
-    }
-    .dept-pill {
-      display: inline-block;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 4px 12px;
-      border-radius: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .dept-pill.cyan { background: rgba(0, 242, 254, 0.1); color: #00f2fe; border: 1px solid rgba(0, 242, 254, 0.3); }
-    .dept-pill.purple { background: rgba(168, 85, 247, 0.1); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
-    .dept-pill.amber { background: rgba(245, 158, 11, 0.1); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
-
-    /* ── Level 3 Grid (7 Functional Specialists) ────────────────────── */
-    .org-grid-l3 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-      max-width: 1240px;
-      margin: 0 auto;
-    }
-    .org-card-l3 {
-      background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 16px;
-      padding: 24px 20px;
-      text-align: center;
-      transition: all 0.25s ease;
-      position: relative;
-    }
-    .org-card-l3:hover {
-      transform: translateY(-4px);
-      border-color: rgba(0, 242, 254, 0.35);
-      background: rgba(30, 41, 59, 0.75);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-    }
-    .org-avatar-l3 {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: #38bdf8;
+    .name-l2 {
       font-size: 1.25rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 12px;
-    }
-    .org-name-l3 {
-      font-size: 1.15rem;
       font-weight: 700;
       color: #ffffff;
       margin-bottom: 4px;
     }
-    .org-role-l3 {
-      font-size: 0.85rem;
-      color: #38bdf8;
+    .role-l2 {
+      font-size: 0.82rem;
       font-weight: 600;
       margin-bottom: 8px;
     }
-    .org-desc-l3 {
-      font-size: 0.82rem;
-      color: #94a3b8;
-      line-height: 1.5;
-      margin-bottom: 12px;
+    .role-l2.cyan { color: #00f2fe; }
+    .role-l2.purple { color: #c084fc; }
+    .role-l2.amber { color: #fbbf24; }
+
+    .dept-l2 {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .dept-l2.cyan { background: rgba(0, 242, 254, 0.1); color: #00f2fe; border: 1px solid rgba(0, 242, 254, 0.25); }
+    .dept-l2.purple { background: rgba(168, 85, 247, 0.1); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.25); }
+    .dept-l2.amber { background: rgba(245, 158, 11, 0.1); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.25); }
+
+    /* Level 3: Functional Leads & Specialists (7 Members) */
+    .node-l3 {
+      width: 175px;
+      padding: 14px 10px;
+      border-radius: 14px;
+      background: rgba(30, 41, 59, 0.7);
+    }
+    .avatar-l3 {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #38bdf8;
+      font-size: 1rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px;
+    }
+    .name-l3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 2px;
+      line-height: 1.2;
+    }
+    .role-l3 {
+      font-size: 0.74rem;
+      color: #38bdf8;
+      font-weight: 600;
+      margin-bottom: 6px;
+      line-height: 1.3;
     }
     .tag-l3 {
       display: inline-block;
-      font-size: 0.72rem;
+      font-size: 0.65rem;
       font-weight: 600;
-      padding: 3px 10px;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.05);
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.06);
       color: #cbd5e1;
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    /* ── Metrics Counter Banner ─────────────────────────────────────── */
+    /* ── Alternate Mobile/List View ─────────────────────────────────── */
+    .org-list-view {
+      display: none;
+      max-width: 900px;
+      margin: 0 auto 60px;
+    }
+    .list-tier-block {
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 25px;
+    }
+    .list-tier-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #00f2fe;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .list-members-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+    }
+    .list-member-card {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* ── Stats & Pillars ────────────────────────────────────────────── */
     .stats-banner-glass {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -386,7 +420,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 20px;
       padding: 35px 25px;
-      margin: 60px 0;
+      margin: 40px 0 60px;
       text-align: center;
     }
     .stat-number {
@@ -402,7 +436,6 @@ if (!defined('SERVEASY_ASSET_VER')) {
       font-weight: 600;
     }
 
-    /* ── Mission & Pillars ──────────────────────────────────────────── */
     .about-grid-3 {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -437,7 +470,6 @@ if (!defined('SERVEASY_ASSET_VER')) {
     .about-card-icon.emerald { background: rgba(16, 185, 129, 0.1); color: #34d399; }
     .about-card-icon.purple { background: rgba(168, 85, 247, 0.1); color: #c084fc; }
 
-    /* ── CTA Banner ─────────────────────────────────────────────────── */
     .cta-banner-glass {
       background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(59, 130, 246, 0.15));
       border: 1px solid rgba(0, 242, 254, 0.3);
@@ -497,7 +529,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
       <!-- Breadcrumbs -->
       <div style="padding: 25px 0 10px;">
         <span style="color: #64748b; font-size: 0.9rem;">
-          <a href="../index.php" style="color: #94a3b8; text-decoration: none;">Home</a> / <span style="color: #00f2fe;">About ServEasy & Team Site Map</span>
+          <a href="../index.php" style="color: #94a3b8; text-decoration: none;">Home</a> / <span style="color: #00f2fe;">About ServEasy & Team Hierarchy Tree</span>
         </span>
       </div>
 
@@ -505,197 +537,263 @@ if (!defined('SERVEASY_ASSET_VER')) {
       <section class="about-hero-section">
         <div class="about-badge">
           <ion-icon name="git-network-outline"></ion-icon>
-          <span>ServEasy Organization Site Map</span>
+          <span>Leadership & Team Hierarchy Tree</span>
         </div>
         <h1 class="about-hero-title">
-          The Leadership & Specialists Behind <span>ServEasy</span>
+          ServEasy <span>Team Organization Tree</span>
         </h1>
         <p class="about-hero-desc">
-          ServEasy is powered by a tiered team of engineering architects, operational directors, and field specialists dedicated to transforming doorstep on-demand vehicle care, residential cleaning, and emergency roadside assistance.
+          Explore the official organizational site map of ServEasy: structured from top executive leadership under Sharthak Sen down to the 3 directorate department heads and 7 operational specialists.
         </p>
 
-        <!-- Quick Filter Pills -->
-        <div class="org-filter-bar">
-          <button type="button" class="org-filter-btn active" onclick="filterOrg('all', this)">
-            <ion-icon name="apps-outline"></ion-icon> All Tiers (11 Members)
+        <!-- View Toggle Controls -->
+        <div class="view-switcher-bar">
+          <button type="button" class="btn-view-toggle active" id="btn-show-tree" onclick="switchView('tree')">
+            <ion-icon name="git-branch-outline"></ion-icon> Visual Tree Diagram
           </button>
-          <button type="button" class="org-filter-btn" onclick="filterOrg('l1', this)">
-            <ion-icon name="star-outline"></ion-icon> Level 1: Executive Leader
+          <button type="button" class="btn-view-toggle" id="btn-show-list" onclick="switchView('list')">
+            <ion-icon name="list-outline"></ion-icon> Detailed Tier List
           </button>
-          <button type="button" class="org-filter-btn" onclick="filterOrg('l2', this)">
-            <ion-icon name="layers-outline"></ion-icon> Level 2: Directorate (3 Members)
-          </button>
-          <button type="button" class="org-filter-btn" onclick="filterOrg('l3', this)">
-            <ion-icon name="people-outline"></ion-icon> Level 3: Functional Leads (7 Members)
-          </button>
+        </div>
+        <div class="tree-scroll-hint">
+          <ion-icon name="swap-horizontal-outline"></ion-icon> Scroll horizontally to view complete hierarchy branches
         </div>
       </section>
 
       <!-- ===============================================================
-           ORGANIZATION SITE MAP & TEAM HIERARCHY TREE
+           1. PURE CSS / SVG VISUAL ORGANIZATIONAL TREE DIAGRAM
            =============================================================== -->
-      <section class="org-tree-container">
+      <div class="org-chart-wrapper" id="view-tree-container">
+        <div class="tree">
+          <ul>
+            <!-- ROOT / LEVEL 1: SHARTHAK SEN -->
+            <li>
+              <div class="tree-node-box node-l1">
+                <div class="avatar-l1">SS</div>
+                <h2 class="name-l1">Sharthak Sen</h2>
+                <div class="role-l1">Founder & Chief Executive Officer (Super Admin)</div>
+                <div class="badge-l1">
+                  <ion-icon name="ribbon-outline"></ion-icon> Level 1: Top Authority & Vision
+                </div>
+              </div>
 
-        <!-- LEVEL 1: TOP EXECUTIVE (Sharthak Sen) -->
-        <div class="org-tree-level tier-box" id="tier-l1">
-          <div class="level-heading-tag">
-            <span class="level-heading-badge">
-              <ion-icon name="shield-checkmark" style="color: #fbbf24;"></ion-icon>
-              Level 1 &bull; Executive Leadership
-            </span>
-          </div>
+              <!-- BRANCH DOWN TO LEVEL 2: 3 DIRECTORATE HEADS -->
+              <ul>
+                <!-- LEVEL 2 - MEMBER 1: SAIKAT SASMAL (TECH) -->
+                <li>
+                  <div class="tree-node-box node-l2 cyan">
+                    <div class="avatar-l2 cyan">SS</div>
+                    <h3 class="name-l2">Saikat Sasmal</h3>
+                    <div class="role-l2 cyan">Chief Technology Officer & Lead Architect</div>
+                    <span class="dept-l2 cyan">Engineering & Systems</span>
+                  </div>
 
-          <div class="org-l1-wrap">
-            <div class="org-card-l1">
-              <div class="org-avatar-l1">SS</div>
-              <h2 class="org-name-l1">Sharthak Sen</h2>
-              <div class="org-role-l1">Founder & Chief Executive Officer (Super Admin)</div>
-              <p class="org-bio-l1">
-                Directs the overarching strategic vision, technology roadmap, governance, and business expansion of the ServEasy on-demand multi-service ecosystem across regional hubs.
-              </p>
-              <span class="org-badge-executive">
-                <ion-icon name="ribbon-outline"></ion-icon>
-                Executive Directorate & Bull; Top Authority
-              </span>
-            </div>
-          </div>
+                  <!-- SUB-BRANCH TO LEVEL 3 (2 SPECIALISTS UNDER SAIKAT) -->
+                  <ul>
+                    <li>
+                      <div class="tree-node-box node-l3">
+                        <div class="avatar-l3">DC</div>
+                        <h4 class="name-l3">David Chen</h4>
+                        <div class="role-l3">Emergency SOS Dispatch</div>
+                        <span class="tag-l3">Roadside SOS</span>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="tree-node-box node-l3">
+                        <div class="avatar-l3">SL</div>
+                        <h4 class="name-l3">Sophia Lin</h4>
+                        <div class="role-l3">Cybersecurity Lead</div>
+                        <span class="tag-l3">AppSec & Privacy</span>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
 
-          <!-- Tree Vertical Line from Level 1 down to Level 2 -->
-          <div class="tree-connector-down" style="margin-top: 25px;"></div>
+                <!-- LEVEL 2 - MEMBER 2: ELENA ROSTOVA (OPERATIONS) -->
+                <li>
+                  <div class="tree-node-box node-l2 purple">
+                    <div class="avatar-l2 purple">ER</div>
+                    <h3 class="name-l2">Elena Rostova</h3>
+                    <div class="role-l2 purple">Chief Operating Officer (COO)</div>
+                    <span class="dept-l2 purple">Operations & Service Grid</span>
+                  </div>
+
+                  <!-- SUB-BRANCH TO LEVEL 3 (3 SPECIALISTS UNDER ELENA) -->
+                  <ul>
+                    <li>
+                      <div class="tree-node-box node-l3">
+                        <div class="avatar-l3">PS</div>
+                        <h4 class="name-l3">Priya Sharma</h4>
+                        <div class="role-l3">Customer Concierge</div>
+                        <span class="tag-l3">Concierge Desk</span>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="tree-node-box node-l3">
+                        <div class="avatar-l3">RV</div>
+                        <h4 class="name-l3">Rahul Verma</h4>
+                        <div class="role-l3">Partner KYC Lead</div>
+                        <span class="tag-l3">Vetting & Compliance</span>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="tree-node-box node-l3">
+                        <div class="avatar-l3">AD</div>
+                        <h4 class="name-l3">Ananya Das</h4>
+                        <div class="role-l3">QA & Field Auditor</div>
+                        <span class="tag-l3">Quality Standards</span>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+
+                <!-- LEVEL 2 - MEMBER 3: MARCUS STERLING (PRODUCT & AUTOMOTIVE) -->
+                <li>
+                  <div class="tree-node-box node-l2 amber">
+                    <div class="avatar-l2 amber">MS</div>
+                    <h3 class="name-l2">Marcus Sterling</h3>
+                    <div class="role-l2 amber">Chief Product Officer (CPO)</div>
+                    <span class="dept-l2 amber">Automotive & Product Standards</span>
+                  </div>
+
+                  <!-- SUB-BRANCH TO LEVEL 3 (2 SPECIALISTS UNDER MARCUS) -->
+                  <ul>
+                    <li>
+                      <div class="tree-node-box node-l3">
+                        <div class="avatar-l3">VM</div>
+                        <h4 class="name-l3">Vikram Malhotra</h4>
+                        <div class="role-l3">Fleet Logistics Manager</div>
+                        <span class="tag-l3">Fleet & Cargo</span>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="tree-node-box node-l3">
+                        <div class="avatar-l3">AR</div>
+                        <h4 class="name-l3">Amit Roy</h4>
+                        <div class="role-l3">Merchant Settlements</div>
+                        <span class="tag-l3">Billing & Payouts</span>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
         </div>
+      </div>
 
-        <!-- LEVEL 2: 3 CORE DEPARTMENT HEADS / DIRECTORS -->
-        <div class="org-tree-level tier-box" id="tier-l2">
-          <!-- Horizontal Crossbar linking Level 2 -->
-          <div class="tree-connector-horizontal"></div>
-
-          <div class="level-heading-tag">
-            <span class="level-heading-badge">
-              <ion-icon name="git-branch-outline" style="color: #00f2fe;"></ion-icon>
-              Level 2 &bull; Directorate & Department Heads (3 Members)
-            </span>
+      <!-- ===============================================================
+           2. DETAILED TIER LIST VIEW (ALTERNATE DISPLAY)
+           =============================================================== -->
+      <div class="org-list-view" id="view-list-container">
+        <!-- Tier 1 -->
+        <div class="list-tier-block">
+          <div class="list-tier-title">
+            <ion-icon name="star"></ion-icon> Level 1: Executive Top Leadership (1 Member)
           </div>
-
-          <div class="org-grid-l2">
-            <!-- Level 2 - Member 1 -->
-            <div class="org-card-l2 card-cyan">
-              <div class="org-avatar-l2 bg-cyan">SS</div>
-              <h3 class="org-name-l2">Saikat Sasmal</h3>
-              <div class="org-role-l2" style="color: #00f2fe;">Chief Technology Officer & Lead Architect</div>
-              <p class="org-desc-l2">
-                Leads multi-portal infrastructure, database integrity, real-time dispatch APIs, and technical platform reliability.
-              </p>
-              <span class="dept-pill cyan">Engineering & Systems</span>
-            </div>
-
-            <!-- Level 2 - Member 2 -->
-            <div class="org-card-l2 card-purple">
-              <div class="org-avatar-l2 bg-purple">ER</div>
-              <h3 class="org-name-l2">Elena Rostova</h3>
-              <div class="org-role-l2" style="color: #c084fc;">Chief Operating Officer (COO)</div>
-              <p class="org-desc-l2">
-                Manages daily field fulfillment, partner network performance benchmarks, customer concierge, and service quality.
-              </p>
-              <span class="dept-pill purple">Operations & Service Grid</span>
-            </div>
-
-            <!-- Level 2 - Member 3 -->
-            <div class="org-card-l2 card-amber">
-              <div class="org-avatar-l2 bg-amber">MS</div>
-              <h3 class="org-name-l2">Marcus Sterling</h3>
-              <div class="org-role-l2" style="color: #fbbf24;">Chief Product Officer (CPO)</div>
-              <p class="org-desc-l2">
-                Directs automotive technical standards, mechanical inspection protocols, and product innovation roadmaps.
-              </p>
-              <span class="dept-pill amber">Product & Technical Standards</span>
-            </div>
-          </div>
-
-          <!-- Tree Vertical Line from Level 2 down to Level 3 -->
-          <div class="tree-connector-down" style="margin-top: 35px;"></div>
-        </div>
-
-        <!-- LEVEL 3: 7 FUNCTIONAL SPECIALISTS & TEAM LEADS -->
-        <div class="org-tree-level tier-box" id="tier-l3">
-          <!-- Horizontal Crossbar linking Level 3 -->
-          <div class="tree-connector-horizontal" style="max-width: 980px;"></div>
-
-          <div class="level-heading-tag">
-            <span class="level-heading-badge">
-              <ion-icon name="people" style="color: #38bdf8;"></ion-icon>
-              Level 3 &bull; Operations & Functional Specialist Leads (7 Members)
-            </span>
-          </div>
-
-          <div class="org-grid-l3">
-            <!-- 1. David Chen -->
-            <div class="org-card-l3">
-              <div class="org-avatar-l3">DC</div>
-              <h4 class="org-name-l3">David Chen</h4>
-              <div class="org-role-l3">Emergency SOS Dispatch Lead</div>
-              <p class="org-desc-l3">Coordinates rapid vehicle breakdown dispatch and 24/7 highway roadside towing.</p>
-              <span class="tag-l3">Roadside SOS & Towing</span>
-            </div>
-
-            <!-- 2. Priya Sharma -->
-            <div class="org-card-l3">
-              <div class="org-avatar-l3">PS</div>
-              <h4 class="org-name-l3">Priya Sharma</h4>
-              <div class="org-role-l3">Customer Concierge Lead</div>
-              <p class="org-desc-l3">Directs multi-channel customer inquiries, booking reschedules, and feedback satisfaction.</p>
-              <span class="tag-l3">Customer Success</span>
-            </div>
-
-            <!-- 3. Rahul Verma -->
-            <div class="org-card-l3">
-              <div class="org-avatar-l3">RV</div>
-              <h4 class="org-name-l3">Rahul Verma</h4>
-              <div class="org-role-l3">Provider Onboarding & KYC Lead</div>
-              <p class="org-desc-l3">Conducts government identity verification, background vetting, and trade certification.</p>
-              <span class="tag-l3">Partner KYC & Vetting</span>
-            </div>
-
-            <!-- 4. Ananya Das -->
-            <div class="org-card-l3">
-              <div class="org-avatar-l3">AD</div>
-              <h4 class="org-name-l3">Ananya Das</h4>
-              <div class="org-role-l3">Quality Assurance & Safety Auditor</div>
-              <p class="org-desc-l3">Conducts surprise site visits, tool compliance audits, and home sanitization standards.</p>
-              <span class="tag-l3">Quality & Safety Audit</span>
-            </div>
-
-            <!-- 5. Vikram Malhotra -->
-            <div class="org-card-l3">
-              <div class="org-avatar-l3">VM</div>
-              <h4 class="org-name-l3">Vikram Malhotra</h4>
-              <div class="org-role-l3">Fleet Logistics & Transport Manager</div>
-              <p class="org-desc-l3">Oversees rental vehicle fleet, cargo carriers, and citywide vehicle relocation logistics.</p>
-              <span class="tag-l3">Fleet & Cargo Logistics</span>
-            </div>
-
-            <!-- 6. Sophia Lin -->
-            <div class="org-card-l3">
-              <div class="org-avatar-l3">SL</div>
-              <h4 class="org-name-l3">Sophia Lin</h4>
-              <div class="org-role-l3">Cybersecurity & Data Privacy Lead</div>
-              <p class="org-desc-l3">Enforces OWASP application security, credential hashing, and client data protection.</p>
-              <span class="tag-l3">AppSec & Privacy</span>
-            </div>
-
-            <!-- 7. Amit Roy -->
-            <div class="org-card-l3">
-              <div class="org-avatar-l3">AR</div>
-              <h4 class="org-name-l3">Amit Roy</h4>
-              <div class="org-role-l3">Merchant Billing & Settlements Lead</div>
-              <p class="org-desc-l3">Oversees payment gateway reconciliations, provider payouts, and verified refund audits.</p>
-              <span class="tag-l3">Payouts & Settlement</span>
+          <div class="list-member-card" style="border-left: 4px solid #00f2fe;">
+            <div class="avatar-l1" style="width: 50px; height: 50px; font-size: 1.2rem; margin: 0;">SS</div>
+            <div>
+              <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 2px;">Sharthak Sen</h3>
+              <p style="color: #00f2fe; font-size: 0.85rem; font-weight: 700; margin: 0;">Founder & Chief Executive Officer (Super Admin)</p>
+              <p style="color: #94a3b8; font-size: 0.82rem; margin-top: 4px;">Top platform authority steering strategy, governance, and business expansion.</p>
             </div>
           </div>
         </div>
 
-      </section>
+        <!-- Tier 2 -->
+        <div class="list-tier-block">
+          <div class="list-tier-title">
+            <ion-icon name="layers"></ion-icon> Level 2: Directorate & Department Heads (3 Members)
+          </div>
+          <div class="list-members-grid">
+            <div class="list-member-card" style="border-left: 4px solid #00f2fe;">
+              <div class="avatar-l2 cyan" style="width: 44px; height: 44px; font-size: 1.1rem; margin: 0;">SS</div>
+              <div>
+                <h4 style="color: #fff; font-size: 1.05rem; margin-bottom: 2px;">Saikat Sasmal</h4>
+                <p style="color: #00f2fe; font-size: 0.8rem; font-weight: 600; margin: 0;">Chief Technology Officer</p>
+                <span class="dept-l2 cyan" style="margin-top: 4px;">Engineering</span>
+              </div>
+            </div>
+            <div class="list-member-card" style="border-left: 4px solid #c084fc;">
+              <div class="avatar-l2 purple" style="width: 44px; height: 44px; font-size: 1.1rem; margin: 0;">ER</div>
+              <div>
+                <h4 style="color: #fff; font-size: 1.05rem; margin-bottom: 2px;">Elena Rostova</h4>
+                <p style="color: #c084fc; font-size: 0.8rem; font-weight: 600; margin: 0;">Chief Operating Officer</p>
+                <span class="dept-l2 purple" style="margin-top: 4px;">Operations</span>
+              </div>
+            </div>
+            <div class="list-member-card" style="border-left: 4px solid #fbbf24;">
+              <div class="avatar-l2 amber" style="width: 44px; height: 44px; font-size: 1.1rem; margin: 0;">MS</div>
+              <div>
+                <h4 style="color: #fff; font-size: 1.05rem; margin-bottom: 2px;">Marcus Sterling</h4>
+                <p style="color: #fbbf24; font-size: 0.8rem; font-weight: 600; margin: 0;">Chief Product Officer</p>
+                <span class="dept-l2 amber" style="margin-top: 4px;">Product</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
-      <!-- Organization Metrics Banner -->
+        <!-- Tier 3 -->
+        <div class="list-tier-block">
+          <div class="list-tier-title">
+            <ion-icon name="people"></ion-icon> Level 3: Functional Specialist Leads (7 Members)
+          </div>
+          <div class="list-members-grid">
+            <div class="list-member-card">
+              <div class="avatar-l3" style="margin: 0;">DC</div>
+              <div>
+                <h5 style="color: #fff; font-size: 0.95rem; margin-bottom: 2px;">David Chen</h5>
+                <p style="color: #38bdf8; font-size: 0.75rem; margin: 0;">Emergency SOS Dispatch</p>
+              </div>
+            </div>
+            <div class="list-member-card">
+              <div class="avatar-l3" style="margin: 0;">PS</div>
+              <div>
+                <h5 style="color: #fff; font-size: 0.95rem; margin-bottom: 2px;">Priya Sharma</h5>
+                <p style="color: #38bdf8; font-size: 0.75rem; margin: 0;">Customer Concierge</p>
+              </div>
+            </div>
+            <div class="list-member-card">
+              <div class="avatar-l3" style="margin: 0;">RV</div>
+              <div>
+                <h5 style="color: #fff; font-size: 0.95rem; margin-bottom: 2px;">Rahul Verma</h5>
+                <p style="color: #38bdf8; font-size: 0.75rem; margin: 0;">Partner KYC & Vetting</p>
+              </div>
+            </div>
+            <div class="list-member-card">
+              <div class="avatar-l3" style="margin: 0;">AD</div>
+              <div>
+                <h5 style="color: #fff; font-size: 0.95rem; margin-bottom: 2px;">Ananya Das</h5>
+                <p style="color: #38bdf8; font-size: 0.75rem; margin: 0;">QA & Field Safety Auditor</p>
+              </div>
+            </div>
+            <div class="list-member-card">
+              <div class="avatar-l3" style="margin: 0;">VM</div>
+              <div>
+                <h5 style="color: #fff; font-size: 0.95rem; margin-bottom: 2px;">Vikram Malhotra</h5>
+                <p style="color: #38bdf8; font-size: 0.75rem; margin: 0;">Fleet Logistics Manager</p>
+              </div>
+            </div>
+            <div class="list-member-card">
+              <div class="avatar-l3" style="margin: 0;">SL</div>
+              <div>
+                <h5 style="color: #fff; font-size: 0.95rem; margin-bottom: 2px;">Sophia Lin</h5>
+                <p style="color: #38bdf8; font-size: 0.75rem; margin: 0;">Cybersecurity & Privacy</p>
+              </div>
+            </div>
+            <div class="list-member-card">
+              <div class="avatar-l3" style="margin: 0;">AR</div>
+              <div>
+                <h5 style="color: #fff; font-size: 0.95rem; margin-bottom: 2px;">Amit Roy</h5>
+                <p style="color: #38bdf8; font-size: 0.75rem; margin: 0;">Merchant Settlements</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Metrics Banner -->
       <div class="stats-banner-glass">
         <div>
           <div class="stat-number">1</div>
@@ -772,32 +870,24 @@ if (!defined('SERVEASY_ASSET_VER')) {
   <!-- Footer -->
   <?php include __DIR__ . '/layout/footer.php'; ?>
 
-  <!-- Interactive Hierarchy Filter Script -->
+  <!-- Interactive Tree / List View Switcher Script -->
   <script>
-    function filterOrg(tier, btn) {
-      document.querySelectorAll('.org-filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+    function switchView(mode) {
+      const treeBtn = document.getElementById('btn-show-tree');
+      const listBtn = document.getElementById('btn-show-list');
+      const treeContainer = document.getElementById('view-tree-container');
+      const listContainer = document.getElementById('view-list-container');
 
-      const l1 = document.getElementById('tier-l1');
-      const l2 = document.getElementById('tier-l2');
-      const l3 = document.getElementById('tier-l3');
-
-      if (tier === 'all') {
-        l1.style.display = 'block';
-        l2.style.display = 'block';
-        l3.style.display = 'block';
-      } else if (tier === 'l1') {
-        l1.style.display = 'block';
-        l2.style.display = 'none';
-        l3.style.display = 'none';
-      } else if (tier === 'l2') {
-        l1.style.display = 'none';
-        l2.style.display = 'block';
-        l3.style.display = 'none';
-      } else if (tier === 'l3') {
-        l1.style.display = 'none';
-        l2.style.display = 'none';
-        l3.style.display = 'block';
+      if (mode === 'tree') {
+        treeBtn.classList.add('active');
+        listBtn.classList.remove('active');
+        treeContainer.style.display = 'block';
+        listContainer.style.display = 'none';
+      } else {
+        listBtn.classList.add('active');
+        treeBtn.classList.remove('active');
+        treeContainer.style.display = 'none';
+        listContainer.style.display = 'block';
       }
     }
   </script>
