@@ -1,12 +1,12 @@
 <?php
 /**
  * ServEasy Customer Web Portal - About Us & Professional Team Tree
- * Clean, compact visual organogram: Professional image icon & name in tree;
- * Full biography, reporting hierarchy, and skills displayed in rich popup modal on click.
+ * 1600px Width Display, Zero Left/Right Cutoff, Zero X/Y Scrollbar
+ * Click any node to open rich profile popup details.
  */
 require_once __DIR__ . '/../common/auth_session.php';
 if (!defined('SERVEASY_ASSET_VER')) {
-    define('SERVEASY_ASSET_VER', '20261120v4');
+    define('SERVEASY_ASSET_VER', '20261120v6');
 }
 ?>
 <!DOCTYPE html>
@@ -35,24 +35,42 @@ if (!defined('SERVEASY_ASSET_VER')) {
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 
   <style>
-    /* ── Ambient Glow Stage ──────────────────────────────────────────── */
+    html, body {
+      overflow-x: hidden !important;
+      max-width: 100vw;
+    }
+
+    /* ── 1600px Master Layout Container ──────────────────────────────── */
+    .tree-container-1600 {
+      max-width: 1600px !important;
+      width: 100% !important;
+      margin-inline: auto !important;
+      padding-inline: 24px;
+      box-sizing: border-box;
+      overflow: visible;
+    }
+
+    /* ── Ambient Glow Stage (Exact 1600px Box, No Overflow, No Scroll) ── */
     .tree-stage {
       position: relative;
+      max-width: 1600px !important;
+      width: 100% !important;
+      margin: 0 auto 70px !important;
+      box-sizing: border-box !important;
       background: radial-gradient(ellipse at 50% 12%, rgba(0, 242, 254, 0.12) 0%, rgba(15, 23, 42, 0) 65%),
                   radial-gradient(ellipse at 85% 60%, rgba(168, 85, 247, 0.08) 0%, rgba(15, 23, 42, 0) 60%),
-                  radial-gradient(ellipse at 15% 75%, rgba(245, 158, 11, 0.08) 0%, rgba(15, 23, 42, 0) 60%);
-      padding: 40px 10px 70px;
+                  radial-gradient(ellipse at 15% 75%, rgba(245, 158, 11, 0.08) 0%, rgba(15, 23, 42, 0) 60%),
+                  rgba(15, 23, 42, 0.65);
+      padding: 45px 25px 65px;
       border-radius: 32px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8);
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      margin-bottom: 70px;
+      border: 1px solid rgba(0, 242, 254, 0.22);
+      box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 242, 254, 0.08);
+      overflow: visible !important;
     }
 
     /* ── Hero Section ────────────────────────────────────────────────── */
     .about-hero-section {
-      padding: 50px 20px 30px;
+      padding: 50px 20px 25px;
       text-align: center;
       position: relative;
     }
@@ -104,7 +122,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
       font-size: 1.15rem;
       color: #94a3b8;
       max-width: 820px;
-      margin: 0 auto 30px;
+      margin: 0 auto 25px;
       line-height: 1.7;
     }
     .tree-interactive-tip {
@@ -113,31 +131,25 @@ if (!defined('SERVEASY_ASSET_VER')) {
       gap: 8px;
       background: rgba(0, 242, 254, 0.08);
       border: 1px dashed rgba(0, 242, 254, 0.3);
-      padding: 7px 18px;
+      padding: 7px 20px;
       border-radius: 50px;
       color: #38bdf8;
       font-size: 0.88rem;
       font-weight: 600;
       margin-bottom: 25px;
     }
-    .scroll-hint-pill {
-      display: none;
-      text-align: center;
-      color: #64748b;
-      font-size: 0.82rem;
-      margin-bottom: 20px;
-      font-family: 'JetBrains Mono', monospace;
-    }
-    @media (max-width: 1100px) {
-      .scroll-hint-pill { display: block; }
-    }
 
     /* ── PURE CSS ORGANIZATIONAL TREE DIAGRAM ────────────────────────── */
     .org-tree {
       display: flex;
       justify-content: center;
-      min-width: 1050px;
-      padding: 20px 0;
+      align-items: center;
+      width: 100%;
+      max-width: 1540px;
+      margin: 0 auto;
+      padding: 15px 0 10px;
+      overflow: visible !important;
+      box-sizing: border-box;
     }
     .org-tree ul {
       padding-top: 36px;
@@ -148,14 +160,16 @@ if (!defined('SERVEASY_ASSET_VER')) {
       margin: 0;
       padding-left: 0;
       list-style-type: none;
+      overflow: visible;
     }
     .org-tree li {
       float: left;
       text-align: center;
       list-style-type: none;
       position: relative;
-      padding: 36px 14px 0 14px;
+      padding: 36px 10px 0 10px;
       transition: all 0.5s ease;
+      box-sizing: border-box;
     }
 
     /* Tree Branch Connectors with Cyan Neon Glow */
@@ -216,6 +230,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
       cursor: pointer;
       transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      box-sizing: border-box;
     }
     .pro-node:hover {
       transform: translateY(-6px) scale(1.04);
@@ -254,8 +269,8 @@ if (!defined('SERVEASY_ASSET_VER')) {
       position: absolute;
       bottom: 2px;
       right: 2px;
-      width: 14px;
-      height: 14px;
+      width: 13px;
+      height: 13px;
       border-radius: 50%;
       background: #10b981;
       border: 2px solid #0f172a;
@@ -273,7 +288,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
       white-space: nowrap;
     }
     .node-role-pill {
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       font-weight: 700;
       padding: 3px 10px;
       border-radius: 12px;
@@ -293,7 +308,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
       color: #00f2fe;
     }
 
-    /* ── TIER-SPECIFIC STYLING ───────────────────────────────────────── */
+    /* ── TIER-SPECIFIC STYLING & SIZING ──────────────────────────────── */
     /* Level 1: Sharthak Sen (Top Leader) */
     .pro-node-l1 {
       width: 250px;
@@ -322,12 +337,15 @@ if (!defined('SERVEASY_ASSET_VER')) {
 
     /* Level 2: 3 Directorate Heads */
     .pro-node-l2 {
-      width: 200px;
-      padding: 18px 14px 14px;
+      width: 175px;
+      padding: 16px 12px 14px;
+    }
+    .li-l2 {
+      padding: 36px 14px 0 14px !important;
     }
     .pro-node-l2 .node-avatar-frame {
-      width: 62px;
-      height: 62px;
+      width: 58px;
+      height: 58px;
     }
     .pro-node-l2.cyan {
       border-top: 3px solid #00f2fe;
@@ -351,14 +369,17 @@ if (!defined('SERVEASY_ASSET_VER')) {
     .pro-node-l2.amber .node-role-pill { background: rgba(245, 158, 11, 0.12); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
 
     .pro-node-l2 .node-name {
-      font-size: 1.15rem;
+      font-size: 1.1rem;
     }
 
-    /* Level 3: 7 Functional Leads */
+    /* Level 3: 7 Functional Leads (Clean Fit inside 1600px without cut or scroll) */
+    .li-l3 {
+      padding: 30px 5px 0 5px !important;
+    }
     .pro-node-l3 {
-      width: 145px;
-      padding: 14px 10px 12px;
-      background: rgba(30, 41, 59, 0.7);
+      width: 125px;
+      padding: 12px 6px 10px;
+      background: rgba(30, 41, 59, 0.75);
     }
     .pro-node-l3:hover {
       border-color: #00f2fe;
@@ -366,18 +387,48 @@ if (!defined('SERVEASY_ASSET_VER')) {
       box-shadow: 0 12px 25px rgba(0, 242, 254, 0.25);
     }
     .pro-node-l3 .node-avatar-frame {
-      width: 48px;
-      height: 48px;
+      width: 44px;
+      height: 44px;
       border: 2px solid rgba(255, 255, 255, 0.15);
     }
     .pro-node-l3 .node-name {
-      font-size: 0.92rem;
+      font-size: 0.88rem;
+      letter-spacing: -0.2px;
+      margin-top: 8px;
+      margin-bottom: 3px;
     }
     .pro-node-l3 .node-role-pill {
-      font-size: 0.7rem;
+      font-size: 0.67rem;
       background: rgba(255, 255, 255, 0.06);
       color: #94a3b8;
       border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 2px 6px;
+      max-width: 112px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* Responsive Adaptive Scaling: Guarantee 0 Scroll & 0 Clipping across viewports */
+    @media (max-width: 1240px) {
+      .org-tree {
+        zoom: 0.90;
+      }
+    }
+    @media (max-width: 1024px) {
+      .org-tree {
+        zoom: 0.76;
+      }
+    }
+    @media (max-width: 768px) {
+      .org-tree {
+        zoom: 0.60;
+      }
+    }
+    @media (max-width: 480px) {
+      .org-tree {
+        zoom: 0.48;
+      }
     }
 
     /* ── POPUP DETAIL MODAL ─────────────────────────────────────────── */
@@ -532,10 +583,10 @@ if (!defined('SERVEASY_ASSET_VER')) {
       box-shadow: 0 4px 15px rgba(0, 242, 254, 0.35);
     }
 
-    /* ── Metrics Banner & Pillars ───────────────────────────────────── */
+    /* ── Metrics Banner & Pillars (1600px Responsive) ───────────────── */
     .hud-metrics-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 20px;
       background: rgba(15, 23, 42, 0.75);
       backdrop-filter: blur(16px);
@@ -565,7 +616,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
 
     .about-grid-3 {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 25px;
       margin-bottom: 60px;
     }
@@ -655,13 +706,14 @@ if (!defined('SERVEASY_ASSET_VER')) {
   <!-- Sidebar Overlays -->
   <?php include __DIR__ . '/constants/aside.php'; ?>
 
-  <main>
-    <div class="container">
+  <main style="overflow-x: hidden;">
+    <!-- 1600px Max-Width Master Container -->
+    <div class="tree-container-1600">
 
       <!-- Breadcrumbs -->
       <div style="padding: 25px 0 10px;">
         <span style="color: #64748b; font-size: 0.9rem;">
-          <a href="../index.php" style="color: #94a3b8; text-decoration: none;">Home</a> / <span style="color: #00f2fe;">About ServEasy & Team Tree</span>
+          <a href="../index.php" style="color: #94a3b8; text-decoration: none;">Home</a> / <span style="color: #00f2fe;">About ServEasy & Leadership Tree</span>
         </span>
       </div>
 
@@ -682,15 +734,11 @@ if (!defined('SERVEASY_ASSET_VER')) {
           <ion-icon name="finger-print-outline" style="font-size: 1.1rem;"></ion-icon>
           <span>Click on any leader or specialist card to view complete profile & bio</span>
         </div>
-
-        <div class="scroll-hint-pill">
-          <ion-icon name="swap-horizontal-outline"></ion-icon> Swipe horizontally to inspect reporting branches
-        </div>
       </section>
 
       <!-- ===============================================================
-           CLEAN, COMPACT PURE CSS ORGANIZATIONAL TREE
-           (Professional Image Icon + Name, Details on Click Popup)
+           EXACT 1600PX BOX WIDTH TREE SECTION
+           (Zero Left/Right Cut, Zero X or Y Scrollbar)
            =============================================================== -->
       <section class="tree-stage">
         <div class="org-tree">
@@ -711,7 +759,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
               <!-- BRANCH DOWN TO LEVEL 2: 3 DIRECTORATE HEADS -->
               <ul>
                 <!-- LEVEL 2 &bull; 1. SAIKAT SASMAL (TECH) -->
-                <li>
+                <li class="li-l2">
                   <div class="pro-node pro-node-l2 cyan" onclick="openMemberModal('saikat')">
                     <div class="node-avatar-frame">
                       <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80" alt="Saikat Sasmal" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
@@ -725,7 +773,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
 
                   <!-- SUB-BRANCH TO LEVEL 3 (2 SPECIALISTS UNDER SAIKAT) -->
                   <ul>
-                    <li>
+                    <li class="li-l3">
                       <div class="pro-node pro-node-l3" onclick="openMemberModal('david')">
                         <div class="node-avatar-frame">
                           <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&q=80" alt="David Chen" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
@@ -737,7 +785,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
                         <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Info</div>
                       </div>
                     </li>
-                    <li>
+                    <li class="li-l3">
                       <div class="pro-node pro-node-l3" onclick="openMemberModal('sophia')">
                         <div class="node-avatar-frame">
                           <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80" alt="Sophia Lin" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
@@ -753,7 +801,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
                 </li>
 
                 <!-- LEVEL 2 &bull; 2. ELENA ROSTOVA (OPERATIONS) -->
-                <li>
+                <li class="li-l2">
                   <div class="pro-node pro-node-l2 purple" onclick="openMemberModal('elena')">
                     <div class="node-avatar-frame">
                       <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80" alt="Elena Rostova" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
@@ -767,7 +815,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
 
                   <!-- SUB-BRANCH TO LEVEL 3 (3 SPECIALISTS UNDER ELENA) -->
                   <ul>
-                    <li>
+                    <li class="li-l3">
                       <div class="pro-node pro-node-l3" onclick="openMemberModal('priya')">
                         <div class="node-avatar-frame">
                           <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="Priya Sharma" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
@@ -779,7 +827,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
                         <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Info</div>
                       </div>
                     </li>
-                    <li>
+                    <li class="li-l3">
                       <div class="pro-node pro-node-l3" onclick="openMemberModal('rahul')">
                         <div class="node-avatar-frame">
                           <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=80" alt="Rahul Verma" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
@@ -791,7 +839,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
                         <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Info</div>
                       </div>
                     </li>
-                    <li>
+                    <li class="li-l3">
                       <div class="pro-node pro-node-l3" onclick="openMemberModal('ananya')">
                         <div class="node-avatar-frame">
                           <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&q=80" alt="Ananya Das" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
@@ -807,7 +855,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
                 </li>
 
                 <!-- LEVEL 2 &bull; 3. MARCUS STERLING (AUTOMOTIVE & FLEET) -->
-                <li>
+                <li class="li-l2">
                   <div class="pro-node pro-node-l2 amber" onclick="openMemberModal('marcus')">
                     <div class="node-avatar-frame">
                       <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80" alt="Marcus Sterling" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
@@ -821,7 +869,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
 
                   <!-- SUB-BRANCH TO LEVEL 3 (2 SPECIALISTS UNDER MARCUS) -->
                   <ul>
-                    <li>
+                    <li class="li-l3">
                       <div class="pro-node pro-node-l3" onclick="openMemberModal('vikram')">
                         <div class="node-avatar-frame">
                           <img src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=400&q=80" alt="Vikram Malhotra" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
@@ -833,7 +881,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
                         <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Info</div>
                       </div>
                     </li>
-                    <li>
+                    <li class="li-l3">
                       <div class="pro-node pro-node-l3" onclick="openMemberModal('amit')">
                         <div class="node-avatar-frame">
                           <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80" alt="Amit Roy" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
