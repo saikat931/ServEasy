@@ -6,7 +6,7 @@
  */
 require_once __DIR__ . '/../common/auth_session.php';
 if (!defined('SERVEASY_ASSET_VER')) {
-    define('SERVEASY_ASSET_VER', '20261120v6');
+    define('SERVEASY_ASSET_VER', '20261120v7');
 }
 ?>
 <!DOCTYPE html>
@@ -17,7 +17,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About ServEasy — Leadership Team & Professional Organization Tree</title>
-  <meta name="description" content="Explore the ServEasy leadership tree: Sharthak Sen (Founder & CEO), 3 executive directors, and 7 functional command leads with clickable profiles and department insights.">
+  <meta name="description" content="Explore the ServEasy leadership tree: Saikat Sasmal (Founder & CEO), 3 executive directors, and 7 functional command leads with clickable profiles and department insights.">
   <link rel="canonical" href="https://silver-penguin-156353.hostingersite.com/pages/about.php">
 
   <!-- Favicon -->
@@ -309,7 +309,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
     }
 
     /* ── TIER-SPECIFIC STYLING & SIZING ──────────────────────────────── */
-    /* Level 1: Sharthak Sen (Top Leader) */
+    /* Level 1: Saikat Sasmal (Founder & CEO) */
     .pro-node-l1 {
       width: 250px;
       padding: 22px 18px 16px;
@@ -743,30 +743,30 @@ if (!defined('SERVEASY_ASSET_VER')) {
       <section class="tree-stage">
         <div class="org-tree">
           <ul>
-            <!-- ROOT / LEVEL 1: SHARTHAK SEN -->
+            <!-- ROOT / LEVEL 1: SAIKAT SASMAL (FOUNDER & CEO) -->
             <li>
-              <div class="pro-node pro-node-l1" onclick="openMemberModal('sharthak')">
+              <div class="pro-node pro-node-l1" onclick="openMemberModal('saikat')">
                 <div class="node-avatar-frame">
-                  <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="Sharthak Sen" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80" alt="Saikat Sasmal" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                   <div class="node-avatar-fallback" style="background: linear-gradient(135deg, #00f2fe, #4facfe);">SS</div>
                   <span class="node-status-dot"></span>
                 </div>
-                <div class="node-name">Sharthak Sen</div>
+                <div class="node-name">Saikat Sasmal</div>
                 <div class="node-role-pill">Founder & CEO</div>
                 <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> View Profile</div>
               </div>
 
               <!-- BRANCH DOWN TO LEVEL 2: 3 DIRECTORATE HEADS -->
               <ul>
-                <!-- LEVEL 2 &bull; 1. SAIKAT SASMAL (TECH) -->
+                <!-- LEVEL 2 &bull; 1. ARJUN MEHTA (TECH) -->
                 <li class="li-l2">
-                  <div class="pro-node pro-node-l2 cyan" onclick="openMemberModal('saikat')">
+                  <div class="pro-node pro-node-l2 cyan" onclick="openMemberModal('arjun')">
                     <div class="node-avatar-frame">
-                      <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80" alt="Saikat Sasmal" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                      <div class="node-avatar-fallback" style="background: #00f2fe; color: #0b132b;">SS</div>
+                      <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80" alt="Arjun Mehta" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                      <div class="node-avatar-fallback" style="background: #00f2fe; color: #0b132b;">AM</div>
                       <span class="node-status-dot"></span>
                     </div>
-                    <div class="node-name">Saikat Sasmal</div>
+                    <div class="node-name">Arjun Mehta</div>
                     <div class="node-role-pill">Chief Technology Officer</div>
                     <div class="node-click-hint"><ion-icon name="information-circle"></ion-icon> Details</div>
                   </div>
@@ -818,7 +818,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
                     <li class="li-l3">
                       <div class="pro-node pro-node-l3" onclick="openMemberModal('priya')">
                         <div class="node-avatar-frame">
-                          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="Priya Sharma" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                          <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=400&q=80" alt="Priya Sharma" class="node-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                           <div class="node-avatar-fallback" style="background: #c084fc; color: #0b132b;">PS</div>
                           <span class="node-status-dot"></span>
                         </div>
@@ -1014,31 +1014,31 @@ if (!defined('SERVEASY_ASSET_VER')) {
   <!-- Interactive Data & Modal Handler -->
   <script>
     const teamDatabase = {
-      'sharthak': {
-        name: 'Sharthak Sen',
+      'saikat': {
+        name: 'Saikat Sasmal',
         role: 'Founder & Chief Executive Officer (Super Admin)',
         dept: 'Executive Directorate & Supreme Governance',
         reportsTo: 'Directing Supreme Board',
-        img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
-        bio: 'Sharthak Sen steers the overarching strategic vision, technology roadmap, capital investments, governance, and nationwide expansion of the ServEasy on-demand ecosystem. He leads the multi-portal architecture connecting customers, service providers, and administrators into one unified platform.',
+        img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
+        bio: 'Saikat Sasmal steers the overarching strategic vision, technology roadmap, capital investments, governance, and nationwide expansion of the ServEasy on-demand ecosystem. He architected the multi-portal platform connecting customers, service providers, and administrators into one unified service-booking infrastructure.',
         skills: ['Strategic Governance', 'Platform Architecture', 'Superadmin Control', 'Partner Network Scaling', 'Product Innovation'],
-        email: 'mailto:support@serveasy.in?subject=Inquiry for CEO Office (Sharthak Sen)'
+        email: 'mailto:support@serveasy.in?subject=Inquiry for CEO Office (Saikat Sasmal)'
       },
-      'saikat': {
-        name: 'Saikat Sasmal',
+      'arjun': {
+        name: 'Arjun Mehta',
         role: 'Chief Technology Officer & Lead Architect',
         dept: 'Engineering & Technology Command',
-        reportsTo: 'Sharthak Sen (Founder & CEO)',
+        reportsTo: 'Saikat Sasmal (Founder & CEO)',
         img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
-        bio: 'Saikat Sasmal directs core software engineering, multi-portal API architecture, database integrity, real-time GPS telemetry, and OWASP application security. He oversees continuous deployment reliability across our cloud hosting infrastructure.',
+        bio: 'Arjun Mehta directs core software engineering, multi-portal API architecture, database integrity, real-time GPS telemetry, and OWASP application security. He oversees continuous deployment reliability across our cloud hosting infrastructure.',
         skills: ['API Architecture', 'Database Security', 'High Availability', 'System Defense', 'Microservices'],
-        email: 'mailto:support@serveasy.in?subject=Inquiry for CTO Desk (Saikat Sasmal)'
+        email: 'mailto:support@serveasy.in?subject=Inquiry for CTO Desk (Arjun Mehta)'
       },
       'elena': {
         name: 'Elena Rostova',
         role: 'Chief Operating Officer (COO)',
         dept: 'Field Operations & Service Grid',
-        reportsTo: 'Sharthak Sen (Founder & CEO)',
+        reportsTo: 'Saikat Sasmal (Founder & CEO)',
         img: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80',
         bio: 'Elena Rostova manages daily field fulfillment, service provider network compliance, quality benchmarks, and multi-channel customer concierge. She ensures every booking meets strict hygiene, punctuality, and satisfaction standards.',
         skills: ['Field Operations', 'SLA Enforcement', 'Partner Network', 'Service Quality', 'Dispute Shield'],
@@ -1048,7 +1048,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
         name: 'Marcus Sterling',
         role: 'Chief Product Officer (CPO)',
         dept: 'Automotive & Product Standards',
-        reportsTo: 'Sharthak Sen (Founder & CEO)',
+        reportsTo: 'Saikat Sasmal (Founder & CEO)',
         img: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80',
         bio: 'Marcus Sterling directs automotive technical standards, mechanical diagnostic protocols, doorstep vehicle detailing specs, and rental fleet logistics. He ensures technicians deploy with certified commercial-grade tooling.',
         skills: ['Automotive Engineering', 'Fleet Standards', 'Mechanical R&D', 'Tooling Specs', 'Product UX'],
@@ -1058,7 +1058,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
         name: 'David Chen',
         role: 'Emergency SOS Dispatch Lead',
         dept: 'Rapid Response Unit',
-        reportsTo: 'Saikat Sasmal (CTO)',
+        reportsTo: 'Arjun Mehta (CTO)',
         img: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&q=80',
         bio: 'Coordinates 24/7 live GPS roadside breakdown tracking, emergency tow truck dispatch, battery jumpstarts, and flat-tire rescue across major highway corridors.',
         skills: ['24/7 Roadside SOS', 'GPS Telemetry', 'Towing Logistics', 'Emergency Incident Response'],
@@ -1068,7 +1068,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
         name: 'Sophia Lin',
         role: 'Cybersecurity & Privacy Lead',
         dept: 'Information Security Directorate',
-        reportsTo: 'Saikat Sasmal (CTO)',
+        reportsTo: 'Arjun Mehta (CTO)',
         img: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80',
         bio: 'Conducts continuous penetration testing, audits OWASP defensive controls, and secures customer payment gateway tokens and session encryption.',
         skills: ['AppSec Hardening', 'Zero Trust Architecture', 'Data Privacy', 'Penetration Testing'],
@@ -1079,7 +1079,7 @@ if (!defined('SERVEASY_ASSET_VER')) {
         role: 'Customer Concierge Lead',
         dept: 'Customer Success & Experience',
         reportsTo: 'Elena Rostova (COO)',
-        img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+        img: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=400&q=80',
         bio: 'Leads our multi-channel customer concierge team, resolving scheduling adjustments, booking preferences, and customer satisfaction tickets.',
         skills: ['Concierge Desk', 'Support Resolution', 'Customer NPS', 'Booking Logistics'],
         email: 'mailto:support@serveasy.in?subject=Customer Concierge (Priya Sharma)'
