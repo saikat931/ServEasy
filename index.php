@@ -58,7 +58,11 @@ if (class_exists('App\Repositories\ServiceRepository')) {
   <meta name="theme-color" content="#4361ee">
 
   <!-- Favicon -->
-  <link rel="shortcut icon" href="./assets/favicon.svg" type="image/svg+xml">
+    <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
+  <link rel="alternate icon" type="image/x-icon" href="./assets/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png">
 
   <!-- Font & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -72,6 +76,7 @@ if (class_exists('App\Repositories\ServiceRepository')) {
   <link rel="stylesheet" href="./assets/css/notify.css?v=<?= SERVEASY_ASSET_VER ?>">
   <link rel="stylesheet" href="./assets/css/category.css?v=<?= SERVEASY_ASSET_VER ?>">
   <link rel="stylesheet" href="./assets/css/wishlist.css?v=<?= SERVEASY_ASSET_VER ?>">
+  <link rel="stylesheet" href="./assets/css/chocolate-theme.css?v=<?= SERVEASY_ASSET_VER ?>">
 
 
 </head>
@@ -93,28 +98,45 @@ if (class_exists('App\Repositories\ServiceRepository')) {
     <article class="dashboard-container">
 
       <!-- HERO SECTION -->
-      <section class="hero-glass-box">
-        <h2 class="hero-title">Discover & Book Premium Local Services</h2>
-        <p class="hero-subtitle">
-          From mechanical care and private room booking to professional personal assistance, emergency help, and logistics. Book trusted services instantly with transparent booking.
-        </p>
+            <!-- HERO SECTION (LIGHTER CHOCOLATE SPLIT BANNER) -->
+      <section class="hero-glass-box hero-chocolate-banner">
+        <div class="hero-split-grid">
+          <!-- Left Column -->
+          <div class="hero-left-col">
+            <h1 class="hero-title">
+              Discover & Book<br>
+              <span class="hero-highlight">Premium Local Services</span>
+            </h1>
+            <p class="hero-subtitle">
+              From mechanical care and private room booking to professional personal assistance, emergency help, and logistics. Book trusted services instantly with transparent booking.
+            </p>
 
-        <!-- GLOBAL SEARCH BAR -->
-        <div class="search-container">
-          <span class="search-icon-glass"><ion-icon name="search-outline"></ion-icon></span>
-          <input type="text" id="global-service-search" placeholder="Type a service to search (e.g. AC Repair, Bike Rental, Female Maid, Towing...)" class="search-bar-glass">
-        </div>
+            <!-- Search Bar with Inline Amber Button -->
+            <div class="search-chocolate">
+              <span class="search-icon-glass"><ion-icon name="search-outline"></ion-icon></span>
+              <input type="text" id="global-service-search" placeholder="Type a service to search (e.g. AC Repair, Bike Rental, Female Maid, Transport)" class="search-bar-glass">
+              <button type="button" class="btn-hero-search-chocolate" id="btn-hero-search-trigger">Search</button>
+            </div>
 
-        <!-- CATEGORIES PILLS FILTERS (Matching Services Page) -->
-        <div class="categories-pills" id="services-pills">
-          <div class="pill active" data-filter="all">All Services</div>
-          <div class="pill" data-filter="1" data-slug="automotive">Automotive</div>
-          <div class="pill" data-filter="2" data-slug="home">Home & Living</div>
-          <div class="pill" data-filter="3" data-slug="care">Personal Staff</div>
-          <div class="pill" data-filter="4" data-slug="transport">Transport & Rental</div>
-          <div class="pill" data-filter="5" data-slug="stay">Rooms & Lodging</div>
-          <div class="pill" data-filter="6" data-slug="food">Food & Dining</div>
-          <div class="pill" data-filter="7" data-slug="emergency">Emergency SOS</div>
+            <!-- Categories Pills Filters -->
+            <div class="categories-pills" id="services-pills">
+              <div class="pill active" data-filter="all">All Services</div>
+              <div class="pill" data-filter="1" data-slug="automotive"><ion-icon name="car-outline"></ion-icon> Automotive</div>
+              <div class="pill" data-filter="2" data-slug="home"><ion-icon name="home-outline"></ion-icon> Home & Living</div>
+              <div class="pill" data-filter="3" data-slug="care"><ion-icon name="people-outline"></ion-icon> Personal Staff</div>
+              <div class="pill" data-filter="4" data-slug="transport"><ion-icon name="car-sport-outline"></ion-icon> Transport & Rental</div>
+              <div class="pill" data-filter="5" data-slug="stay"><ion-icon name="bed-outline"></ion-icon> Rooms & Lodging</div>
+              <div class="pill" data-filter="6" data-slug="food"><ion-icon name="restaurant-outline"></ion-icon> Food & Dining</div>
+              <div class="pill" data-filter="7" data-slug="emergency"><ion-icon name="warning-outline"></ion-icon> Emergency SOS</div>
+            </div>
+          </div>
+
+          <!-- Right Column: Visual Side with Technician & Feature Cards -->
+          <div class="hero-right-col">
+            <div class="hero-visual-wrapper">
+              <img src="./assets/images/hero-chocolate-visual.png" alt="ServEasy Verified Professionals" class="hero-visual-img">
+            </div>
+          </div>
         </div>
       </section>
 
@@ -244,6 +266,26 @@ if (class_exists('App\Repositories\ServiceRepository')) {
 
           renderGrid();
         }, 120);
+      });
+      // Inline Hero Search Button Action
+      const heroSearchBtn = document.getElementById('btn-hero-search-trigger');
+      if (heroSearchBtn) {
+        heroSearchBtn.addEventListener('click', () => {
+          const q = searchInput.value.trim();
+          if (q) {
+            window.location.href = './services.php?query=' + encodeURIComponent(q);
+          } else {
+            searchInput.focus();
+          }
+        });
+      }
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const q = searchInput.value.trim();
+          if (q) {
+            window.location.href = './services.php?query=' + encodeURIComponent(q);
+          }
+        }
       });
     }
 

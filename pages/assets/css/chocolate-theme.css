@@ -1,0 +1,552 @@
+/*--------------------------------------------------------------
+  # chocolate-theme.css - ServEasy Lighter Chocolate Theme
+  Official Web Theme specification:
+  - Background:       #4E2F1F (Rich warm chocolate)
+  - Header & Top Bar: #583A27 (Deep cocoa chocolate)
+  - Card Surfaces:    #6F4A34 (Warm caramel chocolate)
+  - Primary Accent:   #F4A95E (Warm honey amber gold)
+  - Secondary Accent: #F9D5A8 (Champagne cream peach)
+  - Text:             #FFF3E6 (Vanilla cream off-white)
+--------------------------------------------------------------*/
+
+:root {
+  --theme-chocolate-bg: #4E2F1F;
+  --theme-chocolate-header: #583A27;
+  --theme-chocolate-card: #6F4A34;
+  --theme-chocolate-accent: #F4A95E;
+  --theme-chocolate-secondary: #F9D5A8;
+  --theme-chocolate-text: #FFF3E6;
+
+  /* Global Framework Overrides */
+  --bg-dark: #4E2F1F;
+  --bg-gradient: radial-gradient(circle at 50% 12%, #633c27 0%, #4E2F1F 55%, #381f13 100%);
+  --glass-bg: rgba(111, 74, 52, 0.78);
+  --glass-border: rgba(244, 169, 94, 0.30);
+  --glass-bg-hover: rgba(111, 74, 52, 0.92);
+  --glass-border-hover: rgba(244, 169, 94, 0.60);
+  --glass-shadow: 0 18px 50px rgba(35, 18, 10, 0.70), 0 0 25px rgba(244, 169, 94, 0.08);
+
+  --text-primary: #FFF3E6;
+  --text-secondary: #F9D5A8;
+
+  --neon-cyan: #F4A95E;
+  --neon-emerald: #F9D5A8;
+  --neon-purple: #C87D3B;
+  --neon-gold: #F4A95E;
+  --neon-orange: #F4A95E;
+}
+
+/* ============================================================
+   GLOBAL BODY & BACKGROUND
+   ============================================================ */
+body,
+body.theme-default,
+body:not(.theme-black):not(.theme-white) {
+  background-color: #4E2F1F !important;
+  background: radial-gradient(circle at 50% 12%, #633c27 0%, #4E2F1F 55%, #381f13 100%) !important;
+  color: #FFF3E6 !important;
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  min-height: 100vh;
+}
+
+/* Glow Spheres Warm Ambient Halos */
+.glow-sphere {
+  opacity: 0.22 !important;
+  filter: blur(140px) !important;
+}
+.glow-sphere.sphere-1 {
+  background: radial-gradient(circle, #F4A95E 0%, #6F4A34 100%) !important;
+  width: 500px !important;
+  height: 500px !important;
+}
+.glow-sphere.sphere-2 {
+  background: radial-gradient(circle, #E08E45 0%, #583A27 100%) !important;
+  width: 550px !important;
+  height: 550px !important;
+}
+.glow-sphere.sphere-3 {
+  background: radial-gradient(circle, #F9D5A8 0%, #4E2F1F 100%) !important;
+  width: 440px !important;
+  height: 440px !important;
+}
+
+/* ============================================================
+   TOP BAR & HEADER NAVBAR
+   ============================================================ */
+.top-bar {
+  background: #583A27 !important;
+  border-bottom: 1px solid rgba(244, 169, 94, 0.22) !important;
+  padding-block: 8px !important;
+}
+.top-bar .container {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+.top-bar p, .top-bar span {
+  color: #FFF3E6 !important;
+  font-size: 0.82rem !important;
+  letter-spacing: 0.6px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  margin: 0 !important;
+}
+.top-bar ion-icon {
+  color: #F4A95E !important;
+  font-size: 1rem !important;
+}
+
+.header,
+.header.active {
+  background: #583A27 !important;
+  border-bottom: 1.5px solid rgba(244, 169, 94, 0.25) !important;
+  box-shadow: 0 10px 30px rgba(35, 18, 10, 0.45) !important;
+}
+
+.navbar-list {
+  display: flex !important;
+  align-items: center !important;
+  gap: 24px !important;
+}
+
+.navbar-link {
+  color: #FFF3E6 !important;
+  font-size: 0.95rem !important;
+  font-weight: 500 !important;
+  transition: all 0.25s ease !important;
+}
+.navbar-link:hover,
+.navbar-link:focus {
+  color: #F4A95E !important;
+}
+
+.header-action-btn {
+  background: rgba(111, 74, 52, 0.60) !important;
+  border: 1.5px solid rgba(244, 169, 94, 0.32) !important;
+  color: #FFF3E6 !important;
+  border-radius: 50% !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.header-action-btn:hover {
+  background: #F4A95E !important;
+  border-color: #F4A95E !important;
+  box-shadow: 0 0 18px rgba(244, 169, 94, 0.55) !important;
+  transform: translateY(-2px) !important;
+}
+.header-action-btn:hover ion-icon {
+  color: #2A1608 !important;
+}
+
+.btn-badge {
+  background: #F4A95E !important;
+  color: #2A1608 !important;
+  font-weight: 800 !important;
+  font-size: 0.68rem !important;
+  border: 1.5px solid #583A27 !important;
+}
+
+/* ============================================================
+   HERO BANNER - LIGHTER CHOCOLATE SPLIT DESIGN
+   ============================================================ */
+.hero-chocolate-banner {
+  background: linear-gradient(135deg, rgba(88, 58, 39, 0.96) 0%, rgba(111, 74, 52, 0.90) 100%) !important;
+  border: 1.5px solid rgba(244, 169, 94, 0.45) !important;
+  border-radius: 32px !important;
+  padding: 48px 46px 44px 46px !important;
+  box-shadow: 0 30px 80px rgba(35, 18, 10, 0.82), 0 0 35px rgba(244, 169, 94, 0.12) !important;
+  margin-bottom: 50px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Golden Contour Accent Sweep */
+.hero-chocolate-banner::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: 15%;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  border: 2px solid rgba(244, 169, 94, 0.45);
+  box-shadow: 0 0 50px rgba(244, 169, 94, 0.25), inset 0 0 40px rgba(244, 169, 94, 0.15);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero-split-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: center;
+  gap: 36px;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left !important;
+}
+
+.hero-title {
+  font-family: 'Playfair Display', serif !important;
+  font-size: 3.1rem !important;
+  font-weight: 800 !important;
+  line-height: 1.16 !important;
+  color: #FFF3E6 !important;
+  margin: 0 !important;
+  text-align: left !important;
+  letter-spacing: -0.5px;
+}
+
+.hero-highlight {
+  color: #F4A95E !important;
+  display: block;
+}
+
+.hero-subtitle {
+  color: #FFF3E6 !important;
+  opacity: 0.90;
+  font-size: 0.98rem !important;
+  line-height: 1.6 !important;
+  margin: 0 !important;
+  text-align: left !important;
+  max-width: 580px;
+  font-weight: 400;
+}
+
+/* Search Bar with Inline Amber Button */
+.search-chocolate {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  max-width: 620px !important;
+  background: rgba(45, 25, 15, 0.65) !important;
+  border: 1.5px solid rgba(244, 169, 94, 0.45) !important;
+  border-radius: 50px !important;
+  padding: 5px 6px 5px 18px !important;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5) !important;
+  margin: 8px 0 4px 0 !important;
+  transition: all 0.3s ease !important;
+}
+.search-chocolate:focus-within {
+  border-color: #F4A95E !important;
+  box-shadow: 0 0 22px rgba(244, 169, 94, 0.35), inset 0 2px 6px rgba(0, 0, 0, 0.5) !important;
+}
+
+.search-chocolate .search-icon-glass {
+  color: #F4A95E !important;
+  font-size: 1.3rem !important;
+  margin-right: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.search-chocolate .search-bar-glass {
+  flex: 1 !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  color: #FFF3E6 !important;
+  font-size: 0.95rem !important;
+  padding: 8px 0 !important;
+  box-shadow: none !important;
+}
+.search-chocolate .search-bar-glass::placeholder {
+  color: rgba(255, 243, 230, 0.55) !important;
+}
+
+.btn-hero-search-chocolate {
+  background: #F4A95E !important;
+  color: #2A1608 !important;
+  font-weight: 800 !important;
+  font-size: 0.95rem !important;
+  padding: 10px 26px !important;
+  border-radius: 40px !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: all 0.25s ease !important;
+  box-shadow: 0 4px 15px rgba(244, 169, 94, 0.40) !important;
+  letter-spacing: 0.3px;
+}
+.btn-hero-search-chocolate:hover {
+  background: #ffb86c !important;
+  transform: scale(1.03);
+  box-shadow: 0 6px 20px rgba(244, 169, 94, 0.60) !important;
+}
+
+/* Category Filter Pills */
+.categories-pills {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  margin-top: 8px !important;
+}
+
+.categories-pills .pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  padding: 8px 18px !important;
+  border-radius: 30px !important;
+  background: rgba(45, 25, 15, 0.60) !important;
+  border: 1px solid rgba(244, 169, 94, 0.28) !important;
+  color: #FFF3E6 !important;
+  font-size: 0.86rem !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.categories-pills .pill ion-icon {
+  font-size: 1rem !important;
+  color: #F9D5A8 !important;
+}
+
+.categories-pills .pill:hover {
+  border-color: #F4A95E !important;
+  color: #F4A95E !important;
+  background: rgba(88, 58, 39, 0.85) !important;
+  transform: translateY(-2px) !important;
+}
+.categories-pills .pill:hover ion-icon {
+  color: #F4A95E !important;
+}
+
+.categories-pills .pill.active {
+  background: #F4A95E !important;
+  border-color: #F4A95E !important;
+  color: #2A1608 !important;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 18px rgba(244, 169, 94, 0.45) !important;
+}
+.categories-pills .pill.active ion-icon {
+  color: #2A1608 !important;
+}
+
+/* Right Visual Column */
+.hero-right-col {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  position: relative !important;
+}
+
+.hero-visual-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-visual-img {
+  width: 100%;
+  max-width: 440px;
+  height: auto;
+  object-fit: contain;
+  border-radius: 20px;
+  filter: drop-shadow(0 15px 35px rgba(20, 10, 5, 0.65));
+}
+
+/* ============================================================
+   CATEGORIES SECTION & SHOWCASE CARDS (#6F4A34)
+   ============================================================ */
+.category-section-title,
+.services-section-title,
+#cat-main-heading {
+  font-family: 'Playfair Display', serif !important;
+  color: #FFF3E6 !important;
+  font-weight: 800 !important;
+  font-size: 2.1rem !important;
+}
+
+.cat-showcase-card,
+.subcat-showcase-card,
+.service-card,
+.panel-nav-card {
+  background: #6F4A34 !important;
+  border: 1.5px solid rgba(244, 169, 94, 0.32) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 14px 40px rgba(35, 18, 10, 0.55) !important;
+  color: #FFF3E6 !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.cat-showcase-card:hover,
+.subcat-showcase-card:hover,
+.service-card:hover {
+  border-color: #F4A95E !important;
+  box-shadow: 0 20px 50px rgba(35, 18, 10, 0.75), 0 0 25px rgba(244, 169, 94, 0.25) !important;
+  transform: translateY(-4px) !important;
+}
+
+.cat-title, .subcat-title, .service-title {
+  color: #FFF3E6 !important;
+  font-weight: 700 !important;
+}
+
+.cat-desc, .subcat-desc, .service-desc {
+  color: #F9D5A8 !important;
+  opacity: 0.92 !important;
+}
+
+.cat-icon-container,
+.subcat-icon-container,
+.service-icon {
+  background: rgba(244, 169, 94, 0.18) !important;
+  border: 1px solid rgba(244, 169, 94, 0.45) !important;
+  color: #F4A95E !important;
+  border-radius: 14px !important;
+}
+.cat-icon-container ion-icon,
+.subcat-icon-container ion-icon,
+.service-icon ion-icon {
+  color: #F4A95E !important;
+}
+
+/* Category View Switcher Tabs */
+.cat-view-switcher {
+  background: rgba(88, 58, 39, 0.70) !important;
+  border: 1px solid rgba(244, 169, 94, 0.30) !important;
+  border-radius: 30px !important;
+  padding: 4px !important;
+}
+
+.btn-cat-view {
+  background: transparent !important;
+  border: none !important;
+  color: #FFF3E6 !important;
+  font-weight: 600 !important;
+  font-size: 0.88rem !important;
+  padding: 8px 18px !important;
+  border-radius: 25px !important;
+  transition: all 0.25s ease !important;
+}
+
+.btn-cat-view.active {
+  background: #F4A95E !important;
+  color: #2A1608 !important;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 15px rgba(244, 169, 94, 0.40) !important;
+}
+
+.cat-view-all-btn,
+.btn-book-glass,
+.btn-cat-explore,
+.btn-subcat-book,
+.btn-explore-all-cta {
+  background: #F4A95E !important;
+  border: 1px solid #F4A95E !important;
+  color: #2A1608 !important;
+  font-weight: 800 !important;
+  border-radius: 30px !important;
+  box-shadow: 0 4px 16px rgba(244, 169, 94, 0.35) !important;
+  transition: all 0.25s ease !important;
+}
+
+.cat-view-all-btn:hover,
+.btn-book-glass:hover,
+.btn-cat-explore:hover,
+.btn-subcat-book:hover,
+.btn-explore-all-cta:hover {
+  background: #ffb86c !important;
+  color: #2A1608 !important;
+  box-shadow: 0 6px 22px rgba(244, 169, 94, 0.55) !important;
+  transform: scale(1.02) !important;
+}
+
+.cat-count-badge,
+.subcat-domain-badge,
+.service-badge {
+  background: rgba(244, 169, 94, 0.20) !important;
+  color: #F4A95E !important;
+  border: 1px solid rgba(244, 169, 94, 0.42) !important;
+  font-weight: 700 !important;
+}
+
+.cat-price-text, .subcat-price-val, .service-price {
+  color: #F4A95E !important;
+  font-weight: 800 !important;
+}
+
+.cat-sub-tag {
+  background: rgba(45, 25, 15, 0.50) !important;
+  border: 1px solid rgba(244, 169, 94, 0.25) !important;
+  color: #FFF3E6 !important;
+}
+.cat-sub-tag:hover {
+  background: rgba(244, 169, 94, 0.25) !important;
+  border-color: #F4A95E !important;
+  color: #F4A95E !important;
+}
+
+/* ============================================================
+   FOOTER SECTION (#4E2F1F / #381F13)
+   ============================================================ */
+.footer {
+  background: #381F13 !important;
+  border-top: 1.5px solid rgba(244, 169, 94, 0.25) !important;
+  color: #FFF3E6 !important;
+}
+.footer-top {
+  border-bottom: 1px solid rgba(244, 169, 94, 0.15) !important;
+}
+.footer-list-title {
+  color: #F4A95E !important;
+  font-weight: 700 !important;
+}
+.footer-link {
+  color: #F9D5A8 !important;
+  transition: all 0.2s ease !important;
+}
+.footer-link:hover {
+  color: #F4A95E !important;
+  padding-left: 4px;
+}
+.footer-bottom {
+  background: #2D180E !important;
+  color: rgba(255, 243, 230, 0.70) !important;
+}
+
+/* ============================================================
+   RESPONSIVE MEDIA QUERIES
+   ============================================================ */
+@media (max-width: 1024px) {
+  .hero-split-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .hero-left-col {
+    text-align: center !important;
+    align-items: center !important;
+  }
+  .hero-title, .hero-subtitle {
+    text-align: center !important;
+  }
+  .categories-pills {
+    justify-content: center !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-chocolate-banner {
+    padding: 32px 20px !important;
+    border-radius: 22px !important;
+  }
+  .hero-title {
+    font-size: 2.1rem !important;
+  }
+  .search-chocolate {
+    flex-direction: column !important;
+    border-radius: 20px !important;
+    padding: 12px 14px !important;
+    gap: 8px !important;
+  }
+  .btn-hero-search-chocolate {
+    width: 100% !important;
+  }
+}

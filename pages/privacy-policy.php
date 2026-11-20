@@ -20,7 +20,11 @@ if (!defined('SERVEASY_ASSET_VER')) {
   <link rel="canonical" href="https://silver-penguin-156353.hostingersite.com/pages/privacy-policy.php">
 
   <!-- Favicon -->
-  <link rel="shortcut icon" href="./assets/favicon.svg" type="image/svg+xml">
+    <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
+  <link rel="alternate icon" type="image/x-icon" href="./assets/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png">
 
   <!-- Core Stylesheets -->
   <link rel="stylesheet" href="./assets/css/main.css?v=<?= SERVEASY_ASSET_VER ?>">
