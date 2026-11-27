@@ -150,9 +150,9 @@ if ($db) {
 
     try {
         $stmtProfiles = $db->prepare("
-            SELECT mp.*, sp.id AS sp_provider_id, COALESCE(c.company_name, sp.full_name) AS company_name
+            SELECT mp.*, sp.id AS sp_provider_id, COALESCE(c.company_name, pp.full_name) AS company_name
             FROM `provider_profiles` mp
-            JOIN `serveasy-providers` sp ON mp.provider_id = sp.id
+            JOIN `serveasy-providers` sp LEFT JOIN `provider_profiles` pp ON pp.provider_id = sp.id ON mp.provider_id = sp.id
             LEFT JOIN `serveasy-company` c ON c.provider_id = sp.id
             WHERE mp.status = 'Approved'
             ORDER BY mp.years_of_experience DESC, mp.id DESC

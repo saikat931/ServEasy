@@ -290,16 +290,16 @@ if ($db) {
     // -------------------------------------------------------
     $stmtAll = $db->prepare("
         SELECT s.*,
-               COALESCE(c.company_name, sp.full_name) AS business_name,
+               COALESCE(c.company_name, pp.full_name) AS business_name,
                4.5            AS provider_rating,
                sp.is_active   AS provider_available,
                sc.name        AS subcategory_name,
                sc.slug        AS subcategory_slug,
-               COALESCE(c.company_name, sp.full_name) AS provider_company,
+               COALESCE(c.company_name, pp.full_name) AS provider_company,
                sp.location_address AS provider_address,
                s.service_range_km
         FROM `serveasy-services` s
-        JOIN `serveasy-providers` sp ON s.provider_id = sp.id
+        JOIN `serveasy-providers` sp LEFT JOIN `provider_profiles` pp ON pp.provider_id = sp.id ON s.provider_id = sp.id
         LEFT JOIN `serveasy-company` c ON c.provider_id = sp.id
         JOIN `serveasy-subcategories` sc ON s.subcategory_id = sc.id
         WHERE s.is_active = 1
@@ -350,12 +350,12 @@ if ($db) {
     // -------------------------------------------------------
     $stmtProviders = $db->prepare("
         SELECT 
-            sp.id, COALESCE(c.company_name, sp.full_name) AS business_name, 4.5 AS rating, sp.is_active AS is_available,
-            COALESCE(c.company_name, sp.full_name) AS company_name, c.id AS company_id,
+            sp.id, COALESCE(c.company_name, pp.full_name) AS business_name, 4.5 AS rating, sp.is_active AS is_available,
+            COALESCE(c.company_name, pp.full_name) AS company_name, c.id AS company_id,
             (CASE WHEN c.id IS NOT NULL AND c.company_name IS NOT NULL AND TRIM(c.company_name) != '' THEN 0 ELSE 1 END) AS is_single_provider,
             sp.location_address, MAX(s.service_range_km) AS service_range_km,
-            sp.full_name, sp.phone AS phone_number
-        FROM `serveasy-providers` sp
+            COALESCE(pp.full_name, ''), sp.phone AS phone_number
+        FROM `serveasy-providers` sp LEFT JOIN `provider_profiles` pp ON pp.provider_id = sp.id
         LEFT JOIN `serveasy-company` c ON c.provider_id = sp.id
         JOIN `serveasy-services` s ON s.provider_id = sp.id
         WHERE s.is_active = 1
@@ -372,11 +372,11 @@ if ($db) {
     // -------------------------------------------------------
     $stmtBranches = $db->prepare("
         SELECT b.id, b.branch_name, b.address, b.phone,
-               COALESCE(c.company_name, sp.full_name) AS business_name,
+               COALESCE(c.company_name, pp.full_name) AS business_name,
                sp.id AS provider_sp_id,
                sp.id AS provider_id
         FROM `serveasy-provider-branches` b
-        JOIN `serveasy-providers` sp ON b.provider_id = sp.id
+        JOIN `serveasy-providers` sp LEFT JOIN `provider_profiles` pp ON pp.provider_id = sp.id ON b.provider_id = sp.id
         LEFT JOIN `serveasy-company` c ON c.provider_id = sp.id
         JOIN `serveasy-services` s ON s.provider_id = sp.id
         WHERE b.is_active = 1
@@ -449,10 +449,10 @@ $preselectedBooking = $apiPreselectedBooking ?? null;
 if (isset($_GET['booking_id']) && $db) {
   try {
     $stmtB = $db->prepare("
-          SELECT b.*, s.name as service_name, COALESCE(c.company_name, sp.full_name) as provider_name
+          SELECT b.*, s.name as service_name, COALESCE(c.company_name, pp.full_name) as provider_name
           FROM vehicle_wash b
           JOIN `serveasy-services` s ON b.service_id = s.id
-          JOIN `serveasy-providers` sp ON b.provider_id = sp.id
+          JOIN `serveasy-providers` sp LEFT JOIN `provider_profiles` pp ON pp.provider_id = sp.id ON b.provider_id = sp.id
           LEFT JOIN `serveasy-company` c ON c.provider_id = sp.id
           WHERE b.id = :id AND b.customer_id = :cust_id
       ");
